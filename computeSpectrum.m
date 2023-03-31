@@ -1,6 +1,6 @@
 %% Offline Computation of Medtronic Power Spectrum using Raw Time Domain Input
 
-% Input 30 second (7500 Sample) stream of LFP data
+% Input 30 second (7500 Sample) stream of LFP data (raw) and 100 value frequency array specified by Medtronic Event Snapshot
 
 function [LFPamplitude,frequency] = computeSpectrum(raw,freq_array)
 
