@@ -1,7 +1,6 @@
-clear all
-close all
-load('spectro_days.mat')
-load('spectro_LFP_norm.mat')
+
+load([loaddir,'spectro_days.mat'])
+load([loaddir,'spectro_LFP_norm.mat'])
 
 x_tick_scale=10; %adjust distance between x ticks here
 color_height=1; %can adjust the height ratio of colorbar to spectrogram here
@@ -104,5 +103,5 @@ xlabel(fig,'Days Since DBS On','FontSize',fontsize);
 set(gcf,'Position',[0,0,1300,1700])
 %set(gcf,'PaperUnits','centimeters','PaperPosition',[0,0,13,17])
 
-saveas(gcf,'spectrograms.png')
-saveas(gcf,'spectrograms.svg')
+saveas(gcf,[savedir,'spectrograms.png'])
+saveas(gcf,[savedir,'spectrograms.svg'])
