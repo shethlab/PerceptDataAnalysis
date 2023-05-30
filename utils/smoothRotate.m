@@ -4,7 +4,7 @@ function smoothedRotatedMatrix = smoothRotate(matrix,acrophase,pval)
 %% matrix: 144 x numDays matrix. 
 % Row corresponds to time of day, column corresponds to day. Matrix element is recorded
 % power in defined recording band.
-%% acrophase: Vector containing acrophases (in hours on 24h clock)  for days whose matrix column is non empty
+%% acrophase: Vector containing acrophases (in radians)  for days whose matrix column is non empty
 % Days which are empty do not recieve an acrophase
 %% pval: Vector containing pvalue for corresponding acrophase. 
 % Only dates for which pval<=0.05 are rotated by acrophase
@@ -24,18 +24,20 @@ c = 1;
 for q = 1:length(subtracted_acro)
     if all(isnan(matrix(:,q)))
         continue
-    elseif pval(c) >0.05
+    elseif pval(q) >0.05
         continue
     else
-        subtracted_acro(q) = acrophase(c);
-        c=c+1;
+        subtracted_acro(q) = acrophase(q);
+        %c=c+1;
     end
 end
 
 %% Rotate matrix indices to align acrophases
-t=repmat((0:24/144:24*143/144)',[1,size(matrix,2)]);
-t=t-subtracted_acro'-12;
-t(t<0)=t(t<0)+24;
+t=repmat((0:2*pi/144:2*pi*143/144)',[1,size(matrix,2)]);
+t=t-subtracted_acro'-pi;
+while any(t<0,'all')
+    t(t<0)=t(t<0)+2*pi;
+end
 [~,sort_unrotated]=sort(t,'ascend');
 
 for j=1:size(matrix,2)
