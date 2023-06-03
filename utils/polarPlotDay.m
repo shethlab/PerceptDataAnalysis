@@ -20,10 +20,26 @@ end
 theta = 0:2*pi/144:143*2*pi/144 ;
 if size(day,2) ==1
     polarplot(theta,day,'Color',color,'LineWidth',2)
-    rlim([-1,inf+.1])
     pax=gca;
+    try
+    currlim = rlim(pax);
+    catch
+    end
+    try
+        if min(day)-.5 < currlim(1);
+            currlim(1) = min(day)-.5;
+        end
+        if max(day)+1 > currlim(2)
+            currlim(2) = max(day)+1;
+        end
+    rlim(currlim);
+    catch
+    end
+    rlim([currlim(1),2])
     pax.ThetaDir='clockwise';
     pax.ThetaZeroLocation='top';
+    hold on
+    polarplot(pi*[1,1],[currlim(1),currlim(2)],'Color','k');
     thetaticklabels({});
     pax.RTickLabels = {};
     %thetaticklabels({'0:00','2:00','4:00','6:00','8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'})
