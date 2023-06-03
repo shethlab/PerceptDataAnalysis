@@ -14,21 +14,25 @@ c_yellow = [255,215,0]/255;
 templates = {};
 for i = 1:5
     [~, indspre] = intersect(comb_days{i,1},preDBSdays{i});
+    indspre=setdiff(indspre,find(isnan(comb_acro{i,1}(:,:,1))));
     templates{i,1} = median(smoothedRotatedCircadianMatrices{i,2}(:,indspre),2,'omitnan');
     %+[-std(smoothedRotatedCircadianMatrices{c,2}(:,indspre),2,'omitnan'),0,std(smoothedRotatedCircadianMatrices{c,2}(:,indspre),2,'omitnan')];
     
     
     [~, maniainds] = intersect(comb_days{i,1},maniadays{i});
+    maniainds=setdiff(maniainds,find(isnan(comb_acro{i,1}(:,:,1))));
     templates{i,2} = median(smoothedRotatedCircadianMatrices{i,2}(:,maniainds),2,'omitnan');
     %+[-std(smoothedRotatedCircadianMatrices{c,2}(:,maniainds),2,'omitnan'),0,std(smoothedRotatedCircadianMatrices{c,2}(:,maniainds),2,'omitnan')];
     
     
     [~, postDBSinds] = intersect(comb_days{i,1},postDBSdays{i});
+    postDBSinds=setdiff(postDBSinds,find(isnan(comb_acro{i,1}(:,:,1))));
     templates{i,3} = median(smoothedRotatedCircadianMatrices{i,2}(:,postDBSinds),2,'omitnan');
     %+[-std(smoothedRotatedCircadianMatrices{c,2}(:,postDBSinds),2,'omitnan'),0,std(smoothedRotatedCircadianMatrices{c,2}(:,postDBSinds),2,'omitnan')];
     
     
     [~, indshealth] = intersect(comb_days{i,1},healthydays{i});
+    indshealth=setdiff(indshealth,find(isnan(comb_acro{i,1}(:,:,1))));
     templates{i,4} = median(smoothedRotatedCircadianMatrices{i,2}(:,indshealth),2,'omitnan');
     %+[-std(smoothedRotatedCircadianMatrices{c,2}(:,indshealth),2,'omitnan'),0,std(smoothedRotatedCircadianMatrices{c,2}(:,indshealth),2,'omitnan')]
 
