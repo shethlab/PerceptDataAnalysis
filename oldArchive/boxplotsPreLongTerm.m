@@ -2,15 +2,16 @@
 %close all
 box = 1;
 useAnthonys = 1;
-chronic = 0;
+chronic = 1;
 if chronic
     dayspre = {[-100:-1];[-100:-1];[-100:-1];[-100:-1];[-100:-1];[-100:-1]};
     dayspost = {[48:100];[0:29,70:999];[176:665];[95:290];[0:396]};
-    figsave = 'C:\Users\Owner\Desktop\Percept Runnig Circadian Data\Figures\chronic\';
+    figsave = 'C:\Users\Owner\Desktop\Percept Runnig Circadian Data\Figures\chronicrolling\';
 else
-    dayspre = {[-9:-1];[-9:-1];[-9:-1];[-9:-1];[-9:-1]}
-    dayspost = {[1:9];[1:9];[1:9];[1:9];[1:9];};
-    figsave = 'C:\Users\Owner\Desktop\Percept Runnig Circadian Data\Figures\pm9\';
+    day = 5;
+    dayspre = {[-day:-1];[-day:-1];[-day:-1];[-day:-1];[-day:-1]}
+    dayspost = {[1:day];[1:day];[1:day];[1:day];[1:day];};
+    figsave = 'C:\Users\Owner\Desktop\Percept Runnig Circadian Data\Figures\pm9rolling\';
 end
 
 distspreacro = {};
@@ -37,20 +38,23 @@ for i = 1:5
     for j = 2:3
         [~, indspre] = intersect(comb_days{i,1},dayspre{i});
         [~, indspost] = intersect(comb_days{i,1},dayspost{i});
-        indspre = indspre(end-min(length(indspre),length(indspost))+1:end);
-        indspost = indspost(1:min(length(indspre),length(indspost)));
+        
+        if ~chronic
+            indspre = indspre(end-min(length(indspre),length(indspost))+1:end);
+            indspost = indspost(1:min(length(indspre),length(indspost)));
+        end
 
         distspreacro{i,j} = comb_acro{i,1}(:,indspre,1);
         distspreamp{i,j} = comb_amp{i,1}(:,indspre,1);
         distsprecircmean{i,2} = comb_circmean{i,1}(indspre);
         distsprecircvar{i,2} = comb_circvar{i,1}(indspre);
-        distspreentropy{i,2} = comb_entropy{i,1}(indspre);
+        distspreentropy{i,2} = comb_circentropy{i,1}(indspre);
         
         distspostacro{i,j} = comb_acro{i,1}(:,indspost,1);
         distspostamp{i,j} = comb_amp{i,1}(:,indspost,1);
         distspostcircmean{i,2} = comb_circmean{i,1}(indspost);
         distspostcircvar{i,2} = comb_circvar{i,1}(indspost);
-        distspostentropy{i,2} = comb_entropy{i,1}(indspost);
+        distspostentropy{i,2} = comb_circentropy{i,1}(indspost);
     end
 end
 
@@ -227,8 +231,8 @@ pvals = cell2table(p,'VariableNames',{'Patient','Acrophase','Amplitude','Circula
 
 end
 if chronic
-    save('C:\Users\Owner\Desktop\Percept Runnig Circadian Data\New Stats\pvaluestats.mat','pvals');
+    save('C:\Users\Owner\Desktop\Percept Runnig Circadian Data\New Stats\pvaluestatsrolling.mat','pvals');
 else
-    save('C:\Users\Owner\Desktop\Percept Runnig Circadian Data\New Stats\pvaluestatsday.mat','pvals');
+    save('C:\Users\Owner\Desktop\Percept Runnig Circadian Data\New Stats\pvaluestatsdayrolling.mat','pvals');
 end
 
