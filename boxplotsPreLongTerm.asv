@@ -65,7 +65,7 @@ end
 p = {'001';'002';'004';'005';'006'};
 f = figure('Position', get(0, 'Screensize'));
 t =tiledlayout(1,5);
-for i = [1,3,4,2,5]
+for i = 1:5
     nexttile
     if i ==2 || i ==5
         if box
@@ -78,7 +78,7 @@ for i = [1,3,4,2,5]
         end
     else
         if box
-            filledBoxPlots([distspreacro{i,2},distspostacro{i,2}],[ones(length(distspreacro{i,2}),1);2*ones(length(distspostacro{i,2}),1)]',[c_yellow;c_blue],labels);
+            filledBoxPlots([distspreacro{i,2},distspostacro{i,2}],[ones(length(distspreacro{i,2}),1);2*ones(length(distspostacro{i,2}),1)]',[c_yellow;c_blue],labels,'BoxStyle','filled');
             set(gca,'FontSize',12);
         else
             violin(cellfun(@transpose,[distspreacro(i,2),distspostacro(i,2)],'UniformOutput',false),'bw',.3,'facecolor',[c_yellow;c_blue],'xlabel',labels,'medc',[],'plotlegend',0);
@@ -100,11 +100,11 @@ close all
 
 f = figure('Position', get(0, 'Screensize'));
 t =tiledlayout(1,5);
-for i = [1,3,4,2,5]
+for i = 1:5
     nexttile
     if i ==2 || i ==5
         if box
-            filledBoxPlots([distspreamp{i,2},distspostamp{i,2}],[ones(length(distspreamp{i,2}),1);2*ones(length(distspostamp{i,2}),1)]',[c_yellow;c_orange],labels);
+            filledBoxPlots([distspreamp{i,2},distspostamp{i,2}],[ones(length(distspreamp{i,2}),1);2*ones(length(distspostamp{i,2}),1)]',[c_yellow;c_orange],labels,'BoxStyle','filled');
             set(gca,'FontSize',12);
         else
             violin(cellfun(@transpose,[distspreamp(i,2),distspostamp(i,2)],'UniformOutput',false),'bw',.05,'facecolor',[c_yellow;c_orange],'xlabel',labels,'medc',[],'plotlegend',0);
@@ -114,7 +114,7 @@ for i = [1,3,4,2,5]
 
     else
         if box
-            filledBoxPlots([distspreamp{i,2},distspostamp{i,2}],[ones(length(distspreamp{i,2}),1);2*ones(length(distspostamp{i,2}),1)]',[c_yellow;c_blue],labels);
+            filledBoxPlots([distspreamp{i,2},distspostamp{i,2}],[ones(length(distspreamp{i,2}),1);2*ones(length(distspostamp{i,2}),1)]',[c_yellow;c_blue],labels,'BoxStyle','filled');
             set(gca,'FontSize',12);
         else
             violin(cellfun(@transpose,[distspreamp(i,2),distspostamp(i,2)],'UniformOutput',false),'bw',.05,'facecolor',[c_yellow;c_blue],'xlabel',labels,'medc',[],'plotlegend',0);
@@ -137,11 +137,11 @@ if useAnthonys
 
     f = figure('Position', get(0, 'Screensize'));
     t =tiledlayout(1,5);
-    for i = [1,3,4,2,5]
+    for i = 1:5
         nexttile
         if i ==2 || i ==5
             if box
-                filledBoxPlots([distsprecircmean{i,2},distspostcircmean{i,2}],[ones(length(distsprecircmean{i,2}),1);2*ones(length(distspostcircmean{i,2}),1)]',[c_yellow;c_orange],labels);
+                filledBoxPlots([distsprecircmean{i,2},distspostcircmean{i,2}],[ones(length(distsprecircmean{i,2}),1);2*ones(length(distspostcircmean{i,2}),1)]',[c_yellow;c_orange],labels,'BoxStyle','filled');
                 set(gca,'FontSize',12);
             else
                 violin(cellfun(@transpose,[distsprecircmean(i,2),distspostcircmean(i,2)],'UniformOutput',false),'bw',.5,'facecolor',[c_yellow;c_orange],'xlabel',labels,'medc',[],'plotlegend',0);
@@ -150,7 +150,7 @@ if useAnthonys
             end
         else
             if box
-                filledBoxPlots([distsprecircmean{i,2},distspostcircmean{i,2}],[ones(length(distsprecircmean{i,2}),1);2*ones(length(distspostcircmean{i,2}),1)]',[c_yellow;c_blue],labels);
+                filledBoxPlots([distsprecircmean{i,2},distspostcircmean{i,2}],[ones(length(distsprecircmean{i,2}),1);2*ones(length(distspostcircmean{i,2}),1)]',[c_yellow;c_blue],labels,'BoxStyle','filled');
                 set(gca,'FontSize',12);
             else
                 violin(cellfun(@transpose,[distsprecircmean(i,2),distspostcircmean(i,2)],'UniformOutput',false),'bw',.5,'facecolor',[c_yellow;c_blue],'xlabel',labels,'medc',[],'plotlegend',0);
@@ -172,11 +172,11 @@ if useAnthonys
 
     f = figure('Position', get(0, 'Screensize'));
     t =tiledlayout(1,5);
-    for i = [1,3,4,2,5]
+    for i = 1:5
         nexttile
         if i ==2 || i ==5
             if box
-                filledBoxPlots([distsprecircvar{i,2},distspostcircvar{i,2}],[ones(length(distsprecircvar{i,2}),1);2*ones(length(distspostcircvar{i,2}),1)]',[c_yellow;c_orange],labels);
+                filledBoxPlots([distsprecircvar{i,2},distspostcircvar{i,2}],[ones(length(distsprecircvar{i,2}),1);2*ones(length(distspostcircvar{i,2}),1)]',[c_yellow;c_orange],labels,'BoxStyle','filled');
                 set(gca,'FontSize',12);
             else
                 violin(cellfun(@transpose,[distsprecircvar(i,2),distspostcircvar(i,2)],'UniformOutput',false),'bw',.05,'facecolor',[c_yellow;c_orange],'xlabel',labels,'medc',[],'plotlegend',0);
@@ -185,7 +185,7 @@ if useAnthonys
             end
         else
             if box
-                filledBoxPlots([distsprecircvar{i,2},distspostcircvar{i,2}],[ones(length(distsprecircvar{i,2}),1);2*ones(length(distspostcircvar{i,2}),1)]',[c_yellow;c_blue],labels);
+                filledBoxPlots([distsprecircvar{i,2},distspostcircvar{i,2}],[ones(length(distsprecircvar{i,2}),1);2*ones(length(distspostcircvar{i,2}),1)]',[c_yellow;c_blue],labels,'BoxStyle','filled');
                 set(gca,'FontSize',12);
             else
                 violin(cellfun(@transpose,[distsprecircvar(i,2),distspostcircvar(i,2)],'UniformOutput',false),'bw',.05,'facecolor',[c_yellow;c_blue],'xlabel',labels,'medc',[],'plotlegend',0);
@@ -208,11 +208,11 @@ if useAnthonys
 
     f = figure('Position', get(0, 'Screensize'));
     t =tiledlayout(1,5);
-    for i = [1,3,4,2,5]
+    for i = 1:5
         nexttile
         if i ==2 || i ==5
             if box
-                filledBoxPlots([distspreentropy{i,2},distspostentropy{i,2}],[ones(length(distspreentropy{i,2}),1);2*ones(length(distspostentropy{i,2}),1)]',[c_yellow;c_orange],labels);
+                filledBoxPlots([distspreentropy{i,2},distspostentropy{i,2}],[ones(length(distspreentropy{i,2}),1);2*ones(length(distspostentropy{i,2}),1)]',[c_yellow;c_orange],labels,'BoxStyle','filled');
                 set(gca,'FontSize',12);
             else
                 violin(cellfun(@transpose,[distspreentropy(i,2),distspostentropy(i,2)],'UniformOutput',false),'bw',.01,'facecolor',[c_yellow;c_orange],'xlabel',labels,'medc',[],'plotlegend',0);
@@ -221,7 +221,7 @@ if useAnthonys
             end
         else
             if box
-                filledBoxPlots([distspreentropy{i,2},distspostentropy{i,2}],[ones(length(distspreentropy{i,2}),1);2*ones(length(distspostentropy{i,2}),1)]',[c_yellow;c_blue],labels);
+                filledBoxPlots([distspreentropy{i,2},distspostentropy{i,2}],[ones(length(distspreentropy{i,2}),1);2*ones(length(distspostentropy{i,2}),1)]',[c_yellow;c_blue],labels,'BoxStyle','filled');
                 set(gca,'FontSize',12);
             else
                 violin(cellfun(@transpose,[distspreentropy(i,2),distspostentropy(i,2)],'UniformOutput',false),'bw',.01,'facecolor',[c_yellow;c_blue],'xlabel',labels,'medc',[],'plotlegend',0);
