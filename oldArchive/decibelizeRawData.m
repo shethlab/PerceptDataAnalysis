@@ -43,7 +43,7 @@ for i = 1:5
 % %         end
     end
 end
-save('C:\Users\Owner\Desktop\Percept Runnig Circadian Data\logScaledtoMeanZScoretoMean.mat','comb_LFP_logscaled','filled_missing','comb_days','comb_p','comb_acro');
+save('C:\Users\Owner\Desktop\Percept Runnig Circadian Data\logScaledtoMeanZScoretoMean2.mat','comb_LFP_logscaled','filled_missing','comb_days','comb_p','comb_acro');
 
 %% Option 3: Log Data, Zscore to Median
 comb_LFP_logscaled = {};
