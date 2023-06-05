@@ -1,6 +1,5 @@
 
 pathsave = 'C:\Users\Owner\Desktop\SVR Code + Figs\MATLAB scripts\Analyses In Progress\Percept\Nicole 417\';
-% Load in the collected patient data
 %% Left Hem
 dateLeft = {};
 stimsL = [];
@@ -91,78 +90,78 @@ for i = 1:length(data_VCVS)
             end
         end
     end
-% % % %     curr_dat = data_VCVS(i).dat1.stimVlfp;
-% % % %     if isempty(curr_dat)
-% % % %         continue
-% % % %     end
-% % % %     for j = 1:length(curr_dat)
-% % % %         stream = curr_dat(j);
-% % % %         if ~isfield(stream,'label')
-% % % %             continue
-% % % %         end
-% % % %         if isempty(stream.label)
-% % % %             continue
-% % % %         end
-% % % %         if ~contains(stream.label,'BL')
-% % % %             continue
-% % % %         end
-% % % %         chans = stream.ch;
-% % % %         for c =1:length(chans)
-% % % %             channel = chans{c};
-% % % %             if isempty(channel)
-% % % %                 continue
-% % % %             end
-% % % %             if contains(channel,'Left','IgnoreCase',true)
-% % % %                 tdL = stream.raw{c};
-% % % %                 if length(tdL)/(60*250) <.1
-% % % %                         continue
-% % % %                     end
-% % % %                 [PSD,freq] = computeSpectrum(tdL);
-% % % %                 PSD = PSD';
-% % % %                 freq = freq';
-% % % %                 powerSpectraLeft = [powerSpectraLeft;PSD];
-% % % %                 freqLeft = [freqLeft;freq];
-% % % %                 indexL = indexL+1;
-% % % %                 dateLeft{indexL} = date;
-% % % %                 if isempty(stream.stim)
-% % % %                     stimsL(indexL) = -1;
-% % % %                 else
-% % % %                     stimsL(indexL) = mode(stream.stim(:,c));
-% % % %                 end
-% % % %                 if contains(channel,'Zero','IgnoreCase',true)
-% % % %                     contactL(indexL) = 1;
-% % % %                 else
-% % % %                     contactL(indexL) = 2;
-% % % %                 end
-% % % %                 durationL(indexL) = length(tdL)/(60*250);
-% % % % 
-% % % %             elseif contains(channel,'Right','IgnoreCase',true)
-% % % %                 tdR = stream.raw{c};
-% % % %                 if length(tdR)/(60*250) <.1
-% % % %                         continue
-% % % %                     end
-% % % %                 [PSD,freq] = computeSpectrum(tdR);
-% % % %                 PSD = PSD';
-% % % %                 freq = freq';
-% % % %                 powerSpectraRight = [powerSpectraRight;PSD];
-% % % %                 freqRight = [freqRight;freq];
-% % % %                 indexR = indexR+1;
-% % % %                 dateRight{indexR} = date;
-% % % %                 if isempty(stream.stim)
-% % % %                     stimsR(indexR) = -1;
-% % % %                 else
-% % % %                     stimsR(indexR) = mode(stream.stim(:,c));
-% % % %                 end
-% % % %                 if contains(channel,'Zero','IgnoreCase',true)
-% % % %                     contactR(indexR) = 1;
-% % % %                 else
-% % % %                     contactR(indexR) = 2;
-% % % %                 end
-% % % %                 durationR(indexR) = length(tdR)/(60*250);
-% % % % 
-% % % %             end
-% % % %         end
-% % % %     end
+    curr_dat = data_VCVS(i).dat1.stimVlfp;
+    if isempty(curr_dat)
+        continue
+    end
+    for j = 1:length(curr_dat)
+        stream = curr_dat(j);
+        if ~isfield(stream,'label')
+            continue
+        end
+        if isempty(stream.label)
+            continue
+        end
+        if ~contains(stream.label,'BL')
+            continue
+        end
+        chans = stream.ch;
+        for c =1:length(chans)
+            channel = chans{c};
+            if isempty(channel)
+                continue
+            end
+            if contains(channel,'Left','IgnoreCase',true)
+                tdL = stream.raw{c};
+                if length(tdL)/(60*250) <.1
+                        continue
+                    end
+                [PSD,freq] = computeSpectrum(tdL);
+                PSD = PSD';
+                freq = freq';
+                powerSpectraLeft = [powerSpectraLeft;PSD];
+                freqLeft = [freqLeft;freq];
+                indexL = indexL+1;
+                dateLeft{indexL} = date;
+                if isempty(stream.stim)
+                    stimsL(indexL) = -1;
+                else
+                    stimsL(indexL) = mode(stream.stim(:,c));
+                end
+                if contains(channel,'Zero','IgnoreCase',true)
+                    contactL(indexL) = 1;
+                else
+                    contactL(indexL) = 2;
+                end
+                durationL(indexL) = length(tdL)/(60*250);
+
+            elseif contains(channel,'Right','IgnoreCase',true)
+                tdR = stream.raw{c};
+                if length(tdR)/(60*250) <.1
+                        continue
+                    end
+                [PSD,freq] = computeSpectrum(tdR);
+                PSD = PSD';
+                freq = freq';
+                powerSpectraRight = [powerSpectraRight;PSD];
+                freqRight = [freqRight;freq];
+                indexR = indexR+1;
+                dateRight{indexR} = date;
+                if isempty(stream.stim)
+                    stimsR(indexR) = -1;
+                else
+                    stimsR(indexR) = mode(stream.stim(:,c));
+                end
+                if contains(channel,'Zero','IgnoreCase',true)
+                    contactR(indexR) = 1;
+                else
+                    contactR(indexR) = 2;
+                end
+                durationR(indexR) = length(tdR)/(60*250);
+
+            end
+        end
+    end
 end
 
 
@@ -171,7 +170,7 @@ legendL = strcat(extractBefore(dateLeft,'T')',{';   '},string(stimsL'),{'mA  '},
 legendR = strcat(extractBefore(dateRight,'T')',{';   '},string(stimsR'),{'mA  '},string(contactR'),{';   '},string(durationR'),{'min'});
 
 %%
-%save('Z:\OCD_Data\Percept\Data\Time Domain Data\001\FOOOF_ready.mat',"freqLeft","freqRight","powerSpectraRight","powerSpectraLeft","legendL","legendR");
+
 cmap = colormap('jet');
 close all
 fig = figure;
@@ -197,9 +196,9 @@ legend(cellstr(legendR));
 sgtitle(strcat('00',string(patient),' VCVS'))
 linkaxes
 xlim([0,60])
- saveas(gcf,strcat(pathsave,'00',string(patient),' VCVSoff.png'))
- savefig(gcf,strcat(pathsave,'00',string(patient),' VCVSoff.fig'))
- close all
+%  saveas(gcf,strcat(pathsave,'00',string(patient),' VCVS.png'))
+%  savefig(gcf,strcat(pathsave,'00',string(patient),' VCVS.fig'))
+%  close all
 
 
 

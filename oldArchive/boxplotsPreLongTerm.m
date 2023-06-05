@@ -4,19 +4,23 @@ box = 1;
 useAnthonys = 1;
 chronic = 1;
 savefig = 0;
+rolling = 0;
 if chronic
-    dayspre = {[-100:-1];[-100:-1];[-100:-1];[-100:-1];[-100:-1];[-100:-1]};
+    dayspre = {[-100:-1];[-100:-1];[-100:-1];[-100:-1];[-100:-1];};
     dayspost = {[48:100];[0:29,70:999];[176:665];[95:290];[0:396]};
-    figsave = 'C:\Users\Owner\Desktop\Percept Runnig Circadian Data\Figures\chronicrolling\';
+    figsave = 'C:\Users\Owner\Desktop\Percept Runnig Circadian Data\Figures\chronic\';
     labels = {'Pre - DBS','Long Term Status'};
 else
-    day = 5;
+    day = 4;
     dayspre = {[-day:-1];[-day:-1];[-day:-1];[-day:-1];[-day:-1]}
     dayspost = {[1:day];[1:day];[1:day];[1:day];[1:day];};
-    figsave = 'C:\Users\Owner\Desktop\Percept Runnig Circadian Data\Figures\pm9rolling\';
+    figsave = 'C:\Users\Owner\Desktop\Percept Runnig Circadian Data\Figures\day\';
     labels = {'5 Days Pre - DBS','5 Days Post DBS'};
 end
-
+if rolling
+    figsave = strcat(figsave,'rolling\');
+end
+%%
 distspreacro = {};
 distspostacro = {};
 
@@ -32,7 +36,7 @@ distspostcircvar = {};
 distspreentropy = {};
 distspostentropy = {};
 
-
+%%
 c_red = [245,0,40]/255;
 c_blue = [50,50,255]/255;
 c_orange = [127,63,152]/255;
@@ -47,16 +51,16 @@ for i = 1:5
             indspost = indspost(1:min(length(indspre),length(indspost)));
         end
 
-        distspreacro{i,j} = comb_acro{i,1}(:,indspre,1);
-        distspreamp{i,j} = comb_amp{i,1}(:,indspre,1);
-        distsprecircmean{i,2} = comb_circmean{i,1}(indspre);
-        distsprecircvar{i,2} = comb_circvar{i,1}(indspre);
+% %         distspreacro{i,j} = comb_acro{i,1}(:,indspre,1);
+% %         distspreamp{i,j} = comb_amp{i,1}(:,indspre,1);
+% %         distsprecircmean{i,2} = comb_circmean{i,1}(indspre);
+% %         distsprecircvar{i,2} = comb_circvar{i,1}(indspre);
         distspreentropy{i,2} = comb_entropy{i,1}(indspre);
 
-        distspostacro{i,j} = comb_acro{i,1}(:,indspost,1);
-        distspostamp{i,j} = comb_amp{i,1}(:,indspost,1);
-        distspostcircmean{i,2} = comb_circmean{i,1}(indspost);
-        distspostcircvar{i,2} = comb_circvar{i,1}(indspost);
+% %         distspostacro{i,j} = comb_acro{i,1}(:,indspost,1);
+% %         distspostamp{i,j} = comb_amp{i,1}(:,indspost,1);
+% %         distspostcircmean{i,2} = comb_circmean{i,1}(indspost);
+% %         distspostcircvar{i,2} = comb_circvar{i,1}(indspost);
         distspostentropy{i,2} = comb_entropy{i,1}(indspost);
     end
 end
@@ -87,7 +91,8 @@ for i = [1,3,4,2,5]
         end
     end
 
-    [~,p{i,2}] = ttest2(distspreacro{i,2},distspostacro{i,2},'VarType','unequal');
+    p{i,2} = circ_wwtest(distspreacro{i,2},distspostacro{i,2});
+    %ttest2(distspreacro{i,2},distspostacro{i,2},'VarType','unequal');
     title(p{i,1})
 end
 linkaxes
@@ -159,7 +164,8 @@ if useAnthonys
             end
         end
 
-        [~,p{i,4}] = ttest2(distsprecircmean{i,2},distspostcircmean{i,2},'VarType','unequal');
+        p{i,4} = circ_wwtest(distsprecircmean{i,2},distspostcircmean{i,2});
+        %ttest2(distsprecircmean{i,2},distspostcircmean{i,2},'VarType','unequal');
         title(p{i,1})
     end
     linkaxes
@@ -238,16 +244,16 @@ if useAnthonys
     if savefig
         saveas(f,strcat(figsave,'entropyBox.png'));
     end
-    close all
+    %close all
 
     pvals = cell2table(p,'VariableNames',{'Patient','Acrophase','Amplitude','Circular Mean','Circular Variance','Sample Entropy'});
 
 end
 if savefig
     if chronic
-        save('C:\Users\Owner\Desktop\Percept Runnig Circadian Data\New Stats\pvaluestatsrolling.mat','pvals');
+        save(strcat(figsave,'pvaluestats.mat'),'pvals');
     else
-        save('C:\Users\Owner\Desktop\Percept Runnig Circadian Data\New Stats\pvaluestatsdayrolling.mat','pvals');
+        save(strcat(figsave,'pvaluestatsday.mat'),'pvals');
     end
 end
 
