@@ -1,11 +1,14 @@
-x_tick_scale = 20;
-ylims = [0,0.06]; % 0-0.06 for entropy, 0-1 for R^2, 0-1.2 for amplitude
+x_tick_scale = 50;
+pos = [0,0,1800,1200]
+ylims = []; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
+tick_height = [0.005,0.005]; % x and y tick height
 y_name = 'Sample Entropy'; %y axis label
 stat = comb_entropy; %change metric variable here
 EMA_window = 10; %number of days for exponential moving average (EMA)
 sz = 20; %dot sizes
 EMA_sz = 3; %line width for EMA
 patch_alpha = 0.3; %transparency for background colors
+font_size = 12;
 
 %colors
 c_red = [245,0,40]/255;
@@ -23,7 +26,7 @@ orange={[];[0:29,70:296];[];[];[0:396]};
 
 for k=1 %hemisphere
     fig=tiledlayout(5,1);
-    for j=1:5  
+    for j=[3,1,4,5,2]  
         c1 = stat{j,k}(1,:,1);
     
         h{j}=nexttile;
@@ -49,16 +52,27 @@ for k=1 %hemisphere
         end
         
         %scatter plot of values
-        scatter(comb_days{j,k},c1,sz,[0.5,0.5,0.5],'filled')
-        title(comb_LFP_norm_matrix{j,1},'FontSize',20)
-        if j==5
-            xlabel('Days Since DBS On')
-        end
-        ylabel('Sample Entropy')
         xticks = x_tick_scale*ceil(min(comb_days{j,1})):x_tick_scale:x_tick_scale*floor(max(comb_days{j,k}));
-        set(gca,'XTick',xticks,'XTickLabels', arrayfun(@num2str, xticks, 'UniformOutput', 0))
         xlim([min(comb_days{j,k}-1),max(comb_days{j,k}+1)])
-        ylim(ylims)
+        if j==2
+            scatter(comb_days{j,k},c1,sz,[0.5,0.5,0.5],'filled')
+            xlabel('Days Since DBS On',FontSize=font_size)
+            set(gca,'XTick',xticks,'XTickLabels', arrayfun(@num2str, xticks, 'UniformOutput', 0),'FontSize',font_size,'TickLength',tick_height)
+        elseif j==5
+            scatter(comb_days{j,k}(2:end),c1(2:end),sz,[0.5,0.5,0.5],'filled')
+            set(gca,'XTick',[],'XTickLabels',[],'TickLength',tick_height,'FontSize',font_size)
+        else
+            scatter(comb_days{j,k},c1,sz,[0.5,0.5,0.5],'filled')
+            set(gca,'XTick',[],'XTickLabels',[],'TickLength',tick_height,'FontSize',font_size)
+        end
+        %title(comb_LFP_norm_matrix{j,1},'FontSize',20)
+
+        ylabel(y_name)
+        if ~isempty(ylims)
+            ylim(ylims)
+        else
+            ylim([0,max(c1(2:end))])
+        end
         
         %EMA plot       
         start_index=find(diff(comb_days{j,k})>1);
@@ -76,4 +90,5 @@ for k=1 %hemisphere
     end
 end
 linkaxes([h{:}],'x')
-fig.Padding='Tight';
+fig.Padding='Compact';
+set(gcf,'Position',pos)
