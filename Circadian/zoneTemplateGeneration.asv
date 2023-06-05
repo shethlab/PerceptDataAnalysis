@@ -1,6 +1,6 @@
 %% Template Generation
 
-function zoneTemplateGeneration(circadianData,acrophases,pvals,days,smooth,overlaid,wrapped,daystoplot,bl)
+function zoneTemplateGeneration(circadianData,acrophases,pvals,days,smooth,overlaid,wrapped,daystoplot,)
 
 
 %% Zone Days and Colors
@@ -67,7 +67,7 @@ end
 
 %% Plot Templates Wrapped or Unwrapped
 if wrapped
-    for h = 2:2+bl
+    for h = 2:3
         figure;
         %figure('Position', get(0, 'Screensize'));
 
@@ -91,7 +91,7 @@ if wrapped
 
 
 else
-    for h = 2:2+bl
+    for h = 2:3
         figure('Position', get(0, 'Screensize'));
         t = tiledlayout(2-overlaid,5);
         j = 1;
