@@ -1,0 +1,12 @@
+filled = {};
+logged = {};
+for i = 1:5
+    filled{i,1} = comb_LFP_raw_matrix{i,1};
+    logged{i,1} = comb_LFP_raw_matrix{i,1};
+    for j = 2:3
+        filled{i,j} = fillData(comb_LFP_raw_matrix{i,j},comb_days{i,j-1});
+        logged{i,j} = decibelize(filled{i,j});
+    end
+end
+ 
+zoneTemplateGeneration(logged,comb_acro,comb_p,comb_days,1,1,1)
