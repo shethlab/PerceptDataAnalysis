@@ -1,4 +1,4 @@
-function smoothedRotatedMatrix = smoothRotate(matrix,acrophase,pval)
+function smoothedRotatedMatrix = smoothRotate(matrix,acrophase,pval,smooth)
 %% Function to Rotate Circadian Matrices so Acrophases align and Gaussian Smooth Each Day
 %% Inputs -----
 %% matrix: 144 x numDays matrix. 
@@ -20,7 +20,7 @@ subtracted_acro = zeros(width(matrix),1);
 
 
 %% Generate Array of Acrophases to be subtracted from matrix
-c = 1;
+
 for q = 1:length(subtracted_acro)
     if all(isnan(matrix(:,q)))
         continue
@@ -28,7 +28,6 @@ for q = 1:length(subtracted_acro)
         continue
     else
         subtracted_acro(q) = acrophase(q);
-        %c=c+1;
     end
 end
 
@@ -45,10 +44,14 @@ for j=1:size(matrix,2)
 end
 
 %% Gaussian Smooth Each Day
-smoothedRotatedMatrix = zeros(size(rotated));
-for m = 1:width(rotated)
-    day = rotated(:,m);
-    smoothedRotatedMatrix(:,m) = smoothdata(day,'gaussian');
+if smooth
+    smoothedRotatedMatrix = zeros(size(rotated));
+    for m = 1:width(rotated)
+        day = rotated(:,m);
+        smoothedRotatedMatrix(:,m) = smoothdata(day,'gaussian');
+    end
+else
+    smoothedRotatedMatrix = rotated;
 end
         
 end
