@@ -43,23 +43,23 @@ for i = 1:5
     for j = 2:3
         %% Pre DBS
         [~, indspre] = intersect(days{i,j-1},preDBSdays{i});
-        %indspre=setdiff(indspre,find(isnan(acrophases{i,j-1}(:,:,1))));
+        indspre=setdiff(indspre,find(isnan(acrophases{i,j-1}(:,:,1))));
         templates{i,j}(:,1) = median(smoothedRotatedCircadianMatrices{i,j}(:,indspre),2,'omitnan');
 
 
 
         [~, maniainds] = intersect(days{i,j-1},maniadays{i});
-        %maniainds=setdiff(maniainds,find(isnan(acrophases{i,j-1}(:,:,1))));
+        maniainds=setdiff(maniainds,find(isnan(acrophases{i,j-1}(:,:,1))));
         templates{i,j}(:,2) = median(smoothedRotatedCircadianMatrices{i,j}(:,maniainds),2,'omitnan');
 
 
         [~, postDBSinds] = intersect(days{i,j-1},postDBSdays{i});
-        %postDBSinds=setdiff(postDBSinds,find(isnan(acrophases{i,j-1}(:,:,1))));
+        postDBSinds=setdiff(postDBSinds,find(isnan(acrophases{i,j-1}(:,:,1))));
         templates{i,j}(:,3) = median(smoothedRotatedCircadianMatrices{i,j}(:,postDBSinds),2,'omitnan');
 
 
         [~, indshealth] = intersect(days{i,j-1},healthydays{i});
-        %indshealth=setdiff(indshealth,find(isnan(acrophases{i,j-1}(:,:,1))));
+        indshealth=setdiff(indshealth,find(isnan(acrophases{i,j-1}(:,:,1))));
         templates{i,j}(:,4) = median(smoothedRotatedCircadianMatrices{i,j}(:,indshealth),2,'omitnan');
     end
 end

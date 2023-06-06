@@ -9,10 +9,10 @@ for i = 1:5
     end
 end
  
-zoneTemplateGeneration(logged,comb_acro,comb_p,comb_days,1,1,1,[],1)
+%zoneTemplateGeneration(logged,comb_acro,comb_p,comb_days,1,1,1,[],1)
 %% Left Hem only 
 days = [];
 for j = 1:3
 
-    zoneTemplateGeneration(logged,comb_acro,comb_p,comb_days,0,1,1,daystoplot{j},0);
+    zoneTemplateGeneration(logged,comb_acro,comb_p,comb_days,0,0,1,daystoplot{j},0);
 end
