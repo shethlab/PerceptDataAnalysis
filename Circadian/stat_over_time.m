@@ -23,7 +23,7 @@ c_EMA = [0,0,0];
 red={[];[30:69];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
 blue={[48:100];[];[176:665];[95:273];[]}; %HEALTHY days of blue from Gabriel
 orange={[];[0:29,70:296];[];[];[0:396]};
-
+ema = {};
 for k=1 %hemisphere
     fig=tiledlayout(5,1);
     for j=[3,1,4,5,2]  
@@ -81,10 +81,11 @@ for k=1 %hemisphere
         catch
             start_index=[1,length(comb_days{j,k})+1];
         end
-
+        ema{j,k} = [];
         for m=1:length(start_index)-1
             try
                 plot(comb_days{j,k}(start_index(m)+1:start_index(m+1)-1),movavg(c1(start_index(m)+1:start_index(m+1)-1)',"exponential",5),'Color',c_EMA,'LineWidth',EMA_sz);
+                ema{j,k}(start_index(m)+1:start_index(m+1)-1) = movavg(c1(start_index(m)+1:start_index(m+1)-1)',"exponential",5);
             end
         end
     end
