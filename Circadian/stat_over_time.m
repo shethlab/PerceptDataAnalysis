@@ -1,9 +1,9 @@
 x_tick_scale = 50;
-pos = [0,0,1800,1200]
+pos = [0,0,1800,1200];
 ylims = []; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
 tick_height = [0.005,0.005]; % x and y tick height
 y_name = 'Sample Entropy'; %y axis label
-stat = comb_entropy; %change metric variable here
+stat = comb_amp; %change metric variable here
 EMA_window = 10; %number of days for exponential moving average (EMA)
 sz = 20; %dot sizes
 EMA_sz = 3; %line width for EMA
@@ -24,7 +24,7 @@ red={[];[30:69];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabri
 blue={[48:100];[];[176:665];[95:273];[]}; %HEALTHY days of blue from Gabriel
 orange={[];[0:29,70:296];[];[];[0:396]};
 ema = {};
-for k=1 %hemisphere
+for k=2 %hemisphere
     fig=tiledlayout(5,1);
     for j=[3,1,4,5,2]  
         c1 = stat{j,k}(1,:,1);
@@ -84,8 +84,8 @@ for k=1 %hemisphere
         ema{j,k} = [];
         for m=1:length(start_index)-1
             try
-                plot(comb_days{j,k}(start_index(m)+1:start_index(m+1)-1),movavg(c1(start_index(m)+1:start_index(m+1)-1)',"exponential",5),'Color',c_EMA,'LineWidth',EMA_sz);
-                ema{j,k}(start_index(m)+1:start_index(m+1)-1) = movavg(c1(start_index(m)+1:start_index(m+1)-1)',"exponential",5);
+                plot(comb_days{j,k}(start_index(m)+1:start_index(m+1)-1),movavg(fillmissing(c1(start_index(m)+1:start_index(m+1)-1),'pchip')',"exponential",5),'Color',c_EMA,'LineWidth',EMA_sz);
+                ema{j,k}(start_index(m)+1:start_index(m+1)-1) = movavg(fillmissing(c1(start_index(m)+1:start_index(m+1)-1),'pchip')',"exponential",5);
             end
         end
     end
