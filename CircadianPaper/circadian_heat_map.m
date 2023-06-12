@@ -1,3 +1,4 @@
+%% Load Data
 loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
 load([loaddir,'VCVS_all.mat'])
 
@@ -14,13 +15,13 @@ hem = 1; %left hemisphere = 1, right = 2
 %colors
 c_red = [204,0,0]/255;
 c_blue = [0,0,204]/255;
-c_orange = [229,100,25]/255;
+c_purple = [229,100,25]/255;
 c_yellow = [255,215,0]/255;
 c_white = [255,255,255]/255;
 
-red={[30:69];[0:8];[0:4];[];[];[];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
-blue={[];[176:489];[95:273];[];[];[];[48:100]}; %HEALTHY days of blue from Gabriel
-orange={[197:296];[];[];[];[];[90:396];[]};
+red={[30:69];[0:8];[0:4];[];[];[];[]}; %HYPOMANIA+DISINHIBITION days of red
+blue={[];[176:489];[95:273];[];[];[];[48:100]}; %HEALTHY days of blue
+purple={[197:296];[];[];[];[];[90:396];[]};
 iteration_count=1;
 
 % figure('Units','inches','Renderer','painters','Position',[0 0 5.5 5.5])
@@ -40,14 +41,14 @@ for j=[7,1:4] %starts with 001->008
     [~,red_idx]=intersect(comb_days{j,hem},red{j});
     [~,blue_idx]=intersect(comb_days{j,hem},blue{j});
     [~,yellow_idx]=intersect(comb_days{j,hem},min(comb_days{j,hem}):-1);
-    [~,orange_idx]=intersect(comb_days{j,hem},0:max(comb_days{j,hem}));
+    [~,purple_idx]=intersect(comb_days{j,hem},0:max(comb_days{j,hem}));
 
     c_map=zeros(length(comb_days{j,hem}),3);
     c_map(yellow_idx,:)=repmat(c_yellow,[length(yellow_idx),1]);
     if j==2 | j==3
-        c_map(orange_idx,:)=repmat(c_white,[length(orange_idx),1]);
+        c_map(purple_idx,:)=repmat(c_white,[length(purple_idx),1]);
     else
-    c_map(orange_idx,:)=repmat(c_orange,[length(orange_idx),1]);
+    c_map(purple_idx,:)=repmat(c_purple,[length(purple_idx),1]);
     end
     c_map(red_idx,:)=repmat(c_red,[length(red_idx),1]);
     c_map(blue_idx,:)=repmat(c_blue,[length(blue_idx),1]);

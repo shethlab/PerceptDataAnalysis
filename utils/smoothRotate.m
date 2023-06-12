@@ -1,4 +1,4 @@
-function smoothedRotatedMatrix = smoothRotate(matrix,acrophase,pval,smooth)
+  function smoothedRotatedMatrix = smoothRotate(matrix,acrophase,pval,smooth)
 %% Function to Rotate Circadian Matrices so Acrophases align and Gaussian Smooth Each Day
 %% Inputs -----
 %% matrix: 144 x numDays matrix. 
@@ -10,8 +10,8 @@ function smoothedRotatedMatrix = smoothRotate(matrix,acrophase,pval,smooth)
 % Only dates for which pval<=0.05 are rotated by acrophase
 
 %% Output -----
-%% smoothedRotatedMatrix: equivalent size to matrix, each column of matrix 
-%% has been rotated by corresponding acrophase subject to pvalue significance
+% smoothedRotatedMatrix: equivalent size to matrix, each column of matrix 
+% has been rotated by corresponding acrophase subject to pvalue significance
 
 
 t=[]; 

@@ -1,4 +1,4 @@
-output_file_name = '/Users/sameerrajesh/Desktop/006.gif';
+output_file_name = '006.gif';
 pre_DBS_FPS = 1; %frames per second
 post_DBS_FPS = 10; %frames per second
 
@@ -11,7 +11,7 @@ stat = comb_entropy; %change metric variable here
 EMA_window = 10; %number of days for exponential moving average (EMA)
 sz = 25; %dot sizes
 EMA_sz = 3; %line width for EMA
-patch_alpha = .3;%[.85,0.81,.63,.5]; %transparency for background colors
+patch_alpha = [.3 .3 .3 .3];%[.85,0.81,.63,.5]; %transparency for background colors
 
 %colors
 c_red = [245,0,40]/255;
@@ -25,7 +25,7 @@ p_blue = c_blue;%[59,84,165]/256;
 p_purple = c_purple;%[123,51,147]/256;
 p_yellow = c_yellow;%[254,215,0]/256;
 
-c_dots = [168,170,173]/256;
+c_dots = [0.5 0.5 0.5];%[168,170,173]/256;
 c_EMA = [0,0,0];
 
 %color indices
@@ -35,7 +35,7 @@ purple={[];[0:29,70:296];[];[];[0:396]};
 
 for k=1 %hemisphere
     framecount =1;
-    for j=5 %[3,1,4,5,2]
+    for j=5 %[3,1,4,5,2], 3 for responder and 5 for nonresponder
         
         fig=figure;
         set(gcf,'Position',pos,'Color','w')
@@ -134,18 +134,18 @@ for k=1 %hemisphere
                     imwrite(A,map,output_file_name,"gif","LoopCount",Inf,"DelayTime",1/pre_DBS_FPS/post_DBS_FPS);
                     framecount = framecount+1;
                 end
-            elseif framecount<=40%%comb_days{j,k}(a) < 0 | ismember(comb_days{j,k}(a),red{j})%pre-DBS
+            elseif framecount<=40 %% slow for first 40 frames
                 for m = 1:10
                     imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",1/pre_DBS_FPS/post_DBS_FPS);
                     framecount = framecount+1;
                 end
-            elseif framecount >40 & framecount<=120
+            elseif framecount >40 && framecount<=120 %% Double speed for next 80 frames
                 for m = 1:5
                     imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",0.5/pre_DBS_FPS/post_DBS_FPS);
                     framecount = framecount+1;
                 end
             
-            else
+            else %% Full Speed
                 imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",1/post_DBS_FPS);
                 framecount = framecount+1;
             end
