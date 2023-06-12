@@ -1,6 +1,6 @@
-output_file_name = 'C:\Users\Sandy\Downloads\test2.gif';
-pre_DBS_FPS = 10; %frames per second
-post_DBS_FPS = 20; %frames per second
+output_file_name = '/Users/sameerrajesh/Desktop/006.gif';
+pre_DBS_FPS = 1; %frames per second
+post_DBS_FPS = 10; %frames per second
 
 x_tick_scale = 50;
 pos = [0,0,1600,900]; % please keep this in a 16:9 aspect ratio
@@ -11,7 +11,7 @@ stat = comb_entropy; %change metric variable here
 EMA_window = 10; %number of days for exponential moving average (EMA)
 sz = 25; %dot sizes
 EMA_sz = 3; %line width for EMA
-patch_alpha = 0.3; %transparency for background colors
+patch_alpha = [.85,0.81,.63,.5]; %transparency for background colors
 
 %colors
 c_red = [245,0,40]/255;
@@ -19,7 +19,13 @@ c_blue = [50,50,255]/255;
 c_orange = [127,63,152]/255;
 c_yellow = [255,215,0]/255;
 
-c_dots = [0.5,0.5,0.5];
+%patch colors
+p_red = [236, 34, 39]/256;
+p_blue = [59,84,165]/256;
+p_orange = [123,51,147]/256;
+p_yellow = [254,215,0]/256;
+
+c_dots = [168,170,173]/256;
 c_EMA = [0,0,0];
 
 %color indices
@@ -28,10 +34,12 @@ blue={[48:100];[];[176:665];[95:273];[]}; %HEALTHY days of blue from Gabriel
 orange={[];[0:29,70:296];[];[];[0:396]};
 
 for k=1 %hemisphere
-    for j=3%[3,1,4,5,2]
+    framecount =1;
+    for j=5 %[3,1,4,5,2]
+        
         fig=figure;
         set(gcf,'Position',pos,'Color','w')
-
+        
         %Complete all calculations before iterating for speed
         c1 = stat{j,k}(1,:,1);
         xticks = x_tick_scale*ceil(min(comb_days{j,1})):x_tick_scale:x_tick_scale*floor(max(comb_days{j,k}));
@@ -71,7 +79,7 @@ for k=1 %hemisphere
             set(pax,'ThetaDir','clockwise','ThetaZeroLocation','top','FontSize',25,'RTickLabels',[])
             thetaticklabels({'0:00','2:00','4:00','6:00','8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'})
             pax.LineWidth=1.5;
-            rlim([-2,6])
+            rlim([min(min(q)),6])
 
             h=subplot(2,1,2);
             h.Position([2,4])=[0.1,0.25];
@@ -81,26 +89,26 @@ for k=1 %hemisphere
             
             %background patches
             try
-                patch([red{j}(1),red{j}(1),red{j}(end),red{j}(end)],[0,10,10,0],c_red,'FaceAlpha',patch_alpha,'LineStyle','none')
+                patch([red{j}(1),red{j}(1),red{j}(end),red{j}(end)],[0,10,10,0],p_red,'FaceAlpha',patch_alpha(1),'LineStyle','none')
             end
             try
-                patch([blue{j}(1),blue{j}(1),blue{j}(end)+1,blue{j}(end)+1],[0,10,10,0],c_blue,'FaceAlpha',patch_alpha,'LineStyle','none')
+                patch([blue{j}(1),blue{j}(1),blue{j}(end)+1,blue{j}(end)+1],[0,10,10,0],p_blue,'FaceAlpha',patch_alpha(2),'LineStyle','none')
             end
             try %002 has multiple purple regions
                 if ~isempty(find(diff(orange{j})>1,1))
-                    patch([orange{j}(1),orange{j}(1),orange{j}(diff(orange{j})>1)+1,orange{j}(diff(orange{j})>1)+1],[0,10,10,0],c_orange,'FaceAlpha',patch_alpha,'LineStyle','none')
-                    patch([orange{j}(find(diff(orange{j})>1)+1)-1,orange{j}(find(diff(orange{j})>1)+1)-1,orange{j}(end)+1,orange{j}(end)+1],[0,10,10,0],c_orange,'FaceAlpha',patch_alpha,'LineStyle','none')
+                    patch([orange{j}(1),orange{j}(1),orange{j}(diff(orange{j})>1)+1,orange{j}(diff(orange{j})>1)+1],[0,10,10,0],p_orange,'FaceAlpha',patch_alpha(3),'LineStyle','none')
+                    patch([orange{j}(find(diff(orange{j})>1)+1)-1,orange{j}(find(diff(orange{j})>1)+1)-1,orange{j}(end)+1,orange{j}(end)+1],[0,10,10,0],p_orange,'FaceAlpha',patch_alpha(3),'LineStyle','none')
                 else    
-                    patch([orange{j}(1),orange{j}(1),orange{j}(end)+1,orange{j}(end)+1],[0,10,10,0],c_orange,'FaceAlpha',patch_alpha,'LineStyle','none')
+                    patch([orange{j}(1),orange{j}(1),orange{j}(end)+1,orange{j}(end)+1],[0,10,10,0],p_orange,'FaceAlpha',patch_alpha(3),'LineStyle','none')
                 end
             end
             try
-                patch([min(comb_days{j,k})-1,min(comb_days{j,k})-1,0,0],[0,10,10,0],c_yellow,'FaceAlpha',patch_alpha,'LineStyle','none')
+                patch([min(comb_days{j,k})-1,min(comb_days{j,k})-1,0,0],[0,10,10,0],p_yellow,'FaceAlpha',patch_alpha(4),'LineStyle','none')
             end
         
             %scatter plot of values
             xlim([min(comb_days{j,k}-1),max(comb_days{j,k}+1)])            
-            scatter(comb_days{j,k}(1:a),c1(1:a),sz,[0.5,0.5,0.5],'filled')
+            scatter(comb_days{j,k}(1:a),c1(1:a),sz,c_dots,'filled')
             set(gca,'XTick',xticks,'XTickLabels', arrayfun(@num2str, xticks, 'UniformOutput', 0),'FontSize',20,'TickLength',tick_height)
 
             xlabel('Days Since DBS On',FontSize=25)
@@ -122,12 +130,26 @@ for k=1 %hemisphere
             F2=frame2im(F);
             [A,map] = rgb2ind(F2,256);
             if a == 1 %set to repeat first frame
-                imwrite(A,map,output_file_name,"gif","LoopCount",Inf,"DelayTime",1/pre_DBS_FPS);
-            elseif comb_days{j,k}(a) < 0 %pre-DBS
-                imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",1/pre_DBS_FPS);
+                for m = 1:10
+                    imwrite(A,map,output_file_name,"gif","LoopCount",Inf,"DelayTime",1/pre_DBS_FPS/post_DBS_FPS);
+                    framecount = framecount+1;
+                end
+            elseif framecount<=40%%comb_days{j,k}(a) < 0 | ismember(comb_days{j,k}(a),red{j})%pre-DBS
+                for m = 1:10
+                    imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",1/pre_DBS_FPS/post_DBS_FPS);
+                    framecount = framecount+1;
+                end
+            elseif framecount >40 & framecount<=120
+                for m = 1:5
+                    imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",0.5/pre_DBS_FPS/post_DBS_FPS);
+                    framecount = framecount+1;
+                end
+            
             else
                 imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",1/post_DBS_FPS);
+                framecount = framecount+1;
             end
+            
         end
     end
 end
