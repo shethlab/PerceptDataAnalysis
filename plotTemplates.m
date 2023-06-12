@@ -1,5 +1,3 @@
-addpath(genpath('/Users/sameerrajesh/Desktop/Github/PerceptDataAnalysis'))
-
 filled = {};
 logged = {};
 for i = 1:5
