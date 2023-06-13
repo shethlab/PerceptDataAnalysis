@@ -1,16 +1,28 @@
-%% Load Data
-loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
-load([loaddir,'VCVS_all.mat'])
 
+
+%% User Inputs
+hem = 1; % left = 1 ; right = 2
+target = 2; % VCVS = 1 ; GPi = 2
+loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
+savedir = [loaddir,'final_figures/spectrogram_lGPi.pdf'];
+%% Formatting
+% load data
+if target==1
+    load([loaddir,'VCVS_all.mat'])
+else
+    load([loaddir,'GPI_all.mat'])
+%     comb_days{1,hem} = comb_days{1,hem}-48; %001
+%     comb_days{2,hem} = comb_days{2,hem}-9; %005
+end
+pt_names=[{'MR'},{'KK'},{'CF'},{'CD'},{'  '},{'  '},{'SR'}];
 x_tick_scale=20; %adjust distance between x ticks here
-fontsize = 12; %set font size
+fontsize = 8; %set font size
 num_patients=5; %set equal to number of patients to be plotted
-color_height=0.01; %colorbar height
-spectro_height=0.08; %spectrogram height
-horiz_space_bw_plots=0.003; %set horizontal gap between bars/spectrograms
+color_height=0.003; %colorbar height
+spectro_height=0.115; %spectrogram height
+horiz_space_bw_plots=0.005; %set horizontal gap between bars/spectrograms
 width_scale=0.8; %set relative width of all the bars/spectrograms
 max_day_width=319; %enter the max number of days out of the patients to be plotted
-hem = 1; %left hemisphere = 1, right = 2
 
 %colors
 c_red = [204,0,0]/255;
@@ -22,12 +34,36 @@ c_white = [255,255,255]/255;
 red={[30:69];[0:8];[0:4];[];[];[];[]}; %HYPOMANIA+DISINHIBITION days of red
 blue={[];[176:489];[95:273];[];[];[];[48:100]}; %HEALTHY days of blue
 purple={[197:296];[];[];[];[];[90:396];[]};
-iteration_count=1;
 
-% figure('Units','inches','Renderer','painters','Position',[0 0 5.5 5.5])
-for j=[7,1:4] %starts with 001->008
+c_red = [245,0,40]/255;
+c_blue = [50,50,255]/255;
+c_purple = [127,63,152]/255;
+c_yellow = [255,215,0]/255;
+c_white = [255,255,255]/255;
+
+if target==1
+    red={[];[30:69];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
+    blue={[48:100];[];[176:665];[95:290];[]}; %HEALTHY days of blue from Gabriel
+    purple={[0:47];[0:29,70:296];[9:175];[5:94];[0:396]};
+else
+    red={[];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
+    blue={[48:100];[95:290];[]}; %HEALTHY days of blue from Gabriel
+    purple={[0:47];[5:94];[0:396]};
+end
+
+iteration_count=1;
+%% Plotting
+figure('Units','inches','Position',[0 0 4.2 7.3]);
+% GPi plotting exceptions
+if target==1
+    pt_range = [1:5];
+else
+    pt_range = [1,2];
+end
+% pt_range = [1,2,4,5];
+for j=pt_range %starts with 001->008
     
-    LFP_norm_plot_no_nan=comb_LFP_norm_matrix{j,2};
+    LFP_norm_plot_no_nan=comb_LFP_norm_matrix{j,hem+1};
 
     start_index=find(diff(comb_days{j,hem})>1);
     try
@@ -42,13 +78,15 @@ for j=[7,1:4] %starts with 001->008
     [~,blue_idx]=intersect(comb_days{j,hem},blue{j});
     [~,yellow_idx]=intersect(comb_days{j,hem},min(comb_days{j,hem}):-1);
     [~,purple_idx]=intersect(comb_days{j,hem},0:max(comb_days{j,hem}));
+    [~,purple_idx]=intersect(comb_days{j,hem},purple{j});
 
-    c_map=zeros(length(comb_days{j,hem}),3);
+    c_map=ones(length(comb_days{j,hem}),3);
     c_map(yellow_idx,:)=repmat(c_yellow,[length(yellow_idx),1]);
-    if j==2 | j==3
+    
+    if j==1 || j==3 || j==4 || j==2
         c_map(purple_idx,:)=repmat(c_white,[length(purple_idx),1]);
     else
-    c_map(purple_idx,:)=repmat(c_purple,[length(purple_idx),1]);
+        c_map(purple_idx,:)=repmat(c_purple,[length(purple_idx),1]);
     end
     c_map(red_idx,:)=repmat(c_red,[length(red_idx),1]);
     c_map(blue_idx,:)=repmat(c_blue,[length(blue_idx),1]);
@@ -80,6 +118,9 @@ for j=[7,1:4] %starts with 001->008
         end
         set(gca,'Visible','off','Color','none')
         ax1{i}.Position(4)=color_height;
+    end
+    for i = 1:subplot_number
+    ax1{i}.Position(2)=ax1{i}.Position(2)+0.035;
     end
     
     %spectrogram
@@ -114,25 +155,24 @@ for j=[7,1:4] %starts with 001->008
             %yticklabels = {'0:00','4:00','8:00','12:00','16:00','20:00','24:00'};
             yticks = [0.5,36:36:144];
             yticklabels = {'0:00','','12:00','','24:00'};            
-            set(gca,'YTick',yticks,'YTickLabels',yticklabels,'FontSize',fontsize);
-            ylabel(comb_LFP_raw_matrix(j,1))
+            set(gca,'YTick',yticks,'YTickLabels',yticklabels,'TickLength',[0.01,0.01],'FontSize',fontsize);
+            ylabel(strcat('P',comb_LFP_norm_matrix(j,1)))
         else
             set(gca,'YTick',[]);
         end
         
-        set(gca,'XTick',xticks,'XTickLabels', arrayfun(@num2str, xticks, 'UniformOutput', 0),'FontSize',fontsize)
-        ax2{i}.TickLength(1) = 1/ax2{i}.DataAspectRatio(1);
+        set(gca,'LineWidth',0.1,'XTick',xticks,'XTickLabels', arrayfun(@num2str, xticks, 'UniformOutput', 0),'FontSize',fontsize)
         xtickangle(45)
         ax2{i}.Position(4)=spectro_height;
     end
-
+    
     iteration_count=iteration_count+1;
     
 end
 
-% set(gcf,'Position',[0,0,500,500])
-annotation('textbox',[0,0.05,1,0],'String','Days Since DBS On','FontSize',fontsize,'HorizontalAlignment','center','LineStyle','none')
-%set(gcf,'PaperUnits','centimeters','PaperPosition',[0,0,13,17])
-
-%saveas(gcf,[savedir,'spectrograms.png'])
-%saveas(gcf,[savedir,'spectrograms.svg'])
+% set(gcf,'Position',[0,0,750,1301]);
+% set(gcf,'Units','inches','Renderer','painters','Position',[0 0 4.3 7.3])
+% exportgraphics(gcf,savedir,'ContentType','vector');
+% annotation('textbox',[0,0.05,1,0],'String','Days Since DBS Activation','FontSize',fontsize,'HorizontalAlignment','center','LineStyle','none')
+% set(gcf,'PaperUnits','centimeters','PaperPosition',[0,0,13,17])
+% saveas(gcf,savedir);

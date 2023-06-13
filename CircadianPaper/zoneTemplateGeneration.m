@@ -107,14 +107,14 @@ if wrapped
 
 else
     for h = 2:2+bl
-        figure('Position', get(0, 'Screensize'));
-        t = tiledlayout(2-overlaid,5);
+        figure('units','inches','position',[1 1 2 5]);%('Position', get(0, 'Screensize'));
+        t = tiledlayout(5,2-overlaid);
         j = 1;
         for i =[1,3,4,2,5]
             nexttile(j)
             %plot((0:287)/6,[templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan');templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan')],'Color',c_yellow,'LineWidth',2);
             plot((0:287)/6,[templates{i,h}(:,1);templates{i,h}(:,1)],'Color',c_yellow,'LineWidth',2);
-
+            plot((0:287)/6,[templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan');templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan')],'Color',c_yellow,'LineWidth',2);
             title(smoothedRotatedCircadianMatrices{i,1});
             hold on
             %plot((0:143)/6,templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan'),'Color',c_red,'LineWidth',2);
@@ -130,8 +130,7 @@ else
             plot((0:287)/6,[templates{i,h}(:,4);templates{i,h}(:,4)],'Color',c_blue,'LineWidth',2);
 
             title(smoothedRotatedCircadianMatrices{i,1});
-            linkaxes
-
+            linkaxes;
             j = j+1;
         end
         title(t,hems{h-1});

@@ -1,4 +1,5 @@
-addpath(genpath('C:\Users\Owner\Documents\GitHub\PerceptDataAnalysis'))
+addpath(genpath('/Users/nabeeldiab/Documents/GitHub/PerceptDataAnalysis'));
+load('/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/VCVS_all_daily_stats.mat');
 filled = {};
 logged = {};
 for i = 1:5
@@ -10,12 +11,11 @@ for i = 1:5
     end
 end
  
-zoneTemplateGeneration(logged,comb_acro,comb_p,comb_days,1,1,1,[],0)
 zoneTemplateGeneration(logged,comb_acro,comb_p,comb_days,1,1,0,[],0)
 
 %% Left Hem only 
 days = [];
 for j = 1:3
 
-    zoneTemplateGeneration(logged,comb_acro,comb_p,comb_days,0,0,1,daystoplot{j},0);
+%     zoneTemplateGeneration(logged,comb_acro,comb_p,comb_days,0,0,1,daystoplot{j},0);
 end

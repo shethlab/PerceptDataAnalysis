@@ -2,77 +2,104 @@
 close all
 
 %% User inputs
-hem = 'left';
-loaddir = 'C:\Users\Nicole\OneDrive\Documents\Postdoc\Percept OCD\figure3\';
-savedir = loaddir;
+hem = 1; % left = 1 ; right = 2
+target = 2; % VCVS = 1 ; GPi = 2
+sz = 10; % marker size
+loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
+savedir = [loaddir,'final_figures/acro_lGPi_small.svg'];
 %%
-circadian_heat_map;
-% load('acro_no_overlap.mat')
-% load('amplitude_no_overlap.mat')
-% load('p_no_overlap.mat')
-addpath(genpath(''))
-load([loaddir,'acrophase.mat'])
-load([loaddir,'amplitude.mat'])
-load([loaddir,'p.mat'])
-
-if strcmp(hem,'left')
-    hemi = 1;
+% load data
+if target==1
+    load([loaddir,'VCVS_all.mat'])
 else
-    hemi = 2;
+    load([loaddir,'GPI_all.mat'])
+    
 end
-for i=1:7
-comb_amp{i,hemi}(:,all(isnan(comb_acro{i,hemi}),1))=[];
-comb_p{i,hemi}(:,all(isnan(comb_acro{i,hemi}),1))=[];
-comb_acro{i,hemi}(:,all(isnan(comb_acro{i,hemi}),1))=[];
+% patient initial list
+% pt_names=[{'SR'},{'MR'},{'KK'},{'CF'},{'CD'}];
+% GPi plotting exceptions
+if target==1
+    pt_range = [1:5];
+else
+    pt_range = [1,2,2,2,2];
 end
 
-sz = 20;
-% comb_acro{7,1}(151:547) = [];
-% comb_amp{7,1}(151:547) = [];
-% comb_p{7,1}(151:547) = [];
-%comb_days{7,1}(151:157) = [];
+%colors
+c_red = [245,0,40]/255;
+c_blue = [50,50,255]/255;
+c_purple = [127,63,152]/255;
+c_yellow = [255,215,0]/255;
+c_white = [255,255,255]/255;
 
-red={[15:196];[0:35];[0:19,];[];[];[];[0:54]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
-blue={[];[176:364];[95:273];[];[];[];[55:100]}; %HEALTHY days of blue from Gabriel
-
+if target==1
+    red={[];[30:69];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
+    blue={[48:100];[];[176:665];[95:290];[]}; %HEALTHY days of blue from Gabriel
+    purple={[0:47];[0:29,70:296];[9:175];[5:94];[0:396]};
+else
+    red={[];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
+    blue={[48:100];[95:290];[]}; %HEALTHY days of blue from Gabriel
+    purple={[0:47];[5:94];[0:396]};
+end
 total_height=5;
-fig=tiledlayout(total_height*total_height,1);
-
-for j=[7,1:4]
+figure('Position',[0,0,750,200])
+for j=pt_range
     nexttile([total_height,1])
     
     %generate color map
-    [~,red_idx]=intersect(comb_days{j,hemi},red{j});
-    [~,blue_idx]=intersect(comb_days{j,hemi},blue{j});
-    [~,purple_idx]=intersect(comb_days{j,hemi},min(comb_days{j,hemi}):-1);
-    [~,yellow_idx]=intersect(comb_days{j,hemi},0:max(comb_days{j,hemi}));
+    [~,red_idx]=intersect(comb_days{j,hem},red{j});
+    [~,blue_idx]=intersect(comb_days{j,hem},blue{j});
+    [~,yellow_idx]=intersect(comb_days{j,hem},min(comb_days{j,hem}):-1);
+    [~,purple_idx]=intersect(comb_days{j,hem},purple{j});
 
-    c_map=zeros(length(comb_days{j,hemi}),3);
-   %c_map(purple_idx,:)=repmat([0.6,0,0.8],[length(purple_idx),1]);
-    c_map([yellow_idx;purple_idx],:)=repmat([255, 215, 0]/255,[length(yellow_idx)+length(purple_idx),1]);
-    c_map(red_idx,:)=repmat([0.8,0,0],[length(red_idx),1]);
-    c_map(blue_idx,:)=repmat([0,0,0.8],[length(blue_idx),1]);
+    c_map=zeros(length(comb_days{j,hem}),3);
+    c_map(purple_idx,:)=repmat(c_purple,[length(purple_idx),1]);
+    c_map(yellow_idx,:)=repmat(c_yellow,[length(yellow_idx),1]);
+    c_map(red_idx,:)=repmat(c_red,[length(red_idx),1]);
+    c_map(blue_idx,:)=repmat(c_blue,[length(blue_idx),1]);
+
+    
     
     %plot significant points
-    %polarscatter(comb_acro{j,hemi}(comb_p{j,hemi}<0.05)/24*2*pi,comb_amp{j,hemi}(comb_p{j,hemi}<0.05),sz,c_map(comb_p{j,hemi}<0.05,:),'filled','MarkerFaceAlpha',0.7)
-    polarscatter(comb_acro{j,hemi}(comb_p{j,hemi}<0.05),comb_amp{j,hemi}(comb_p{j,hemi}<0.05),sz,c_map(comb_p{j,hemi}<0.05,:),'filled','MarkerFaceAlpha',0.7)
+    polarscatter(comb_acro{j,hem}(comb_p{j,hem}<0.05),comb_amp{j,hem}(comb_p{j,hem}<0.05),sz,c_map(comb_p{j,hem}<0.05,:),'filled','MarkerFaceAlpha',0.7)
 
     hold on
 
     %plot non-significant points with reduced alpha
-    %polarscatter(comb_acro{j,hemi}(comb_p{j,hemi}<1)/24*2*pi,comb_amp{j,hemi}(comb_p{j,hemi}<1),sz,c_map(comb_p{j,hemi}<1,:),'filled','MarkerFaceAlpha',0.3)
-    polarscatter(comb_acro{j,hemi}(comb_p{j,hemi}<1),comb_amp{j,hemi}(comb_p{j,hemi}<1),sz,c_map(comb_p{j,hemi}<1,:),'filled','MarkerFaceAlpha',0.3)
-
-    hold off
+    polarscatter(comb_acro{j,hem}(comb_p{j,hem}>=0.05),comb_amp{j,hem}(comb_p{j,hem}>=0.05),sz,c_map(comb_p{j,hem}>=0.05,:),'filled','MarkerFaceAlpha',0.3)
     
+    hold off
+   
+    %hide purple dots for responders
+    if (j==1 || j==3 || j== 4 || j==2) && ~isempty(purple_idx)
+        comb_p{j,hem}(purple_idx(1):purple_idx(end))=0.05;
+    polarscatter(comb_acro{j,hem}(comb_p{j,hem}<0.05),comb_amp{j,hem}(comb_p{j,hem}<0.05),sz,c_map(comb_p{j,hem}<0.05,:),'filled','MarkerFaceAlpha',0.7)
+
+    hold on
+
+    polarscatter(comb_acro{j,hem}(comb_p{j,hem}>0.05),comb_amp{j,hem}(comb_p{j,hem}>0.05),sz,c_map(comb_p{j,hem}>0.05,:),'filled','MarkerFaceAlpha',0.3)
+    
+    hold off
+    else
+    end
+
     %change plot axis properties
     pax=gca;
     pax.ThetaDir='clockwise';
     pax.ThetaZeroLocation='top';
     thetaticklabels({'0:00','2:00','4:00','6:00','8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'})
-    %pax.RAxis.Label.String=['Amplitude'; '(Z-Score)'];
-    pax.RAxis.Label.Position=[-5,mean(rlim)];
+%     pax.RAxis.Label.String=['Amplitude'; '(Z-Score)'];
+%     pax.RAxis.Label.Position=[-5,mean(rlim)];
+    subtitle(strcat('P',comb_LFP_raw_matrix(j,1)));
+    pax.FontSize=8;
+    pax.RAxisLocation=0;
+    if j==1
+        rlim(pax,[0,1.2]);
+        rticks(pax,[0,0.3,0.6,0.9]);
+        rticklabels(pax,[0,0.3,0.6,0.9]);
+    else
+        rlim(pax,[0,1]);
+        rticks(pax,[0,0.2,0.4,0.6,0.8]);
+        rticklabels(pax,[0,0.2,0.4,0.6,0.8]);
+    end
 end
-fig.Padding="tight";
-saveas(gcf,[savedir,'acrophase.png'])
-saveas(gcf,[savedir,'acrophase.svg'])
+% saveas(gcf, savedir);
