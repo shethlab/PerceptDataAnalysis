@@ -1,4 +1,4 @@
-output_file_name = '/Users/sameerrajesh/Desktop/006.gif';
+output_file_name = '006.gif';
 pre_DBS_FPS = 1; %frames per second
 post_DBS_FPS = 10; %frames per second
 
@@ -11,31 +11,31 @@ stat = comb_entropy; %change metric variable here
 EMA_window = 10; %number of days for exponential moving average (EMA)
 sz = 25; %dot sizes
 EMA_sz = 3; %line width for EMA
-patch_alpha = [.85,0.81,.63,.5]; %transparency for background colors
+patch_alpha = [.3 .3 .3 .3];%[.85,0.81,.63,.5]; %transparency for background colors
 
 %colors
 c_red = [245,0,40]/255;
 c_blue = [50,50,255]/255;
-c_orange = [127,63,152]/255;
+c_purple = [127,63,152]/255;
 c_yellow = [255,215,0]/255;
 
 %patch colors
-p_red = [236, 34, 39]/256;
-p_blue = [59,84,165]/256;
-p_orange = [123,51,147]/256;
-p_yellow = [254,215,0]/256;
+p_red = c_red;%[236, 34, 39]/256;
+p_blue = c_blue;%[59,84,165]/256;
+p_purple = c_purple;%[123,51,147]/256;
+p_yellow = c_yellow;%[254,215,0]/256;
 
-c_dots = [168,170,173]/256;
+c_dots = [0.5 0.5 0.5];%[168,170,173]/256;
 c_EMA = [0,0,0];
 
 %color indices
 red={[];[30:69];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
 blue={[48:100];[];[176:665];[95:273];[]}; %HEALTHY days of blue from Gabriel
-orange={[];[0:29,70:296];[];[];[0:396]};
+purple={[];[0:29,70:296];[];[];[0:396]};
 
 for k=1 %hemisphere
     framecount =1;
-    for j=5 %[3,1,4,5,2]
+    for j=5 %[3,1,4,5,2], 3 for responder and 5 for nonresponder
         
         fig=figure;
         set(gcf,'Position',pos,'Color','w')
@@ -65,8 +65,8 @@ for k=1 %hemisphere
             subplot(2,1,1)
             if ~isempty(intersect(comb_days{j,k}(a),-999:1))
                 polarplot(0:2*pi/144:2*pi*143/144,q(:,a),'Color',c_yellow,'LineWidth',2)
-            elseif ~isempty(intersect(comb_days{j,k}(a),orange{j}))
-                polarplot(0:2*pi/144:2*pi*143/144,q(:,a),'Color',c_orange,'LineWidth',2)
+            elseif ~isempty(intersect(comb_days{j,k}(a),purple{j}))
+                polarplot(0:2*pi/144:2*pi*143/144,q(:,a),'Color',c_purple,'LineWidth',2)
             elseif ~isempty(intersect(comb_days{j,k}(a),red{j}))
                 polarplot(0:2*pi/144:2*pi*143/144,q(:,a),'Color',c_red,'LineWidth',2)
             elseif ~isempty(intersect(comb_days{j,k}(a),blue{j}))
@@ -95,11 +95,11 @@ for k=1 %hemisphere
                 patch([blue{j}(1),blue{j}(1),blue{j}(end)+1,blue{j}(end)+1],[0,10,10,0],p_blue,'FaceAlpha',patch_alpha(2),'LineStyle','none')
             end
             try %002 has multiple purple regions
-                if ~isempty(find(diff(orange{j})>1,1))
-                    patch([orange{j}(1),orange{j}(1),orange{j}(diff(orange{j})>1)+1,orange{j}(diff(orange{j})>1)+1],[0,10,10,0],p_orange,'FaceAlpha',patch_alpha(3),'LineStyle','none')
-                    patch([orange{j}(find(diff(orange{j})>1)+1)-1,orange{j}(find(diff(orange{j})>1)+1)-1,orange{j}(end)+1,orange{j}(end)+1],[0,10,10,0],p_orange,'FaceAlpha',patch_alpha(3),'LineStyle','none')
+                if ~isempty(find(diff(purple{j})>1,1))
+                    patch([purple{j}(1),purple{j}(1),purple{j}(diff(purple{j})>1)+1,purple{j}(diff(purple{j})>1)+1],[0,10,10,0],p_purple,'FaceAlpha',patch_alpha(3),'LineStyle','none')
+                    patch([purple{j}(find(diff(purple{j})>1)+1)-1,purple{j}(find(diff(purple{j})>1)+1)-1,purple{j}(end)+1,purple{j}(end)+1],[0,10,10,0],p_purple,'FaceAlpha',patch_alpha(3),'LineStyle','none')
                 else    
-                    patch([orange{j}(1),orange{j}(1),orange{j}(end)+1,orange{j}(end)+1],[0,10,10,0],p_orange,'FaceAlpha',patch_alpha(3),'LineStyle','none')
+                    patch([purple{j}(1),purple{j}(1),purple{j}(end)+1,purple{j}(end)+1],[0,10,10,0],p_purple,'FaceAlpha',patch_alpha(3),'LineStyle','none')
                 end
             end
             try
@@ -134,18 +134,18 @@ for k=1 %hemisphere
                     imwrite(A,map,output_file_name,"gif","LoopCount",Inf,"DelayTime",1/pre_DBS_FPS/post_DBS_FPS);
                     framecount = framecount+1;
                 end
-            elseif framecount<=40%%comb_days{j,k}(a) < 0 | ismember(comb_days{j,k}(a),red{j})%pre-DBS
+            elseif framecount<=40 %% slow for first 40 frames
                 for m = 1:10
                     imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",1/pre_DBS_FPS/post_DBS_FPS);
                     framecount = framecount+1;
                 end
-            elseif framecount >40 & framecount<=120
+            elseif framecount >40 && framecount<=120 %% Double speed for next 80 frames
                 for m = 1:5
                     imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",0.5/pre_DBS_FPS/post_DBS_FPS);
                     framecount = framecount+1;
                 end
             
-            else
+            else %% Full Speed
                 imwrite(A,map,output_file_name,"gif","WriteMode","append","DelayTime",1/post_DBS_FPS);
                 framecount = framecount+1;
             end

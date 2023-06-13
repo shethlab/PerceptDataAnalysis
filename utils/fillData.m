@@ -1,4 +1,18 @@
 function filledData = fillData(matrix,days)
+% fillData intakes a circadian matrix in 2D format, reshapes into a series of 1D chunks of contiguous segments of time,
+% and filles outliers and missing values using Piecewise Cubic Hermite Polynomial Interpolation (pchip). Outliers must be 
+% 10SD above the mean of the chunk, while nans are filled only if the length of a series of nans is less than 7 (max length of 
+% data to be interpolated is 1 hour). 
+
+%% Inputs ---
+%  matrix : 2D circadian matrix
+%  days: day vector containing day since VCVS DBS On for each column in
+%  matrix
+%% Outputs ---
+% filledData: data with interpolated values reshaped into original 2D
+% format 
+
+
 filledData = [];
 
 start_index=find(diff(days)>1);
