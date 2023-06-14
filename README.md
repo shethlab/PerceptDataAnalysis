@@ -24,12 +24,14 @@ This package is supported for Windows 11. The package has been tested on the fol
 
 ### Python Dependencies
 ```
-numpy
-pandas
-matlab-engine
-datetime
-sklearn
-EntropyHub
+numpy == 1.24.3
+pandas == 2.0.2
+openpyxl == 3.1.2
+matlabengine == 9.14.3
+scikit-learn == 1.2.2
+EntropyHub == 0.2
+plotly == 5.14.1
+kaleido == 0.1.0
 ```
 
 ### MATLAB Dependencies
