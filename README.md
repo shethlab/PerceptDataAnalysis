@@ -13,6 +13,27 @@ Notably, this comparison requires us to be confident that the neural activity we
 
 ![Fig2](https://user-images.githubusercontent.com/68879124/229225749-2cfea2a8-2f9d-43a8-980d-ad9e4868cd61.png)
 
+# System Requirements
+## Hardware requirements
+package requires only a standard computer with enough RAM to support the in-memory operations.
+
+## Software requirements
+### OS Requirements
+This package is supported for Windows 11. The package has been tested on the following systems:
++ Windows 11
+
+### Python Dependencies
+```
+numpy
+pandas
+matlab-engine
+datetime
+sklearn
+EntropyHub
+```
+
+### MATLAB Dependencies
+
 System requirements:
 All MATLAB code run on version 2022b using Windows 11
 Windows Requirements: https://www.mathworks.com/content/dam/mathworks/mathworks-dot-com/support/sysreq/files/system-requirements-release-2022b-windows.pdf
