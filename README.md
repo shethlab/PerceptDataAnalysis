@@ -12,3 +12,36 @@ We experimentally show that this method is similar to the on-chip algorithm. We 
 Notably, this comparison requires us to be confident that the neural activity we recorded during the 1 minute time domain streaming is similar to that during the recorded LFP snapshots. This is likley true since we minimize the amount of time between snapshot recording and time domain recording, and both recordings were taken at rest. However, towards the end of the 1 minute time domain recording, we encountered some artifacts which strongly affect the power spectrum. We did not include segments containing these artifacts in our analysis/comparison detailed above; the relevant artifact and spectral distortion are shown below (data gathered from VC/VS).
 
 ![Fig2](https://user-images.githubusercontent.com/68879124/229225749-2cfea2a8-2f9d-43a8-980d-ad9e4868cd61.png)
+
+System requirements:
+All MATLAB code run on version 2022b using Windows 11
+Windows Requirements: https://www.mathworks.com/content/dam/mathworks/mathworks-dot-com/support/sysreq/files/system-requirements-release-2022b-windows.pdf
+
+Installation guide:
+Mathworks MATLAB 2022b: https://www.mathworks.com/downloads
+    ~30 minute installation
+Respective version of the Signal Processing Toolbox: https://www.mathworks.com/products/signal.html
+    ~5 minute installation
+EntropyHub Toolbox v0.2: https://github.com/MattWillFlood/EntropyHub
+    ~5 minute installation
+
+Demo:
+Data files
+ - VCVS_all_daily_stats.mat
+ - VCVS_all_5day_stats.mat
+ - GPI_all_daily_stats.mat
+ - GPI_all_5day_stats.mat (but we do not include R2 or amp for GPi)
+Total Preprocessing and plotting runtime: <5 minutes
+* Only use "...5day_stats.mat" when plotting R2 or amplitude *
+acrophase_plots.m - run to produce polar cosinor plots
+circadian_heat_map.m - run to produce spectrogram heat maps
+plotTemplates.m - run to produce circular or unwrapped plots of single-day or whole-epoch median 9 Hz power
+    - uses zoneTemplateGeneration.m for plotting, any figure edits should occur here
+PSD_generation_subplot.m - run to visualize intraop 9 Hz peak with PSD for each patient
+stat_calculations.m - calculate sample entropy for each data stream (should this be first?)
+stat_gif_plot.m - run to flip through every single day template for a patient
+stat_over_time.m - run to visualize sample entropy, R2, or cosinor fit amplitude over time for each patient
+
+Instructions for use:
+All code is configured to run after replacing load paths with file locations on local device
+Plotting code can be run in any order, all depend on the same input file

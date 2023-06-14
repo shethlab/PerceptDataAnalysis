@@ -1,14 +1,22 @@
+% load stats
+load('/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/GPI_all_daily_stats.mat')
+
 x_tick_scale = 50;
-pos = [0,0,1800,1200];
+pos = [0,0,5.514,5];
 ylims = []; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
 tick_height = [0.005,0.005]; % x and y tick height
 y_name = 'Sample Entropy'; %y axis label
-stat = comb_amp; %change metric variable here
+stat = comb_entropy; %change metric variable here
 EMA_window = 10; %number of days for exponential moving average (EMA)
-sz = 20; %dot sizes
-EMA_sz = 3; %line width for EMA
+sz = 3; %dot sizes
+EMA_sz = 1; %line width for EMA
 patch_alpha = 0.3; %transparency for background colors
-font_size = 12;
+font_size = 6;
+hem = 2; %left = 1, right = 2
+
+% update GPi days
+% comb_days{1,hem} = comb_days{1,hem}-48;
+comb_days{4,hem} = comb_days{4,hem}-9;
 
 %colors
 c_red = [245,0,40]/255;
@@ -24,9 +32,9 @@ red={[];[30:69];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red
 blue={[48:100];[];[176:665];[95:273];[]}; %HEALTHY days of blue 
 purple={[];[0:29,70:296];[];[];[0:396]};
 ema = {};
-for k=2 %hemisphere
+for k=hem %hemisphere
     fig=tiledlayout(5,1);
-    for j=[3,1,4,5,2]  
+    for j=[1,4]%[3,1,4,5,2]  
         c1 = stat{j,k}(1,:,1);
     
         h{j}=nexttile;
@@ -54,9 +62,9 @@ for k=2 %hemisphere
         %scatter plot of values
         xticks = x_tick_scale*ceil(min(comb_days{j,1})):x_tick_scale:x_tick_scale*floor(max(comb_days{j,k}));
         xlim([min(comb_days{j,k}-1),max(comb_days{j,k}+1)])
-        if j==2
+        if j==4 %plot with x axis label
             scatter(comb_days{j,k},c1,sz,[0.5,0.5,0.5],'filled')
-            xlabel('Days Since DBS On',FontSize=font_size)
+            xlabel('Days Since DBS Activation',FontSize=font_size)
             set(gca,'XTick',xticks,'XTickLabels', arrayfun(@num2str, xticks, 'UniformOutput', 0),'FontSize',font_size,'TickLength',tick_height)
         elseif j==5
             scatter(comb_days{j,k}(2:end),c1(2:end),sz,[0.5,0.5,0.5],'filled')
@@ -70,8 +78,9 @@ for k=2 %hemisphere
         ylabel(y_name)
         if ~isempty(ylims)
             ylim(ylims)
+            yticks(ylims)
         else
-            ylim([0,max(c1(2:end))])
+            ylim(round([0,max(c1(2:end))],2,"decimals","TieBreaker","fromzero"))
         end
         
         %EMA plot       
@@ -88,8 +97,9 @@ for k=2 %hemisphere
                 ema{j,k}(start_index(m)+1:start_index(m+1)-1) = movavg(fillmissing(c1(start_index(m)+1:start_index(m+1)-1),'pchip')',"exponential",5);
             end
         end
+        yticks(round([0,max(c1(2:end))],2,"decimals","TieBreaker","fromzero"));
     end
 end
 linkaxes([h{:}],'x')
 fig.Padding='Compact';
-set(gcf,'Position',pos)
+set(gcf,'Units','inches','Position',pos)
