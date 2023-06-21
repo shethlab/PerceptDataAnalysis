@@ -2,9 +2,9 @@
 
 %% User Inputs
 hem = 1; % left = 1 ; right = 2
-target = 2; % VCVS = 1 ; GPi = 2
+target = 1; % VCVS = 1 ; GPi = 2
 loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
-savedir = [loaddir,'final_figures/spectrogram_lGPi.pdf'];
+savedir = [loaddir,'final_figures/spectrogram_lVCVS.pdf'];
 %% Formatting
 % load data
 if target==1
@@ -53,14 +53,14 @@ end
 
 iteration_count=1;
 %% Plotting
-figure('Units','inches','Position',[0 0 4.2 7.3]);
+figure('Units','inches','Position',[0 0 5.9 7.3]);
 % GPi plotting exceptions
 if target==1
     pt_range = [1:5];
 else
     pt_range = [1,2];
 end
-% pt_range = [1,2,4,5];
+
 for j=pt_range %starts with 001->008
     
     LFP_norm_plot_no_nan=comb_LFP_norm_matrix{j,hem+1};
@@ -83,7 +83,7 @@ for j=pt_range %starts with 001->008
     c_map=ones(length(comb_days{j,hem}),3);
     c_map(yellow_idx,:)=repmat(c_yellow,[length(yellow_idx),1]);
     
-    if j==1 || j==3 || j==4 || j==2
+    if j==1 || j==3 || j==4% || j==2
         c_map(purple_idx,:)=repmat(c_white,[length(purple_idx),1]);
     else
         c_map(purple_idx,:)=repmat(c_purple,[length(purple_idx),1]);
@@ -148,7 +148,7 @@ for j=pt_range %starts with 001->008
         xline(0,'--y','LineWidth',2,'Alpha',1)
     
         colormap(ax2{i},jet)
-        clim([-1,10])
+        clim([-1,7])
         
         if i==1 %plot y axis on first plot
             %yticks = [0.5,24:24:144];
