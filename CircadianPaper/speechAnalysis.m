@@ -11,7 +11,7 @@ patient_labels = {'P005','P006'};
 titles = {'Optimal Contact','Non-Optimal Contact'};
 %% Loop Through Both Pts
 for p = 1:2
-    figure;
+    figure('Units','inches','Position',[0 0 9.3 1.85]);
     tiles = tiledlayout(1,2);
     if p == 1
         c = c_blue;
@@ -54,7 +54,7 @@ for p = 1:2
         %%
         h(m) = nexttile(m);
         yyaxis left
-        plot(tW,wav*1.5+4,'Color',c);
+%         plot(tW,wav*1.5+3,'Color',c);
         hold on
         bar(edges((1:end-1))+w/2,n,'FaceColor',c,'FaceAlpha',.6);
         if p == 1 && m == 2
@@ -63,7 +63,7 @@ for p = 1:2
             title(titles{2});
         end
         ylabel('Words/s (Hz)');
-        ylim([-inf,5]);
+        ylim([-inf,4]);
         hold on
         yyaxis right
         ts_words_per_second = edges((1:end-1))+w/2;
@@ -72,8 +72,8 @@ for p = 1:2
         scatter(t,wAmp,[],'k','filled');
         ylh = ylabel('Word Volume');
         set(ylh,'rotation',-90,'VerticalAlignment','bottom');
-        ylim([-.03,.08]);
-        yticks(0:.02:.08);
+        ylim([-.03,.06]);
+        yticks(0:.02:.06);
         xlim([min(tW),max(tW)]);
         xlabel('Seconds');
         ax = gca;
@@ -88,4 +88,5 @@ for p = 1:2
     linkprop([r41 r31],'Limits')
     linkprop([r42 r32],'Limits')
     title(tiles,strcat(patient_labels{p},' Response to DBS Activation'));
+    saveas(gcf,[loaddir,patient_labels{p},'speech_noaudio.svg'])
 end

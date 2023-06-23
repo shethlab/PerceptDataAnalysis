@@ -1,12 +1,12 @@
 % load stats
-load('/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/VCVS_all_daily_stats.mat')
+load('/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/GPI_all_5day_stats.mat')
 
 x_tick_scale = 50;
 pos = [0,0,7.014,5];
-ylims = []; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
+ylims = [0 1.5]; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
 tick_height = [0.005,0.005]; % x and y tick height
-y_name = 'Sample Entropy'; %y axis label
-stat = comb_entropy; %change metric variable here
+y_name = 'Amplitude'; %y axis label
+stat = comb_amp; %change metric variable here
 EMA_window = 10; %number of days for exponential moving average (EMA)
 sz = 3; %dot sizes
 EMA_sz = 1; %line width for EMA
@@ -97,7 +97,7 @@ for k=hem %hemisphere
                 ema{j,k}(start_index(m)+1:start_index(m+1)-1) = movavg(fillmissing(c1(start_index(m)+1:start_index(m+1)-1),'pchip')',"exponential",5);
             end
         end
-        yticks(round([0,max(c1(2:end))],2,"decimals","TieBreaker","fromzero"));
+%         yticks(round([0,max(c1(2:end))],2,"decimals","TieBreaker","fromzero"));
     end
 end
 linkaxes([h{:}],'x')

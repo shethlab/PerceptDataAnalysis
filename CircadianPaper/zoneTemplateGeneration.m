@@ -31,8 +31,8 @@ else
     healthydays = daystoplot{4};
 end
 
-c_red = [245,0,40]/255;
-c_blue = [50,50,255]/255;
+c_red = [255,0,0]/255;
+c_blue = [0,0,255]/255;
 c_purple = [127,63,152]/255;
 c_yellow = [255,215,0]/255;
 

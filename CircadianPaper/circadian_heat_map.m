@@ -25,9 +25,9 @@ width_scale=0.8; %set relative width of all the bars/spectrograms
 max_day_width=319; %enter the max number of days out of the patients to be plotted
 
 %colors
-c_red = [204,0,0]/255;
-c_blue = [0,0,204]/255;
-c_purple = [229,100,25]/255;
+c_red = [255,0,0]/255;
+c_blue = [0,0,255]/255;
+c_purple = [127,63,152]/255;
 c_yellow = [255,215,0]/255;
 c_white = [255,255,255]/255;
 
