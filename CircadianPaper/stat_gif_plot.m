@@ -1,4 +1,8 @@
-output_file_name = '006.gif';
+output_file_name = 'C:\Users\Owner\Desktop\006.gif';
+outputmp4 = 'C:\Users\Owner\Desktop\006.mp4';
+
+addpath(genpath('C:\Libraries\ffmpeg-r8\'))
+addpath(genpath('C:\Libraries\ffmpeg-20190804-01994c9-win64-static\'))
 pre_DBS_FPS = 1; %frames per second
 post_DBS_FPS = 10; %frames per second
 
@@ -153,3 +157,4 @@ for k=1 %hemisphere
         end
     end
 end
+ffmpegexec(['ffmpeg -y -i ' output_file_name ' -strict -2 -an -b:v 32M -r 10 ' outputmp4]);
