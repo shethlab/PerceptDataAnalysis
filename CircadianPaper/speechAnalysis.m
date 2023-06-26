@@ -1,5 +1,5 @@
 close all
-loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/speech/';
+loaddir = '/Users/sameerrajesh/Desktop/';
 Fs = 48000;
 %colors
 c_red = [255,0,0]/255;
@@ -79,6 +79,11 @@ for p = 1:2
         ax = gca;
         ax.YAxis(1).Color = c;
         ax.YAxis(2).Color = 'k';
+        if m == 1
+            pre{p} = n(find(n));
+        else
+            post{p} = n(find(n));
+        end
 
     end
     r31=h(1).YAxis(1);
@@ -90,3 +95,8 @@ for p = 1:2
     title(tiles,strcat(patient_labels{p},' Response to DBS Activation'));
     saveas(gcf,[loaddir,patient_labels{p},'speech_noaudio.svg'])
 end
+
+
+
+audiostats(1) = detailedStats(post{1},pre{1});
+audiostats(2) = detailedStats(post{2},pre{2});

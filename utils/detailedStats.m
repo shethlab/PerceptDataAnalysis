@@ -3,11 +3,11 @@ function allStats = detailedStats(x,y)
 if ~isempty(x) && ~isempty(y)
     [~,p,ci,stats] = ttest2(x,y,'Vartype','unequal');
     effect = meanEffectSize(x,y,'Effect','cohen','VarianceType','unequal');
-    if p*3 >= 1
-        allStats.pvalue = 1;
-    else
-        allStats.pvalue = p*3;
+    allStats.pvalue = p;
+    if allStats.pvalue <.01
+        allStats.pvalue = 10^ceil(log10(allStats.pvalue));
     end
+
     allStats.tStat = stats.tstat;
     allStats.CI = ci;
     allStats.df = stats.df;
@@ -21,6 +21,6 @@ else
     allStats.effectSize = [];
     allStats.effectCI = [];
 end
-    allStats.sampleSizePre = length(y);
-    allStats.sampleSizePost = length(x);
+allStats.sampleSizePre = length(y);
+allStats.sampleSizePost = length(x);
 end
