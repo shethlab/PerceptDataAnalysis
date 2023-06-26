@@ -4,8 +4,10 @@
 
 function [LFPamplitude,frequency] = computeSpectrum(raw)
 
-%% Convert Average Voltage to Peak Voltage
-working = raw*pi/2;
+%% Conversion Factor
+factor = rms(hanning(250))*2*sqrt(2)*250/256;
+%% Scale Time Domain
+working = raw*factor;
 fs = 250;
 
 %% Compute the Spectrum at the frequencies using a 256 point offline FFT (at fs = 250, this gives roughly 1Hz bin sizes)
