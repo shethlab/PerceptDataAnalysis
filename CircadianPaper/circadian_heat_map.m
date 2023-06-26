@@ -1,10 +1,10 @@
 
 
 %% User Inputs
-hem = 1; % left = 1 ; right = 2
+hem = 2; % left = 1 ; right = 2
 target = 1; % VCVS = 1 ; GPi = 2
 loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
-savedir = [loaddir,'final_figures/spectrogram_lVCVS.pdf'];
+savedir = [loaddir,'final_figures/spectrogram_rVS.pdf'];
 %% Formatting
 % load data
 if target==1
@@ -31,18 +31,12 @@ c_purple = [127,63,152]/255;
 c_yellow = [255,215,0]/255;
 c_white = [255,255,255]/255;
 
-red={[30:69];[0:8];[0:4];[];[];[];[]}; %HYPOMANIA+DISINHIBITION days of red
+red={[30:68];[0:8];[0:4];[];[];[];[]}; %HYPOMANIA+DISINHIBITION days of red
 blue={[];[176:489];[95:273];[];[];[];[48:100]}; %HEALTHY days of blue
 purple={[197:296];[];[];[];[];[90:396];[]};
 
-c_red = [245,0,40]/255;
-c_blue = [50,50,255]/255;
-c_purple = [127,63,152]/255;
-c_yellow = [255,215,0]/255;
-c_white = [255,255,255]/255;
-
 if target==1
-    red={[];[30:69];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
+    red={[];[30:68];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red from Gabriel
     blue={[48:100];[];[176:665];[95:290];[]}; %HEALTHY days of blue from Gabriel
     purple={[0:47];[0:29,70:296];[9:175];[5:94];[0:396]};
 else
@@ -172,7 +166,7 @@ end
 
 % set(gcf,'Position',[0,0,750,1301]);
 % set(gcf,'Units','inches','Renderer','painters','Position',[0 0 4.3 7.3])
-% exportgraphics(gcf,savedir,'ContentType','vector');
+exportgraphics(gcf,savedir,'ContentType','vector');
 % annotation('textbox',[0,0.05,1,0],'String','Days Since DBS Activation','FontSize',fontsize,'HorizontalAlignment','center','LineStyle','none')
 % set(gcf,'PaperUnits','centimeters','PaperPosition',[0,0,13,17])
-% saveas(gcf,savedir);
+

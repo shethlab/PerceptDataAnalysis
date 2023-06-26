@@ -14,8 +14,8 @@ EMA_sz = 3; %line width for EMA
 patch_alpha = [.3 .3 .3 .3];%[.85,0.81,.63,.5]; %transparency for background colors
 
 %colors
-c_red = [245,0,40]/255;
-c_blue = [50,50,255]/255;
+c_red = [255,0,0]/255;
+c_blue = [0,0,255]/255;
 c_purple = [127,63,152]/255;
 c_yellow = [255,215,0]/255;
 
