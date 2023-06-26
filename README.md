@@ -3,7 +3,7 @@ Details of Code involved in the analysis of data from Medtronic Percept PC
 ## computeSpectrum
 computeSpectrum takes in a time domain stream and outputs the result of spectral analysis in the form of an LFP amplitude for each frequency in the desired range. This function is intended to reconstruct the snapshot spectra provided by Medtronic's Percept PC device.
 
-The function in takes raw data and a frequency array specifying the exact frequencies to compute the LFP amplitude. First, it multiplies the raw data by $\pi/2$ to convert it from units of $\textnormal{uV}$ to $\textnormal{uVp}$. This factor is included after review of [Thenaisie et al.](https://iopscience.iop.org/article/10.1088/1741-2552/ac1d5b) and is intended to scale average voltage to peak voltage ($2/\pi$ is the average magnitude of a sine wave of unit amplitude over its period).
+The function in takes raw data and a frequency array specifying the exact frequencies to compute the LFP amplitude. First, it multiplies the raw data by $1.6985$. This factor includes corrections to the time-domain to account for differences in on-chip Power estimation and offline estimation, the latter of which uses Welch's method. Additionally, it converts the data to units of microvolts-peak.
 
 After scaling the raw data, Power Spectral Density is [estimated via Welch's method](https://www.mathworks.com/help/signal/ref/pwelch.html) using a window size of 1 second and overlap size of 0.6 seconds wtih a 256 point FFT. After computing the PSD, LFP amplitude is computed as $\sqrt{\textnormal{PSD}}$. This LFP amplitude in units of $\textnormal{uVp}$ is calculated at each frequency bin, and the result is returned as a vector along with an array of frequencies at which the amplitude was calculated.
 
