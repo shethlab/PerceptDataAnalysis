@@ -1,5 +1,6 @@
 addpath(genpath('/Users/nabeeldiab/Documents/GitHub/PerceptDataAnalysis'));
 load('/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/VCVS_all_daily_stats.mat');
+load('/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/singleDayTemplateDates.mat');
 filled = {};
 logged = {};
 for i = 1:5
