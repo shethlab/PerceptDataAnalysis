@@ -4,7 +4,7 @@ addpath(genpath('/Users/nabeeldiab/Documents/GitHub/PerceptDataAnalysis'));
 loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
 savedir = [loaddir,'final_figures/PSDs.svg'];
 load([loaddir,'streamsplot.mat'])
-colors = {'r','b'};
+colors = {[230 145 60]/255,[0 162 89]/255};
 band=[8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79];
 pats = {'P001','P002','P004','P005','P006','P007','P008'};
 figure('Renderer', 'painters', 'PaperUnits','centimeters','PaperPosition',[0,0,8.7,8.85]);

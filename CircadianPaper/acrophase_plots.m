@@ -2,26 +2,17 @@
 close all
 
 %% User inputs
-hem = 1; % left = 1 ; right = 2
-target = 2; % VCVS = 1 ; GPi = 2
 sz = 10; % marker size
-loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
-savedir = [loaddir,'final_figures/acro_lGPi_small.svg'];
+load([loaddir loadfile])
 %%
-% load data
-if target==1
-    load([loaddir,'VCVS_all.mat'])
-else
-    load([loaddir,'GPI_all.mat'])
     
-end
 % patient initial list
 % pt_names=[{'SR'},{'MR'},{'KK'},{'CF'},{'CD'}];
 % GPi plotting exceptions
 if target==1
     pt_range = [1:5];
 else
-    pt_range = [1,2,2,2,2];
+    pt_range = [1,2];
 end
 
 %colors

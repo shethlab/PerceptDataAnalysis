@@ -1,32 +1,19 @@
 % load stats
-loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
-loadfile = 'VCVS_all_daily_stats.mat';
 load([loaddir,loadfile]);
-savedir = [loaddir,'final_figures/entropy_rVS_daily.svg'];
 
 x_tick_scale = 50;
 pos = [0,0,7.014,5];
 ylims = []; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
 tick_height = [0.005,0.005]; % x and y tick height
-y_name = 'sample entropy'; %y axis label
-stat = comb_entropy; %change metric variable here
 EMA_window = 5; %number of days for exponential moving average (EMA)
 sz = 3; %dot sizes
 EMA_sz = 0.5; %line width for EMA
 patch_alpha = 0.3; %transparency for background colors
 font_size = 6;
-hem = 2; %left = 1, right = 2
 if contains(loadfile,'5day')
     q=2;
 else
     q=1;
-end
-
-% update GPi days
-if contains(loadfile,'GPI')
-    % comb_days{1,hem} = comb_days{1,hem}-48;
-    comb_days{4,hem} = comb_days{4,hem}-9;
-else
 end
 
 %colors
@@ -45,7 +32,7 @@ purple={[];[0:29,70:296];[];[];[0:396]};
 ema = {};
 for k=hem %hemisphere
     fig=tiledlayout(5,1);
-    for j=[3,1,4,5,2]  
+    for j=patients  
         c1 = stat{j,k}(1,:,1);
     
         h{j}=nexttile;
@@ -114,4 +101,3 @@ end
 linkaxes([h{:}],'x')
 fig.Padding='Compact';
 set(gcf,'Units','inches','Position',pos)
-saveas(gcf,savedir)
