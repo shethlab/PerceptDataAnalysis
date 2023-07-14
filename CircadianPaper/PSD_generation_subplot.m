@@ -1,7 +1,9 @@
 %% Generate Figure 1
 %% Data Located in streamsplot.mat
-load("streamsplot.mat")
-addpath(genpath('C:\Users\Owner\Documents\GitHub\PerceptDataAnalysis\'));
+addpath(genpath('/Users/nabeeldiab/Documents/GitHub/PerceptDataAnalysis'));
+loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
+savedir = [loaddir,'final_figures/PSDs.svg'];
+load([loaddir,'streamsplot.mat'])
 colors = {'r','b'};
 band=[8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79];
 pats = {'P001','P002','P004','P005','P006','P007','P008'};
@@ -42,6 +44,5 @@ for i = [3,1,4,5,2,6,7]
 
 end
 
-saveas(gcf,'PSDs.png')
-saveas(gcf,'PSDs.svg')
+% saveas(gcf,savedir)
 

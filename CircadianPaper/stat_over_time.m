@@ -1,24 +1,33 @@
 % load stats
 loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
-load([loaddir,'GPI_all_5day_stats.mat']);
-savedir = [loaddir,'final_figures/amp_lVS_10day.svg'];
+loadfile = 'VCVS_all_daily_stats.mat';
+load([loaddir,loadfile]);
+savedir = [loaddir,'final_figures/entropy_rVS_daily.svg'];
 
 x_tick_scale = 50;
 pos = [0,0,7.014,5];
-ylims = [0 1.5]; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
+ylims = []; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
 tick_height = [0.005,0.005]; % x and y tick height
-y_name = 'Sample Entropy'; %y axis label
-stat = comb_amp; %change metric variable here
+y_name = 'sample entropy'; %y axis label
+stat = comb_entropy; %change metric variable here
 EMA_window = 5; %number of days for exponential moving average (EMA)
 sz = 3; %dot sizes
 EMA_sz = 0.5; %line width for EMA
 patch_alpha = 0.3; %transparency for background colors
 font_size = 6;
-hem = 1; %left = 1, right = 2
+hem = 2; %left = 1, right = 2
+if contains(loadfile,'5day')
+    q=2;
+else
+    q=1;
+end
 
 % update GPi days
-% comb_days{1,hem} = comb_days{1,hem}-48;
-comb_days{4,hem} = comb_days{4,hem}-9;
+if contains(loadfile,'GPI')
+    % comb_days{1,hem} = comb_days{1,hem}-48;
+    comb_days{4,hem} = comb_days{4,hem}-9;
+else
+end
 
 %colors
 c_red = [255,0,0]/255;
@@ -94,12 +103,12 @@ for k=hem %hemisphere
         end
         ema{j,k} = [];
         for m=1:length(start_index)-1
+            ind=start_index(m)+q:start_index(m+1)-1;
             try
-                plot(comb_days{j,k}(start_index(m)+1:start_index(m+1)-1),movavg(fillmissing(c1(start_index(m)+1:start_index(m+1)-1),'pchip')',"exponential",EMA_window),'Color',c_EMA,'LineWidth',EMA_sz);
-                ema{j,k}(start_index(m)+1:start_index(m+1)-1) = movavg(fillmissing(c1(start_index(m)+1:start_index(m+1)-1),'pchip')',"exponential",EMA_window); %saving EMA values as vector in workspace
+                plot(comb_days{j,k}(ind),movavg(fillmissing(c1(ind),'pchip','EndValues','none')',"exponential",EMA_window),'Color',c_EMA,'LineWidth',EMA_sz);
             end
         end
-        yticks(round([0,max(c1(2:end))],2,"decimals","TieBreaker","fromzero"));
+%         yticks(round([0,max(c1(2:end))],2,"decimals","TieBreaker","fromzero"));
     end
 end
 linkaxes([h{:}],'x')

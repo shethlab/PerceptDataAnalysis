@@ -112,9 +112,9 @@ else
         j = 1;
         for i =[1,3,4,2,5]
             nexttile(j)
-            plot((0:287)/6,[templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan');templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan')],'Color',c_yellow,'LineWidth',2);
-            %plot((0:287)/6,[templates{i,h}(:,1);templates{i,h}(:,1)],'Color',c_yellow,'LineWidth',2);
-            plot((0:287)/6,[templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan');templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan')],'Color',c_yellow,'LineWidth',2);
+            plot((0:143)/6,[templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan')],'Color',c_yellow,'LineWidth',2);
+            %plot((0:143)/6,[templates{i,h}(:,1);templates{i,h}(:,1)],'Color',c_yellow,'LineWidth',2);
+            plot((0:143)/6,[templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan')],'Color',c_yellow,'LineWidth',2);
             title(smoothedRotatedCircadianMatrices{i,1});
             hold on
             %plot((0:143)/6,templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan'),'Color',c_red,'LineWidth',2);
@@ -122,15 +122,16 @@ else
                 nexttile(5*(1)+j)
             end
 
-            plot((0:287)/6,[templates{i,h}(:,3)-mean(templates{i,h}(:,3),'omitnan');templates{i,h}(:,3)-mean(templates{i,h}(:,3),'omitnan')],'Color',c_purple,'LineWidth',2);
-            %plot((0:287)/6,[templates{i,h}(:,3);templates{i,h}(:,3)],'Color',c_purple,'LineWidth',2);
+            plot((0:143)/6,[templates{i,h}(:,3)-mean(templates{i,h}(:,3),'omitnan')],'Color',c_purple,'LineWidth',2);
+            %plot((0:143)/6,[templates{i,h}(:,3);templates{i,h}(:,3)],'Color',c_purple,'LineWidth',2);
 
             hold on
-            plot((0:287)/6,[templates{i,h}(:,4)-mean(templates{i,h}(:,4),'omitnan');templates{i,h}(:,4)-mean(templates{i,h}(:,4),'omitnan')],'Color',c_blue,'LineWidth',2);
-            %plot((0:287)/6,[templates{i,h}(:,4);templates{i,h}(:,4)],'Color',c_blue,'LineWidth',2);
+            plot((0:143)/6,[templates{i,h}(:,4)-mean(templates{i,h}(:,4),'omitnan')],'Color',c_blue,'LineWidth',2);
+            %plot((0:143)/6,[templates{i,h}(:,4);templates{i,h}(:,4)],'Color',c_blue,'LineWidth',2);
 
             title(smoothedRotatedCircadianMatrices{i,1});
             linkaxes;
+            xticks([0,143/24,143/12,143/6,143]);
             j = j+1;
         end
         title(t,hems{h-1});
