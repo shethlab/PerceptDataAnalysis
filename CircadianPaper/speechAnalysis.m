@@ -98,5 +98,5 @@ end
 
 
 
-audiostats(1) = detailedStats(pre{1},post{1});
-audiostats(2) = detailedStats(pre{2},post{2});
+audiostats(1) = detailedStats(post{1},pre{1});
+audiostats(2) = detailedStats(post{2},pre{2});
