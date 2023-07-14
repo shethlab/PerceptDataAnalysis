@@ -9,8 +9,6 @@ import numpy as np
 
 # Constants to determine the hemisphere and the responder/non-responder status of patients
 HEMISPHERE = 1 # 1 for Left hemisphere and 2 for right hemisphere
-RESPONDER = [1, 4, 5]
-NON_RESPONDER = [2, 6]
 
 # Create a pandas DataFrame by loading data from a .mat file
 def create_dataframe(mat_file, eng, num):
