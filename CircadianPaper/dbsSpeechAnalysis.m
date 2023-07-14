@@ -8,9 +8,8 @@ c_purple = [127,63,152]/255;
 c_yellow = [255,215,0]/255;
 c_white = [255,255,255]/255;
 patient_labels = {'P005','P006'};
-titles = {'Optimal Contact','Non-Optimal Contact'};
-%% Loop Through Both Pts
-for p = 1:2
+titles = {'Parameter Configuration 1','Parameter Configuration 2'};
+for p =1:2
     figure('Units','inches','Position',[0 0 9.3 1.85]);
     tiles = tiledlayout(1,2);
     if p == 1
@@ -18,43 +17,16 @@ for p = 1:2
     else
         c = c_purple;
     end
-    %% Loop Through Videos/Audios
     for m = 1:2
-        textg = uigetfile([loaddir,'*.TextGrid']);
-        textg = fullfile(loaddir,textg);
-        text = tgRead(textg);
-        wfile = strcat(extractBefore(textg,'.TextGrid'),'.wav');
-        wav = audioread(wfile);
-        b=text.tier{1};
-
-        %%
-        try
-            keep=~cellfun(@isempty,b.Label);
-            rm=~cellfun(@isempty,strfind(b.Label,'*'));
-            tOn=b.T1(keep&~rm);
-            tOff=b.T2(keep&~rm);
-            t=(tOn+tOff)/2;
-            w=2;
-            edges=0:w:max(tOn)+w;
-            [n,edges]=histcounts(tOn,edges);
-            n=n/w;
-            wAmp=zeros(1,length(t));
-            tW=(1:length(wav))/Fs;
-            for i=1:length(t)
-                wAmp(i)=rms(wav(tW>tOn(i)&tW<tOff(i)));
-            end
-        catch
-            t = [];
-            n = [];
-            edges = [];
-            wAmp =[];
-            tW=(1:length(wav))/Fs;
-            w = [];
-        end
-        %%
+        t = audioinfo(p,m).time;
+        w = audioinfo(p,m).barWidth;
+        tW = audioinfo(p,m).tW;
+        wAmp = audioinfo(p,m).wAmp;
+        n = audioinfo(p,m).nWords;
+        edges = audioinfo(p,m).barEdges;
         h(m) = nexttile(m);
         yyaxis left
-%         plot(tW,wav*1.5+3,'Color',c);
+        %         plot(tW,wav*1.5+3,'Color',c);
         hold on
         bar(edges((1:end-1))+w/2,n,'FaceColor',c,'FaceAlpha',.6);
         if p == 1 && m == 2
@@ -92,8 +64,7 @@ for p = 1:2
     r42=h(2).YAxis(2);
     linkprop([r41 r31],'Limits')
     linkprop([r42 r32],'Limits')
-    title(tiles,strcat(patient_labels{p},' Response to DBS Activation'));
-    saveas(gcf,[loaddir,patient_labels{p},'speech_noaudio.svg'])
+    title(tiles,patient_labels{p});
 end
 
 
