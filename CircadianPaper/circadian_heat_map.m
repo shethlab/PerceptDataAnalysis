@@ -1,20 +1,10 @@
 
 
 %% User Inputs
-hem = 2; % left = 1 ; right = 2
-target = 1; % VCVS = 1 ; GPi = 2
-loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
-savedir = [loaddir,'final_figures/spectrogram_rVS.pdf'];
+load([loaddir loadfile]);
 %% Formatting
 % load data
-if target==1
-    load([loaddir,'VCVS_all.mat'])
-else
-    load([loaddir,'GPI_all.mat'])
-%     comb_days{1,hem} = comb_days{1,hem}-48; %001
-%     comb_days{2,hem} = comb_days{2,hem}-9; %005
-end
-pt_names=[{'MR'},{'KK'},{'CF'},{'CD'},{'  '},{'  '},{'SR'}];
+
 x_tick_scale=20; %adjust distance between x ticks here
 fontsize = 8; %set font size
 num_patients=5; %set equal to number of patients to be plotted
