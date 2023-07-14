@@ -55,7 +55,7 @@ def main():
     # set different parameters based on the selected hemisphere
     if hemi == 0:
         # define patients' numbers, their corresponding IDs, group labels and groups for classification for the left hemisphere
-        pt_numbers = [102, 105, 101, 103, 104]
+        pt_numbers = [1, 2, 4, 5, 6]
         id_num = range(1,6)
         group_labels = [[0]*49 + [1]*48 + [3]*53, 
                         [0]*7 + [1]*16 + [2]*15 + [1]*61,
