@@ -14,11 +14,15 @@ end
 
 % If the demo flag is enabled, uses hardcoded cosinor parameters for the demo dataset
 if exist('is_demo','var') && is_demo == 1
-    all_components = [3,2,1,1,1];
-    all_peaks = [2,2,1,1,1];
-end
+    if size(percept_data.days,1) == 5 %VC/VS demo data loaded
+        all_components = [3,2,1,1,1];
+        all_peaks = [2,2,1,1,1];
+    else %GPi demo data loaded
+        all_components = [2,1];
+        all_peaks = [2,1];
+    end
 
-for j = 1:size(percept_data.LFP_norm_matrix,1)
+for j = 1:size(percept_data.days,1)
     if exist('all_components','var')
         num_components = all_components(j);
         num_peaks = all_peaks(j);
