@@ -1,3 +1,4 @@
+tic
 addpath(genpath('/Users/sameerrajesh/Desktop/GitHub/PerceptDataAnalysis'));
 % set load directory below that contains data file
 
@@ -7,3 +8,4 @@ y_name = 'sample entropy'; %y axis label
 stat = percept_data1day.entropy; %setting metric variable here
 hem = 1; %left = 1, right = 2
 stat_over_time(percept_data1day,'entropy',hem,zone_index);
+toc

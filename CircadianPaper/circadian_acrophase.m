@@ -33,6 +33,7 @@ for j = 1:size(data.days,1)
     [~,non_responder_idx] = intersect(days,zone_index.non_responder{j});
     [~,responder_idx] = intersect(days,zone_index.responder{j});
     [~,manic_idx] = intersect(days,zone_index.hypomania{j});
+    keep_idx = ismember(1:length(days),[pre_DBS_idx; non_responder_idx; responder_idx; manic_idx]);
     
     %Generate RGB colormap for each index of data
     c_map = zeros(length(days),3);
@@ -42,11 +43,11 @@ for j = 1:size(data.days,1)
     c_map(manic_idx,:) = repmat(c_mania,[length(manic_idx),1]);
     
     %Plot significant points
-    polarscatter(acro(p < 0.05),amp(p < 0.05),sz,c_map(p < 0.05,:),'filled','MarkerFaceAlpha',sig_point_alpha)
+    polarscatter(acro(p < 0.05 & keep_idx),amp(p < 0.05 & keep_idx),sz,c_map(p < 0.05 & keep_idx,:),'filled','MarkerFaceAlpha',sig_point_alpha)
     hold on
 
     %Plot non-significant points with reduced alpha
-    polarscatter(acro(p >= 0.05),amp(p >= 0.05),sz,c_map(p >= 0.05,:),'filled','MarkerFaceAlpha',nonsig_point_alpha)   
+    polarscatter(acro(p >= 0.05 & keep_idx),amp(p >= 0.05 & keep_idx),sz,c_map(p >= 0.05 & keep_idx,:),'filled','MarkerFaceAlpha',nonsig_point_alpha)   
     hold off
 
     %Change plot axis properties
