@@ -52,11 +52,11 @@ Panel A: generated via Lead-DBS as described in the methods section.
 
 Panel B: download data file "streamsplot.mat" into a folder accessible by MATLAB. Open figure1.m and edit directories to match those corresponding to your local machine for “streamsplot.mat”, then run the code. 
 
-![Fig1](DEMO/fig1.png)
+![Fig1](DEMO/Figures/fig1.png)
 
 Demo:
 
-![Fig1](DEMO/fig1.png)
+![Fig1](DEMO/Figures/fig1.png)
  
 
 
@@ -74,7 +74,7 @@ Download “demo_data_prepped.mat” into a folder accessible by MATLAB. Adjust 
 
 Demo:
 
-![Fig2acro](DEMO/fig2acro.png)
+![Fig2acro](DEMO/Figures/fig2acro.png)
 
 
 
@@ -84,7 +84,7 @@ Stills and raw audio trace not shared. Download “audioinfo.mat” into a folde
 
 Demo:
 
-![Fig3](DEMO/fig3audio.png)
+![Fig3](DEMO/Figures/fig3audio.png)
 
 
 ## Figure 4
@@ -92,9 +92,9 @@ Template plots: Download “demo_data_prepped_1day.mat” and “singleDayTempla
 
 Demo:
 
-![Fig4wrap](DEMO/fig4avgwrap.png)
-![Fig4unwrap](DEMO/fig4avgunwrap.png)
-![Fig4q3](DEMO/fig4sd3q.png)
+![Fig4wrap](DEMO/Figures/fig4avgwrap.png)
+![Fig4unwrap](DEMO/Figures/fig4avgunwrap.png)
+![Fig4q3](DEMO/Figures/fig4sd3q.png)
 
 
 
@@ -106,7 +106,7 @@ Panel A: Download “demo_data_prepped_1day.mat” into a folder accessible by M
 
 Demo:
 
-![Fig5](DEMO/figure5.png)
+![Fig5](DEMO/Figures/figure5.png)
 
 
 
@@ -125,8 +125,8 @@ Download “demo_data_prepped.mat” and adjust load directory for MATLAB to acc
 
 Demo:
 
-![FigS2a](DEMO/figureS2a.png)
-![FigS2b](DEMO/figureS2b.png)
+![FigS2a](DEMO/Figures/figureS2a.png)
+![FigS2b](DEMO/Figures/figureS2b.png)
 
 
 ## Figure S3
@@ -134,6 +134,6 @@ Download “demo_data_prepped.mat” and adjust load directory for MATLAB to acc
 
 Demo:
 
-![FigS3](DEMO/figureS3.png)
+![FigS3](DEMO/Figures/figureS3.png)
 
 
