@@ -42,10 +42,14 @@ EntropyHub Toolbox v0.2: https://github.com/MattWillFlood/EntropyHub
 Below are instructions for generating each of the code-based figures in the paper sequentially. For all figures, axis and other aesthetic adjustments were completed on Adobe Illustrator. All Figure code contained in Github folder "figure_scripts". Demo data and figures in DEMO folder.
 
 ## Raw Data Extraction
+Run data_generation.m in the CircadianPaper folder. Select the .json files and indicate both date of DBS onset and patient label when required. Output will be of equivalent form to that stored in demo_data.mat. Estimated runtime 5-10s per patient depending on data quantity.
 
 ## Data Preparation
 
 Download “demo_data.mat” Open dataprep.m and adjust the load path to “demo_data.mat” in the code. Run code. Expected run time ~2 minutes for included demo_data file. Outputs of running are saved in “demo_data_prepped.mat” and “demo_data_prepped1day.mat” (included as separate demo files for convenience in running the demonstrations). 
+
+## Statistical Calculations
+detailedStats.m in the utils folder is the central statistical function. It intakes any two datasets and outputs our full set of statistical information. After gathering data, divide dataset to appropriate day ranges needed for comparison and run detailedStats.m on the data you wish to compare.
 
 ## Figure 1
 Panel A: generated via Lead-DBS as described in the methods section.
