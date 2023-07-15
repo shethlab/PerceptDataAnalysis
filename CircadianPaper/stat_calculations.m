@@ -1,4 +1,4 @@
-function [stats_left,stats_right] = stat_calculations(percept_data,field,zone_index); 
+function [stats_left,stats_right] = stat_calculations(percept_data,field,zone_index) 
 
 switch field
     case 'entropy'
@@ -11,8 +11,7 @@ switch field
 end
 
 for j=1:size(percept_data.days,1)
-    for hemisphere=1:2
-        
+    for hemisphere=1:2      
         %Temporary variables per iteration
         days = percept_data.days{j,hemisphere+1};
         metric = percept_data.(field){j,hemisphere+1}(1,:,1);
