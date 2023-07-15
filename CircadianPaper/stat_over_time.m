@@ -114,6 +114,7 @@ for j=1:size(data.days,1)
 end
 
 linkaxes([h{:}],'x')
+linkaxes([h{:}],'y')
 fig.Padding='Compact';
 
 end
