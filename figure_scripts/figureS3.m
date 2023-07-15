@@ -1,8 +1,9 @@
-addpath(genpath('/Users/nabeeldiab/Documents/GitHub/PerceptDataAnalysis'));
+addpath(genpath('/Users/sameerrajesh/Desktop/GitHub/PerceptDataAnalysis'));
 % set load directory below that contains data file
-loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
-loadfile = 'VCVS_all_daily_stats.mat';
+
+load('/Users/sameerrajesh/Desktop/DATA/demo_data_prepped_1day.mat')
+patients = [3,1,4,5,2];
 y_name = 'sample entropy'; %y axis label
-stat = comb_entropy; %setting metric variable here
+
 hem = 2; %left = 1, right = 2
-stat_over_time;
+stat_over_time(percept_data1day,'entropy',hem,zone_index);
