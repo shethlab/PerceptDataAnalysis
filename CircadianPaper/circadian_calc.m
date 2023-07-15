@@ -1,4 +1,4 @@
-function percept_data = circadian_calc(percept_data,window_left,window_right,period)
+function percept_data = circadian_calc(percept_data,window_left,window_right,period,is_demo)
 
 %Warning if improper window size inputs
 window=[window_left,window_right];
@@ -7,14 +7,25 @@ if ~isnumeric(window) || any(window < 0) || any(mod(window,1) ~= 0)
 end
 
 %Set 24 hour cosinor period if no or invalid period is provided
-if ~exist('period','var') || ~isnumeric(period) || period <= 0
+if ~exist('period','var') || ~isnumeric(period) || isempty(period) || period <= 0
     disp('Period input not specified or invalid. Assuming 24 hr.')
     period = 24;
 end
 
+% If the demo flag is enabled, uses hardcoded cosinor parameters for the demo dataset
+if exist('is_demo','var') && is_demo == 1
+    all_components = [3,2,1,1,1];
+    all_peaks = [2,2,1,1,1];
+end
+
 for j = 1:size(percept_data.LFP_norm_matrix,1)
-    num_components = input(['Enter the number of cosinor components for subject ',percept_data.days{j,1},': ']); %cosinor parameter input
-    num_peaks = input(['Enter the number of cosinor peaks for subject ',percept_data.days{j,1},': ']); %cosinor parameter input
+    if exist('all_components','var')
+        num_components = all_components(j);
+        num_peaks = all_peaks(j);
+    else
+        num_components = input(['Enter the number of cosinor components for subject ',percept_data.days{j,1},': ']); %cosinor parameter input
+        num_peaks = input(['Enter the number of cosinor peaks for subject ',percept_data.days{j,1},': ']); %cosinor parameter input
+    end
 
     %Warning if improper cosinor inputs
     if ~isnumeric([num_components,num_peaks]) || any([num_components,num_peaks] < 1) || any(mod([num_components,num_peaks],1) ~= 0)
