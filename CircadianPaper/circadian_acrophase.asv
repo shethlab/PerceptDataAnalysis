@@ -1,0 +1,60 @@
+function []=c(data,field,hemisphere,y_name)
+
+%% User inputs
+
+hemisphere = 1; % Left = 1; Right = 2
+sz = 10; % Marker size
+sig_point_alpha = 0.7; % Transparency of points with significant cosinor fit
+nonsig_point_alpha = 0.3; % Transparency of points with non-significant cosinor fit
+
+%Color indices
+hypomania = {[];[30:69];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red 
+responder = {[48:100];[];[176:665];[95:273];[]}; %HEALTHY days of blue
+non_responder = {[];[0:29,70:296];[];[];[0:396]};
+
+%Color values
+c_mania = [255,0,0]/255;
+c_responder = [0,0,255]/255;
+c_nonresponder = [127,63,152]/255;
+c_preDBS = [255,215,0]/255;
+
+%% Plotting
+
+figure('Position',[0,0,750,200])
+total_height=size(percept_data.days,1);
+
+for j=1:size(percept_data.days,1)
+    nexttile([1,total_height])
+    
+    %Find indices of each zone
+    pre_DBS_idx=find(percept_data.days{j,hemisphere+1}<0);
+    [~,non_responder_idx]=intersect(percept_data.days{j,hemisphere+1},non_responder{j});
+    [~,responder_idx]=intersect(percept_data.days{j,hemisphere+1},responder{j});
+    [~,manic_idx]=intersect(percept_data.days{j,hemisphere+1},hypomania{j});
+    
+    %Generate RGB colormap for each index of data
+    c_map=zeros(length(percept_data.days{j,hemisphere+1}),3);
+    c_map(pre_DBS_idx,:)=repmat(c_preDBS,[length(pre_DBS_idx),1]);
+    c_map(responder_idx,:)=repmat(c_responder,[length(responder_idx),1]);
+    c_map(non_responder_idx,:)=repmat(c_nonresponder,[length(non_responder_idx),1]);
+    c_map(manic_idx,:)=repmat(c_mania,[length(manic_idx),1]);
+    
+    %Plot significant points
+    polarscatter(percept_data.acrophase{j,hemisphere+1}(percept_data.cosinor_p{j,hemisphere+1}<0.05),percept_data.amplitude{j,hemisphere+1}(percept_data.cosinor_p{j,hemisphere+1}<0.05),sz,c_map(percept_data.cosinor_p{j,hemisphere+1}<0.05,:),'filled','MarkerFaceAlpha',0.7)
+    hold on
+
+    %Plot non-significant points with reduced alpha
+    polarscatter(percept_data.acrophase{j,hemisphere+1}(percept_data.cosinor_p{j,hemisphere+1}>=0.05),percept_data.amplitude{j,hemisphere+1}(percept_data.cosinor_p{j,hemisphere+1}>=0.05),sz,c_map(percept_data.cosinor_p{j,hemisphere+1}>=0.05,:),'filled','MarkerFaceAlpha',0.3)   
+    hold off
+
+    %Change plot axis properties
+    pax=gca;
+    pax.ThetaDir='clockwise';
+    pax.ThetaZeroLocation='top';
+    thetaticklabels({'0:00','2:00','4:00','6:00','8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'})
+%     pax.RAxis.Label.String=['Amplitude'; '(Z-Score)'];
+%     pax.RAxis.Label.Position=[-5,mean(rlim)];
+    subtitle(percept_data.LFP_raw_matrix(j,1));
+    pax.FontSize=8;
+    pax.RAxisLocation=0;
+end

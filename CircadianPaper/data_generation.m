@@ -1,20 +1,13 @@
 %% Choosing files and DBS onset date
 
-clearvars -except percept_data t2
+clearvars -except percept_data zone_index
 
 [fileName,path]=uigetfile('*.json','MultiSelect','on');
 fileList=fullfile(path,fileName);
 
 time_zone='America/Chicago';
-% DBS_onset=input('Input the date of DBS onset in the format dd-MMM-yyyy (e.g 01-Jan-2000): ','s');
-% DBS_onset=datetime(DBS_onset,'InputFormat','dd-MMM-yyyy','TimeZone',time_zone);
-
-c=readtable('C:\Users\Sandy\Box\Percept\Data\Patient_Information.xlsx');
-c.InitialVCVSProgramming_Confidential_.TimeZone='America/Chicago';
-DBS_onset=c.InitialVCVSProgramming_Confidential_(find(strcmp(c.PatientStudyNumber,fileName{1}(1:3))));
-% DBS_onset=c.InitialGPiProgramming_OfficeVisit_(find(strcmp(c.PatientStudyNumber,fileName{1}(1:3))));
-% DBS_onset=datetime(DBS_onset,'InputFormat','dd-MMM-yyyy');
-DBS_onset.TimeZone='America/Chicago';
+DBS_onset=input('Input the date of DBS onset in the format dd-MMM-yyyy (e.g 01-Jan-2000): ','s');
+DBS_onset=datetime(DBS_onset,'InputFormat','dd-MMM-yyyy','TimeZone',time_zone);
 
 %% Raw data, normalized data, and timestamps
 
