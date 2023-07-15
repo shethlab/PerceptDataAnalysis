@@ -57,7 +57,7 @@ for j=1:size(data.days,1)
         end
     end
 
-    if ~isempty(zone_index.responder{j}) %Non-responder zone
+    if ~isempty(zone_index.responder{j}) %Responder zone
         zone_idx = [0,find(diff(zone_index.responder{j})>1),length(zone_index.responder{j})];
         for i = 1:length(zone_idx)-1
             patch([zone_index.responder{j}(zone_idx(i)+1),zone_index.responder{j}(zone_idx(i)+1),zone_index.responder{j}(zone_idx(i+1))+1,zone_index.responder{j}(zone_idx(i+1))+1],[0,10,10,0],c_responder,'FaceAlpha',patch_alpha,'LineStyle','none')
@@ -97,15 +97,15 @@ for j=1:size(data.days,1)
     
     %Find indices of discontiuous days of data       
     start_index=find(diff(days)>1);
-    try
-        start_index=[1,start_index+1,length(days)+1];
-    catch
-        start_index=[1,length(days)+1];
+    if ~isempty(start_index)
+        start_index=[1;start_index+1;length(days)+1];
+    else
+        start_index=[1;length(days)+1];
     end
     
     %EMA plot
     for i=1:length(start_index)-1
-        skip_idx=max([2,find(~isnan(stat),1,'first')]); %Skip 1st data point or initial NaN points when identifying start of EMA
+        skip_idx=max([2,find(~isnan(stat(start_index(i):end)),1,'first')]); %Skip 1st data point or initial NaN points when identifying start of EMA
         ind=start_index(i)+skip_idx-1:start_index(i+1)-1;
         try
             plot(days(ind),movavg(fillmissing(stat(ind),'pchip','EndValues','none')',"exponential",EMA_window),'Color',c_EMA,'LineWidth',EMA_sz);
