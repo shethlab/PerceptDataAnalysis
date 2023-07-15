@@ -7,7 +7,6 @@ function [amplitude,acrophase,p_value,fit_model] = cosinor(t,y,w,num_components,
 %   y - value of series at time t
 %   w - cycle length, defined by user based on prior knowledge of time
 %       series
-%   alpha
 %
 % Define Variables:
 %   M - Mesor, the average cylce value
@@ -31,6 +30,12 @@ end
 if size(y,1)==1
     y=y';
 end
+
+%Remove nans and sort data by increasing time
+y(isnan(t))=[];
+t(isnan(t))=[];
+[t,t_sort_idx]=sort(t,'ascend');
+y=y(t_sort_idx);
 
 w=w/24; %convert period from hours to days
 

@@ -42,7 +42,7 @@ function LFP_trend=extract(filename)
         
         [~,right_indices]=ismember(date_time,{data_right.DateTime});
         LFP(2,right_indices(right_indices>0))=[data_right.LFP]; %right_indices=0 indicates non-member
-        stim_amp(2,left_indices(right_indices>0))=[data_right.AmplitudeInMilliAmps]; %right_indices=0 indicates non-member
+        stim_amp(2,right_indices(right_indices>0))=[data_right.AmplitudeInMilliAmps]; %right_indices=0 indicates non-member
         
         % Export values
         LFP_trend.time=datetime(date_time,'InputFormat','yyyy-MM-dd''T''HH:mm:ss''Z''','TimeZone','UTC');

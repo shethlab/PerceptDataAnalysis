@@ -1,8 +1,9 @@
-% load stats
-load([loaddir,loadfile]);
+function [] = stat_over_time(data,field,hemisphere,zone_index)
+
+%% Detailed Adjustable Inputs
 
 x_tick_scale = 50;
-pos = [0,0,7.014,5];
+fig_position = [0,0,7.014,5];
 ylims = []; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
 tick_height = [0.005,0.005]; % x and y tick height
 EMA_window = 5; %number of days for exponential moving average (EMA)
@@ -10,94 +11,109 @@ sz = 3; %dot sizes
 EMA_sz = 0.5; %line width for EMA
 patch_alpha = 0.3; %transparency for background colors
 font_size = 6;
-if contains(loadfile,'5day')
-    q=2;
-else
-    q=1;
-end
 
-%colors
-c_red = [255,0,0]/255;
-c_blue = [0,0,255]/255;
-c_purple = [127,63,152]/255;
-c_yellow = [255,215,0]/255;
-
+%Color values (RGB 0-1)
+c_mania = [255,0,0]/255;
+c_responder = [0,0,255]/255;
+c_nonresponder = [127,63,152]/255;
+c_preDBS = [255,215,0]/255;
 c_dots = [0.5,0.5,0.5];
 c_EMA = [0,0,0];
 
-%color indices
-red={[];[30:69];[0:8];[0:4];[]}; %HYPOMANIA+DISINHIBITION days of red 
-blue={[48:100];[];[176:665];[95:273];[]}; %HEALTHY days of blue 
-purple={[];[0:29,70:296];[];[];[0:396]};
-ema = {};
-for k=hem %hemisphere
-    fig=tiledlayout(5,1);
-    for j=patients  
-        c1 = stat{j,k}(1,:,1);
-    
-        h{j}=nexttile;
-        hold on
-        
-        %background patches
-        try
-            patch([red{j}(1),red{j}(1),red{j}(end),red{j}(end)],[0,10,10,0],c_red,'FaceAlpha',patch_alpha,'LineStyle','none')
-        end
-        try
-            patch([blue{j}(1),blue{j}(1),blue{j}(end)+1,blue{j}(end)+1],[0,10,10,0],c_blue,'FaceAlpha',patch_alpha,'LineStyle','none')
-        end
-        try %002 has multiple purple regions
-            if ~isempty(find(diff(purple{j})>1))
-                patch([purple{j}(1),purple{j}(1),purple{j}(find(diff(purple{j})>1))+1,purple{j}(find(diff(purple{j})>1))+1],[0,10,10,0],c_purple,'FaceAlpha',patch_alpha,'LineStyle','none')
-                patch([purple{j}(find(diff(purple{j})>1)+1)-1,purple{j}(find(diff(purple{j})>1)+1)-1,purple{j}(end)+1,purple{j}(end)+1],[0,10,10,0],c_purple,'FaceAlpha',patch_alpha,'LineStyle','none')
-            else    
-                patch([purple{j}(1),purple{j}(1),purple{j}(end)+1,purple{j}(end)+1],[0,10,10,0],c_purple,'FaceAlpha',patch_alpha,'LineStyle','none')
-            end
-        end
-        try
-            patch([min(comb_days{j,k})-1,min(comb_days{j,k})-1,0,0],[0,10,10,0],c_yellow,'FaceAlpha',patch_alpha,'LineStyle','none')
-        end
-        
-        %scatter plot of values
-        xticks = x_tick_scale*ceil(min(comb_days{j,1})):x_tick_scale:x_tick_scale*floor(max(comb_days{j,k}));
-        xlim([min(comb_days{j,k}-1),max(comb_days{j,k}+1)])
-        if j==2 %plot with x axis label
-            scatter(comb_days{j,k},c1,sz,[0.5,0.5,0.5],'filled')
-            xlabel('Days Since DBS Activation',FontSize=font_size)
-            set(gca,'XTick',xticks,'XTickLabels', arrayfun(@num2str, xticks, 'UniformOutput', 0),'FontSize',font_size,'TickLength',tick_height)
-        elseif j==5
-            scatter(comb_days{j,k}(2:end),c1(2:end),sz,[0.5,0.5,0.5],'filled')
-            set(gca,'XTick',[],'XTickLabels',[],'TickLength',tick_height,'FontSize',font_size)
-        else
-            scatter(comb_days{j,k},c1,sz,[0.5,0.5,0.5],'filled')
-            set(gca,'XTick',[],'XTickLabels',[],'TickLength',tick_height,'FontSize',font_size)
-        end
-        %title(comb_LFP_norm_matrix{j,1},'FontSize',20)
+%% Plotting
 
-        ylabel(y_name)
-        if ~isempty(ylims)
-            ylim(ylims)
-            yticks(ylims)
-        else
-            ylim(round([0,max(c1(2:end))],2,"decimals","TieBreaker","fromzero"))
+switch field
+    case 'entropy'
+        y_label = 'Sample Entropy';
+    case 'amplitude'
+        y_label = 'Amplitude';
+    case 'acrophase'
+        y_label = 'Acrophase';
+    case 'cosinor_p'
+        y_label = 'P-value';
+    case 'cosinor_R2'
+        y_label = 'R^2';
+        ylims = [0,1];
+    otherwise
+        error('Inputted data field is invalid.')
+end
+
+fig=tiledlayout(size(data.days,1),1);
+
+for j=1:size(data.days,1)  
+    
+    %Temporary variables per iteration
+    days = data.days{j,hemisphere+1};
+    stat = data.(field){j,hemisphere+1}(1,:,1);
+
+    h{j}=nexttile;
+    hold on
+    
+    %Background patches
+    if ~isempty(zone_index.hypomania{j}) %Hypomania zone
+        zone_idx = [0,find(diff(zone_index.hypomania{j})>1),length(zone_index.hypomania{j})];
+        for i = 1:length(zone_idx)-1
+            patch([zone_index.hypomania{j}(zone_idx(i)+1),zone_index.hypomania{j}(zone_idx(i)+1),zone_index.hypomania{j}(zone_idx(i+1))+1,zone_index.hypomania{j}(zone_idx(i+1))+1],[0,10,10,0],c_mania,'FaceAlpha',patch_alpha,'LineStyle','none')
         end
-        
-        %EMA plot       
-        start_index=find(diff(comb_days{j,k})>1);
+    end
+
+    if ~isempty(zone_index.responder{j}) %Non-responder zone
+        zone_idx = [0,find(diff(zone_index.responder{j})>1),length(zone_index.responder{j})];
+        for i = 1:length(zone_idx)-1
+            patch([zone_index.responder{j}(zone_idx(i)+1),zone_index.responder{j}(zone_idx(i)+1),zone_index.responder{j}(zone_idx(i+1))+1,zone_index.responder{j}(zone_idx(i+1))+1],[0,10,10,0],c_responder,'FaceAlpha',patch_alpha,'LineStyle','none')
+        end
+    end
+    
+    if ~isempty(zone_index.non_responder{j}) %Non-responder zone
+        zone_idx = [0,find(diff(zone_index.non_responder{j})>1),length(zone_index.non_responder{j})];
+        for i = 1:length(zone_idx)-1
+            patch([zone_index.non_responder{j}(zone_idx(i)+1),zone_index.non_responder{j}(zone_idx(i)+1),zone_index.non_responder{j}(zone_idx(i+1))+1,zone_index.non_responder{j}(zone_idx(i+1))+1],[0,10,10,0],c_nonresponder,'FaceAlpha',patch_alpha,'LineStyle','none')
+        end
+    end
+    
+    patch([min(days)-1,min(days)-1,0,0],[0,10,10,0],c_preDBS,'FaceAlpha',patch_alpha,'LineStyle','none') %Pre-DBS zone
+    
+    %Scatter plot of values
+    scatter(days,stat,sz,c_dots,'filled')
+    
+    %X ticks, labels, and limits
+    xticks = x_tick_scale*ceil(min(days)):x_tick_scale:x_tick_scale*floor(max(days));
+    xlim([min(days-1),max(days+1)])
+    if j == size(data.days,1) %Lowest plot
+        xlabel('Days Since DBS Activation',FontSize=font_size)
+        set(gca,'XTick',xticks,'XTickLabels', arrayfun(@num2str, xticks, 'UniformOutput', 0),'FontSize',font_size,'TickLength',tick_height)
+    else
+        set(gca,'XTick',[],'XTickLabels',[],'TickLength',tick_height,'FontSize',font_size)
+    end
+    
+    %Y labels and limits
+    ylabel(y_label)
+    if ~isempty(ylims)
+        ylim(ylims)
+        yticks(ylims)
+    else
+        ylim(round([0,max(stat(2:end))],2,"decimals","TieBreaker","fromzero"))
+    end
+    
+    %Find indices of discontiuous days of data       
+    start_index=find(diff(days)>1);
+    try
+        start_index=[1,start_index+1,length(days)+1];
+    catch
+        start_index=[1,length(days)+1];
+    end
+    
+    %EMA plot
+    for i=1:length(start_index)-1
+        skip_idx=max([2,find(~isnan(stat),1,'first')]); %Skip 1st data point or initial NaN points when identifying start of EMA
+        ind=start_index(i)+skip_idx-1:start_index(i+1)-1;
         try
-            start_index=[1,start_index+1,length(comb_days{j,k})+1];
-        catch
-            start_index=[1,length(comb_days{j,k})+1];
+            plot(days(ind),movavg(fillmissing(stat(ind),'pchip','EndValues','none')',"exponential",EMA_window),'Color',c_EMA,'LineWidth',EMA_sz);
         end
-        ema{j,k} = [];
-        for m=1:length(start_index)-1
-            ind=start_index(m)+q:start_index(m+1)-1;
-            try
-                plot(comb_days{j,k}(ind),movavg(fillmissing(c1(ind),'pchip','EndValues','none')',"exponential",EMA_window),'Color',c_EMA,'LineWidth',EMA_sz);
-            end
-        end
-%         yticks(round([0,max(c1(2:end))],2,"decimals","TieBreaker","fromzero"));
     end
 end
+
 linkaxes([h{:}],'x')
 fig.Padding='Compact';
-set(gcf,'Units','inches','Position',pos)
+
+end
