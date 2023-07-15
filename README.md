@@ -52,6 +52,7 @@ Panel A: generated via Lead-DBS as described in the methods section.
 
 Panel B: download data file "streamsplot.mat" into a folder accessible by MATLAB. Open figure1.m and edit directories to match those corresponding to your local machine for “streamsplot.mat”, then run the code. 
 
+![Fig1](DEMO/fig1.png)
 
 Demo:
  
