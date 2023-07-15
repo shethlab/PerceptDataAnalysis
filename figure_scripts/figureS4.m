@@ -1,28 +1,29 @@
 addpath(genpath('/Users/nabeeldiab/Documents/GitHub/PerceptDataAnalysis'))
-loaddir = '/Users/nabeeldiab/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sheth/Hyper-Pursuit/DATA/';
-loadfile = 'GPI_all.mat';
-patients = [1,4]; % Set GPi patient range
-% Set desired hemisphere and target
-hem = 1; % left = 1 ; right = 2
-target = 2; % VCVS = 1 ; GPi = 2
-% Plot left hemisphere GPi heatmaps
-circadian_heat_map;
-% Plot left hemisphere GPi acrophase plots
-acrophase_plots;
+load('/Users/sameerrajesh/Desktop/DATA/demo_data_GPi_prepped.mat')
+
+%%patients = [1,4]; % Set GPi patient range
+
+% Plot left hemisphere VS heatmaps
+circadian_heatmap(percept_data,1,zone_index);
+% Plot left hemisphere VS acrophase plots
+circadian_acrophase(percept_data,1,zone_index);
+
+
 % Plot left hemisphere GPi sample entropy
-loadfile = 'GPI_all_daily_stats.mat';
 y_name = 'sample entropy'; %y axis label
-stat = comb_entropy; %setting metric variable here
-stat_over_time;
+stat_over_time(percept_data,'entropy',1,zone_index);
+
+
+
+
+
 % Switch to right hemisphere
-hem = 2; % left = 1 ; right = 2
-target = 2; % VCVS = 1 ; GPi = 2
-% Plot right hemisphere GPi heatmaps
-circadian_heat_map;
-% Plot right hemisphere GPi acrophase plots
-acrophase_plots;
-% Plot right hemisphere GPi sample entropy
-loadfile = 'GPI_all_daily_stats.mat';
+% Plot left hemisphere VS heatmaps
+circadian_heatmap(percept_data,2,zone_index);
+% Plot left hemisphere VS acrophase plots
+circadian_acrophase(percept_data,2,zone_index);
+
+
+% Plot left hemisphere GPi sample entropy
 y_name = 'sample entropy'; %y axis label
-stat = comb_entropy; %setting metric variable here
-stat_over_time;
+stat_over_time(percept_data,'entropy',2,zone_index);

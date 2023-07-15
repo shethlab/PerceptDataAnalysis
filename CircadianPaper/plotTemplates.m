@@ -21,7 +21,6 @@ end
 days = [];
 if sd == 1
 for j = 1:3
-
      zoneTemplateGeneration(logged,percept_data.acrophase,percept_data.cosinor_p,percept_data.days,0,0,1,daystoplot{j},0);
 end
 end

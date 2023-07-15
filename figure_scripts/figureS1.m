@@ -6,3 +6,4 @@ load('/Users/sameerrajesh/Desktop/DATA/demo_data_prepped.mat');
 circadian_heatmap(percept_data,2,zone_index);
 % Plot left hemisphere VS acrophase plots
 circadian_acrophase(percept_data,2,zone_index);
+toc

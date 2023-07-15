@@ -1,17 +1,6 @@
 # PerceptDataAnalysis
 Details of Code involved in the analysis of data from Medtronic Percept PC
-## computeSpectrum
-computeSpectrum takes in a time domain stream and outputs the result of spectral analysis in the form of an LFP amplitude for each frequency in the desired range. This function is intended to reconstruct the snapshot spectra provided by Medtronic's Percept PC device.
 
-The function in takes raw data and a frequency array specifying the exact frequencies to compute the LFP amplitude. First, it multiplies the raw data by $1.6985$. This factor includes corrections to the time-domain to account for differences in on-chip Power estimation and offline estimation, the latter of which uses Welch's method. Additionally, it converts the data to units of microvolts-peak.
-
-After scaling the raw data, Power Spectral Density is [estimated via Welch's method](https://www.mathworks.com/help/signal/ref/pwelch.html) using a window size of 1 second and overlap size of 0.6 seconds wtih a 256 point FFT. After computing the PSD, LFP amplitude is computed as $\sqrt{\textnormal{PSD}}$. This LFP amplitude in units of $\textnormal{uVp}$ is calculated at each frequency bin, and the result is returned as a vector along with an array of frequencies at which the amplitude was calculated.
-
-We experimentally show that this method is similar to the on-chip algorithm. We recorded two consecutive snapshots (30 second LFP streams converted to LFP amplitude spectra on-board the device). Immediately afterwards, we recorded 1 minute of BrainSense TimeDomain (1 minute of raw LFP data). We then selected a 30 second window of LFP data and applied computeSpectrum to it to compute an LFP amplitude spectrum. We plotted the data from each snapshot along with the computed LFP amplitude spectrum to show their agreement bilaterally (data gathered from STN). ![Fig1Alterted](https://user-images.githubusercontent.com/68879124/229304473-6b51a723-8184-4bc5-ba45-63ad5841c7a1.png)
-
-Notably, this comparison requires us to be confident that the neural activity we recorded during the 1 minute time domain streaming is similar to that during the recorded LFP snapshots. This is likley true since we minimize the amount of time between snapshot recording and time domain recording, and both recordings were taken at rest. However, towards the end of the 1 minute time domain recording, we encountered some artifacts which strongly affect the power spectrum. We did not include segments containing these artifacts in our analysis/comparison detailed above; the relevant artifact and spectral distortion are shown below (data gathered from VC/VS).
-
-![Fig2](https://user-images.githubusercontent.com/68879124/229225749-2cfea2a8-2f9d-43a8-980d-ad9e4868cd61.png)
 
 # System Requirements
 ## Hardware requirements
@@ -47,24 +36,107 @@ Respective version of the Signal Processing Toolbox: https://www.mathworks.com/p
     ~5 minute installation
 EntropyHub Toolbox v0.2: https://github.com/MattWillFlood/EntropyHub
     ~5 minute installation
+    
+
+# Code Instructions for Use and Demonstrations
+Below are instructions for generating each of the code-based figures in the paper sequentially. For all figures, axis and other aesthetic adjustments were completed on Adobe Illustrator. All Figure code contained in Github folder "figure_scripts". Demo data and figures in DEMO folder.
+
+## Raw Data Extraction
+Run data_generation.m in the CircadianPaper folder. Select the .json files and indicate both date of DBS onset and patient label when required. Output will be of equivalent form to that stored in demo_data.mat. Estimated runtime 5-10s per patient depending on data quantity.
+
+## Data Preparation
+
+Download “demo_data.mat” Open dataprep.m and adjust the load path to “demo_data.mat” in the code. Run code. Expected run time ~2 minutes for included demo_data file. Outputs of running are saved in “demo_data_prepped.mat” and “demo_data_prepped1day.mat” (included as separate demo files for convenience in running the demonstrations). 
+
+## Statistical Calculations
+detailedStats.m in the utils folder is the central statistical function. It intakes any two datasets and outputs our full set of statistical information. After gathering data, divide dataset to appropriate day ranges needed for comparison and run detailedStats.m on the data you wish to compare.
+
+## Figure 1
+Panel A: generated via Lead-DBS as described in the methods section.
+
+Panel B: download data file "streamsplot.mat" into a folder accessible by MATLAB. Open figure1.m and edit directories to match those corresponding to your local machine for “streamsplot.mat”, then run the code. 
+
 
 Demo:
-Data files
- - VCVS_all_daily_stats.mat
- - VCVS_all_5day_stats.mat
- - GPI_all_daily_stats.mat
- - GPI_all_5day_stats.mat (but we do not include R2 or amp for GPi)
-Total Preprocessing and plotting runtime: <5 minutes
-* Only use "...5day_stats.mat" when plotting R2 or amplitude *
-acrophase_plots.m - run to produce polar cosinor plots
-circadian_heat_map.m - run to produce spectrogram heat maps
-plotTemplates.m - run to produce circular or unwrapped plots of single-day or whole-epoch median 9 Hz power
-    - uses zoneTemplateGeneration.m for plotting, any figure edits should occur here
-PSD_generation_subplot.m - run to visualize intraop 9 Hz peak with PSD for each patient
-stat_calculations.m - calculate sample entropy for each data stream (should this be first?)
-stat_gif_plot.m - run to flip through every single day template for a patient
-stat_over_time.m - run to visualize sample entropy, R2, or cosinor fit amplitude over time for each patient
 
-Instructions for use:
-All code is configured to run after replacing load paths with file locations on local device
-Plotting code can be run in any order, all depend on the same input file
+![Fig1](DEMO/Figures/fig1.png)
+ 
+
+
+(Runtime ~1-3 seconds)
+
+
+
+## Figure 2
+
+Panels A-D are copyrighted artist illustrations.
+
+Panel E-F:
+
+Download “demo_data_prepped.mat” into a folder accessible by MATLAB. Adjust the load directory in the code to load the above noted file. Run figure2.m
+
+Demo:
+
+![Fig2acro](DEMO/Figures/fig2acro.png)
+
+
+
+## Figure 3
+
+Stills and raw audio trace not shared. Download “audioinfo.mat” into a folder accessible by MATLAB. Adjust the load directory in the code to load the file, and run the program figure3.m. Runtime ~1 second. 
+
+Demo:
+
+![Fig3](DEMO/Figures/fig3audio.png)
+
+
+## Figure 4
+Template plots: Download “demo_data_prepped_1day.mat” and “singleDayTemplateDates.mat” into the appropriate load directory on the local machine. Run figure4.m. The last 3 figures correspond to the dates shown as representatives of the first, second and third quartiles respectively. Demo figure 3 below shows only the example 3rd quartile plots (5th plot generated by code). Expected run time 3.5s
+
+Demo:
+
+![Fig4wrap](DEMO/Figures/fig4avgwrap.png)
+![Fig4unwrap](DEMO/Figures/fig4avgunwrap.png)
+![Fig4q3](DEMO/Figures/fig4sd3q.png)
+
+
+
+
+Violin Plots (python code): Allow python access to the directory in which the  “demo_data_prepped_1day.mat” is stored and run plot_violin_entropy.py.
+
+## Figure 5
+Panel A: Download “demo_data_prepped_1day.mat” into a folder accessible by MATLAB. Adjust the load directory in the code to load the above noted file.Run figure5.m. Runtime ~1 second
+
+Demo:
+
+![Fig5](DEMO/Figures/figure5.png)
+
+
+
+
+Panel B: Made entirely through shapes and text in Adobe Illustrator.
+
+
+
+
+## Figure S1
+Download “demo_data_prepped.mat” and adjust load directory for MATLAB to access file. Run figureS1.m Runtime ~1 second.
+
+
+## Figure S2
+Download “demo_data_prepped.mat” and adjust load directory for MATLAB to access file. Run figureS2.m Runtime ~1 second.
+
+Demo:
+
+![FigS2a](DEMO/Figures/figureS2a.png)
+![FigS2b](DEMO/Figures/figureS2b.png)
+
+
+## Figure S3
+Download “demo_data_prepped.mat” and adjust load directory for MATLAB to access file. Run figureS3.m Runtime ~1 second.
+
+Demo:
+
+![FigS3](DEMO/Figures/figureS3.png)
+
+

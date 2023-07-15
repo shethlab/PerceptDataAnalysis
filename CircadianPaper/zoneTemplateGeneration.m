@@ -24,11 +24,14 @@ if isempty(daystoplot)
     maniadays = {[];30:69;0:8;0:4;[]};
     postDBSdays = {[];[0:29,70:296];[];[];0:665};
     healthydays = {48:100;[];176:665;95:290;[]};
+    single_day = 0;
 else
+
     preDBSdays = daystoplot{1};
     maniadays = daystoplot{2};
     postDBSdays = daystoplot{3};
     healthydays = daystoplot{4};
+    single_day = 1;
 end
 
 c_red = [255,0,0]/255;
@@ -58,23 +61,31 @@ for i = 1:5
     for j = 2:3
         %% Pre DBS
         [~, indspre] = intersect(days{i,j},preDBSdays{i});
-        indspre=setdiff(indspre,find(isnan(acrophases{i,j}(:,:,1))));
+        if ~single_day
+            indspre=setdiff(indspre,find(isnan(acrophases{i,j}(:,:,1))));
+        end
         templates{i,j}(:,1) = median(smoothedRotatedCircadianMatrices{i,j}(:,indspre),2,'omitnan');
 
 
 
         [~, maniainds] = intersect(days{i,j},maniadays{i});
-        maniainds=setdiff(maniainds,find(isnan(acrophases{i,j}(:,:,1))));
+        if ~single_day
+            maniainds=setdiff(maniainds,find(isnan(acrophases{i,j}(:,:,1))));
+        end
         templates{i,j}(:,2) = median(smoothedRotatedCircadianMatrices{i,j}(:,maniainds),2,'omitnan');
 
 
         [~, postDBSinds] = intersect(days{i,j},postDBSdays{i});
-        postDBSinds=setdiff(postDBSinds,find(isnan(acrophases{i,j}(:,:,1))));
+        if ~single_day
+            postDBSinds=setdiff(postDBSinds,find(isnan(acrophases{i,j}(:,:,1))));
+        end
         templates{i,j}(:,3) = median(smoothedRotatedCircadianMatrices{i,j}(:,postDBSinds),2,'omitnan');
 
 
         [~, indshealth] = intersect(days{i,j},healthydays{i});
-        indshealth=setdiff(indshealth,find(isnan(acrophases{i,j}(:,:,1))));
+        if ~single_day
+            indshealth=setdiff(indshealth,find(isnan(acrophases{i,j}(:,:,1))));
+        end
         templates{i,j}(:,4) = median(smoothedRotatedCircadianMatrices{i,j}(:,indshealth),2,'omitnan');
     end
 end
@@ -131,7 +142,8 @@ else
 
             title(smoothedRotatedCircadianMatrices{i,1});
             linkaxes;
-            xticks([0,143/24,143/12,143/6,143]);
+            xticks([]);
+            %xticks([0,143/24,143/12,143/6,143]);
             j = j+1;
         end
         title(t,hems{h-1});
