@@ -36,11 +36,11 @@ function LFP_trend=extract(filename)
         LFP=nan(2,max(length(data_left),length(data_right)));
         stim_amp=nan(2,max(length(data_left),length(data_right)));
 
-        [~,left_indices]=ismember(date_time,{data_left.DateTime});
-        LFP(1,left_indices(left_indices>0))=[data_left.LFP]; %left_indices=0 indicates non-member
+        [~,left_indices]=ismember({data_left.DateTime},date_time);
+        LFP(1,left_indices)=[data_left.LFP]; %left_indices=0 indicates non-member
         stim_amp(1,left_indices(left_indices>0))=[data_left.AmplitudeInMilliAmps]; %left_indices=0 indicates non-member
         
-        [~,right_indices]=ismember(date_time,{data_right.DateTime});
+        [~,right_indices]=ismember({data_right.DateTime},date_time);
         LFP(2,right_indices(right_indices>0))=[data_right.LFP]; %right_indices=0 indicates non-member
         stim_amp(2,right_indices(right_indices>0))=[data_right.AmplitudeInMilliAmps]; %right_indices=0 indicates non-member
         

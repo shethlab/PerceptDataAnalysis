@@ -64,7 +64,7 @@ for j = 1:size(percept_data.LFP_norm_matrix,1)
         R2 = nan(1,length(days));
         
         for i = 1:length(days) %Iterating on the specified window for each day in the dataset
-            %disp([percept_data.days{j,1},' - ',num2str(i)])
+            disp([percept_data.days{j,1},' - ',num2str(i)])
             if any((start_index > i-window_left & start_index <= i+window_right) | length(days) < i+window_right)
                 % Skipping calculations if there are full-day or greater gaps in data in the specified window
             else
@@ -88,7 +88,15 @@ for j = 1:size(percept_data.LFP_norm_matrix,1)
     percept_data.acrophase{j,hemisphere+1} = acro;
     percept_data.cosinor_p{j,hemisphere+1} = p;
     percept_data.cosinor_R2{j,hemisphere+1} = R2;
+
     end
+    
+    %Copying patient labels
+    percept_data.entropy{j,1} = percept_data.days{j,1};
+    percept_data.amplitude{j,1} = percept_data.days{j,1};
+    percept_data.acrophase{j,1} = percept_data.days{j,1};
+    percept_data.cosinor_p{j,1} = percept_data.days{j,1};
+    percept_data.cosinor_R2{j,1} = percept_data.days{j,1};
 end
 
 end

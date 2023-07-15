@@ -66,8 +66,8 @@ for hemisphere=1:2
 
     %Remove empty days from LFP data matrix and create nan-filled, outlier-removed, per-day normalized matrix
     LFP_matrix{hemisphere}(:,all_nan_days)=[];
-    LFP_filled=fillData(LFP_matrix{hemisphere},DBS_time{hemisphere});
-    LFP_norm_matrix{hemisphere}=(LFP_filled-nanmean(LFP_filled))./nanstd(LFP_filled);
+    time_matrix{hemisphere}(:,all_nan_days)=[];
+    LFP_norm_matrix{hemisphere}=(LFP_matrix{hemisphere}-nanmean(LFP_matrix{hemisphere}))./nanstd(LFP_matrix{hemisphere});
 end
 
 %% Add raw, normalized, and timestamp data to a combined cell array of all patients
@@ -92,10 +92,10 @@ for hemisphere=1:2
     percept_data.LFP_raw_matrix{subject_idx,1}=subject_name;
     
     %Column 2 is left hemisphere data, column 3 is right hemisphere data
-    percept_data.days{subject_idx,hemisphere+1}=DBS_time{hemisphere};
+    percept_data.days{subject_idx,hemisphere+1}=DBS_time{hemisphere}';
     percept_data.time_matrix{subject_idx,hemisphere+1}=time_matrix{hemisphere};
     percept_data.LFP_norm_matrix{subject_idx,hemisphere+1}=LFP_norm_matrix{hemisphere};
     percept_data.LFP_raw_matrix{subject_idx,hemisphere+1}=LFP_matrix{hemisphere};
 end
 
-clearvars -except percept_data t2
+clearvars -except percept_data zone_index

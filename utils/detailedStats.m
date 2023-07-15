@@ -1,6 +1,7 @@
-function allStats = detailedStats(x,y)
+function allStats = detailedStats(y,x,label)
 %% Return Detailed Statistics obtained from testing H0 that x ~ y
-if ~isempty(x) && ~isempty(y)
+allStats.subject = label;
+if ~isempty(x) && ~isempty(y)    
     [~,p,ci,stats] = ttest2(x,y,'Vartype','unequal');
     effect = meanEffectSize(x,y,'Effect','cohen','VarianceType','unequal');
     allStats.pvalue = p;
@@ -21,6 +22,8 @@ else
     allStats.effectSize = [];
     allStats.effectCI = [];
 end
+
 allStats.sampleSizePre = length(y);
 allStats.sampleSizePost = length(x);
+
 end
