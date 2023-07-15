@@ -43,7 +43,7 @@ smoothedRotatedCircadianMatrices = {};
 for i = 1:5
     smoothedRotatedCircadianMatrices{i,1} = circadianData{i,1};
     for j = 2:3
-        smoothedRotatedCircadianMatrices{i,j} = smoothRotate(circadianData{i,j},acrophases{i,j-1},pvals{i,j-1},smooth);
+        smoothedRotatedCircadianMatrices{i,j} = smoothRotate(circadianData{i,j},acrophases{i,j},pvals{i,j},smooth);
     end
 
 end
@@ -57,24 +57,24 @@ for i = 1:5
     templates{i,1} = smoothedRotatedCircadianMatrices{i,1};
     for j = 2:3
         %% Pre DBS
-        [~, indspre] = intersect(days{i,j-1},preDBSdays{i});
-        indspre=setdiff(indspre,find(isnan(acrophases{i,j-1}(:,:,1))));
+        [~, indspre] = intersect(days{i,j},preDBSdays{i});
+        indspre=setdiff(indspre,find(isnan(acrophases{i,j}(:,:,1))));
         templates{i,j}(:,1) = median(smoothedRotatedCircadianMatrices{i,j}(:,indspre),2,'omitnan');
 
 
 
-        [~, maniainds] = intersect(days{i,j-1},maniadays{i});
-        maniainds=setdiff(maniainds,find(isnan(acrophases{i,j-1}(:,:,1))));
+        [~, maniainds] = intersect(days{i,j},maniadays{i});
+        maniainds=setdiff(maniainds,find(isnan(acrophases{i,j}(:,:,1))));
         templates{i,j}(:,2) = median(smoothedRotatedCircadianMatrices{i,j}(:,maniainds),2,'omitnan');
 
 
-        [~, postDBSinds] = intersect(days{i,j-1},postDBSdays{i});
-        postDBSinds=setdiff(postDBSinds,find(isnan(acrophases{i,j-1}(:,:,1))));
+        [~, postDBSinds] = intersect(days{i,j},postDBSdays{i});
+        postDBSinds=setdiff(postDBSinds,find(isnan(acrophases{i,j}(:,:,1))));
         templates{i,j}(:,3) = median(smoothedRotatedCircadianMatrices{i,j}(:,postDBSinds),2,'omitnan');
 
 
-        [~, indshealth] = intersect(days{i,j-1},healthydays{i});
-        indshealth=setdiff(indshealth,find(isnan(acrophases{i,j-1}(:,:,1))));
+        [~, indshealth] = intersect(days{i,j},healthydays{i});
+        indshealth=setdiff(indshealth,find(isnan(acrophases{i,j}(:,:,1))));
         templates{i,j}(:,4) = median(smoothedRotatedCircadianMatrices{i,j}(:,indshealth),2,'omitnan');
     end
 end

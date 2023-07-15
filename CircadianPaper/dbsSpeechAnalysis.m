@@ -1,5 +1,4 @@
-close all
-loaddir = '/Users/sameerrajesh/Desktop/';
+
 Fs = 48000;
 %colors
 c_red = [255,0,0]/255;

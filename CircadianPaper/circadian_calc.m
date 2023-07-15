@@ -64,7 +64,7 @@ for j = 1:size(percept_data.LFP_norm_matrix,1)
         R2 = nan(1,length(days));
         
         for i = 1:length(days) %Iterating on the specified window for each day in the dataset
-            disp([percept_data.days{j,1},' - ',num2str(i)])
+            %disp([percept_data.days{j,1},' - ',num2str(i)])
             if any((start_index > i-window_left & start_index <= i+window_right) | length(days) < i+window_right)
                 % Skipping calculations if there are full-day or greater gaps in data in the specified window
             else

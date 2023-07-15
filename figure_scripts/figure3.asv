@@ -1,5 +1,3 @@
-tic
 addpath(genpath('/Users/sameerrajesh/Desktop/GitHub/PerceptDataAnalysis'));
-load('/Users/sameerrajesh/Desktop/DATA/streamsplot.mat');
+load('/Users/sameerrajesh/Desktop/streamsplot.mat');
 PSD_generation_subplot;
-toc
