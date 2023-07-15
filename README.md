@@ -39,7 +39,7 @@ EntropyHub Toolbox v0.2: https://github.com/MattWillFlood/EntropyHub
     
 
 # Code Instructions for Use and Demonstrations
-Below are instructions for generating each of the code-based figures in the paper sequentially. For all figures, axis and other aesthetic adjustments were completed on Adobe Illustrator.
+Below are instructions for generating each of the code-based figures in the paper sequentially. For all figures, axis and other aesthetic adjustments were completed on Adobe Illustrator. All Figure code contained in Github folder "figure_scripts". Demo data and figures in DEMO folder.
 
 ## Raw Data Extraction
 
