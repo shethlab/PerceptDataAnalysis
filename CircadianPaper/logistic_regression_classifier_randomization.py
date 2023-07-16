@@ -51,7 +51,7 @@ def main():
 
     for pt in pt_numbers:
         # Create a DataFrame for the patient data
-        all_data  = create_dataframe('demo_data_1day.mat', eng, pt)
+        all_data  = create_dataframe('demo_data_prepped_VCVS.mat', eng, pt)
         
         # Select rows where Labels are either 0 or 1
         comp = all_data[(all_data['Labels'] == 0) | (all_data['Labels'] == 1)]
