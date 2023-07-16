@@ -37,9 +37,9 @@ line_dict[f'PT006']['Long'] = (.33, .5, .36)
 # Function to create a pandas DataFrame by loading data from a .mat file
 def create_dataframe(mat_file, eng, num):
     # Load the entropy data from the .mat file
-    data = pd.DataFrame(eng.eval(f"load('{mat_file}').percept_data.entropy{{{num},{HEMISPHERE+1}}};"))
+    data = pd.DataFrame(eng.eval(f"load('{mat_file}').percept_data_VCVS.entropy{{{num},{HEMISPHERE+1}}};"))
     # Load the label data from the .mat file
-    labels = pd.DataFrame(eng.eval(f"load('{mat_file}').percept_data.grouplabels{{{num},{HEMISPHERE+1}}};"))
+    labels = pd.DataFrame(eng.eval(f"load('{mat_file}').percept_data_VCVS.grouplabels{{{num},{HEMISPHERE+1}}};"))
     # Concatenate data and labels DataFrames
     concat = pd.concat([data,labels]).T
     concat.columns = ['Sample_Entropy', 'Labels']
@@ -54,9 +54,9 @@ def main():
     pointpos_female = [0.6,0.3,1,1.2,.4]
 
     # Iterate over the patients
-    for count, pt in enumerate([4,1,5,6,2]): 
+    for count, pt, id in zip([0,1,2,3,4], [4,1,5,6,2], [3,1,4,5,2]) 
         # Create a DataFrame for the patient data
-        all_data  = create_dataframe('004_test.mat', eng, pt)
+        all_data  = create_dataframe('demo_data_1day.mat', eng, pt)
         # Select rows where Labels are either 0 or 1
         pre_dbs = all_data[(all_data['Labels'] == 0)]
         chronic = all_data[(all_data['Labels'] == 1)]
