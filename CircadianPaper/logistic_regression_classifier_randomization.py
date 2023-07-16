@@ -13,9 +13,9 @@ HEMISPHERE = 1 # 1 for Left hemisphere and 2 for right hemisphere
 # Create a pandas DataFrame by loading data from a .mat file
 def create_dataframe(mat_file, eng, num):
     # Load the entropy data from the .mat file
-    data = pd.DataFrame(eng.eval(f"load('{mat_file}').percept_data.entropy{{{num},{HEMISPHERE+1}}};"))
+    data = pd.DataFrame(eng.eval(f"load('{mat_file}').percept_data_VCVS.entropy{{{num},{HEMISPHERE+1}}};"))
     # Load the label data from the .mat file
-    labels = pd.DataFrame(eng.eval(f"load('{mat_file}').percept_data.grouplabels{{{num},{HEMISPHERE+1}}};"))
+    labels = pd.DataFrame(eng.eval(f"load('{mat_file}').percept_data_VCVS.grouplabels{{{num},{HEMISPHERE+1}}};"))
     
     # Concatenate data and labels DataFrames
     concat = pd.concat([data,labels]).T
@@ -51,7 +51,7 @@ def main():
 
     for pt in pt_numbers:
         # Create a DataFrame for the patient data
-        all_data  = create_dataframe('004_test.mat', eng, pt)
+        all_data  = create_dataframe('demo_data_1day.mat', eng, pt)
         
         # Select rows where Labels are either 0 or 1
         comp = all_data[(all_data['Labels'] == 0) | (all_data['Labels'] == 1)]
