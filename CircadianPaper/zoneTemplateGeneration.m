@@ -99,7 +99,7 @@ if wrapped
 
         t = tiledlayout(2-overlaid,5);
         j = 1;
-        for i =[1,3,4,2,5]
+        for i =1:5
             nexttile(j)
             polarPlotDay(templates{i,h}(:,1),smoothedRotatedCircadianMatrices{i,1},c_yellow);
             hold on
@@ -121,7 +121,7 @@ else
         figure('units','inches','position',[1 1 2 5]);%('Position', get(0, 'Screensize'));
         t = tiledlayout(5,2-overlaid);
         j = 1;
-        for i =[1,3,4,2,5]
+        for i =1:5
             nexttile(j)
             plot((0:143)/6,[templates{i,h}(:,1)-mean(templates{i,h}(:,1),'omitnan')],'Color',c_yellow,'LineWidth',2);
             %plot((0:143)/6,[templates{i,h}(:,1);templates{i,h}(:,1)],'Color',c_yellow,'LineWidth',2);
