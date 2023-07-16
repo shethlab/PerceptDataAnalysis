@@ -1,6 +1,8 @@
 tic
 addpath(genpath('/Users/sameerrajesh/Desktop/GitHub/PerceptDataAnalysis'));
-load('/Users/sameerrajesh/Desktop/DATA/audioinfo.mat');
+loaddir = '/Users/sameerrajesh/Desktop/DATA/';
+loadfile = 'audioinfo.mat';
+load(strcat(loaddir,loadfile));
 dbsSpeechAnalysis;
 %% Audio Statistics located in audiostats, other variables cleared from workspace
 clearvars -except audiostats

@@ -29,7 +29,7 @@ for j = 1:size(data.days,1)
     days = data.days{j,hemisphere+1};
     
     %Find indices of each zone
-    pre_DBS_idx = find(days < 0);
+    pre_DBS_idx = find(days < 0)';
     [~,non_responder_idx] = intersect(days,zone_index.non_responder{j});
     [~,responder_idx] = intersect(days,zone_index.responder{j});
     [~,manic_idx] = intersect(days,zone_index.hypomania{j});

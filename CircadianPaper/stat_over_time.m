@@ -98,7 +98,7 @@ for j=1:size(data.days,1)
     %Find indices of discontiuous days of data       
     start_index=find(diff(days)>1);
     if ~isempty(start_index)
-        start_index=[1;start_index+1;length(days)+1];
+        start_index=[1, start_index+1, length(days)+1];
     else
         start_index=[1;length(days)+1];
     end

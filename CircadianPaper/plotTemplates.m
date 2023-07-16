@@ -1,4 +1,4 @@
-function plotTemplates(percept_data,wrapped,bilateral,sd,daystoplot);
+function plotTemplates(percept_data,wrapped,bilateral,sd,daystoplot)
 
 %% Average Templates
 filled = {};
@@ -12,7 +12,7 @@ for i = 1:5
     end
 end
 if sd == 0
-zoneTemplateGeneration(logged,percept_data.acrophase,percept_data.cosinor_p,percept_data.days,1,1,wrapped,[],bilateral)
+zoneTemplateGeneration(logged,percept_data.acrophase,percept_data.cosinor_p,percept_data.days,1,1,wrapped,daystoplot,bilateral)
 else
 end
 

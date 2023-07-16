@@ -19,11 +19,11 @@ function zoneTemplateGeneration(circadianData,acrophases,pvals,days,smooth,overl
 
 
 %% Zone Days and Colors
-if isempty(daystoplot)
+if isstruct(daystoplot)
     preDBSdays = {-100:-1;-100:-1;-100:-1;-100:-1;-100:-1};
-    maniadays = {[];30:69;0:8;0:4;[]};
-    postDBSdays = {[];[0:29,70:296];[];[];0:665};
-    healthydays = {48:100;[];176:665;95:290;[]};
+    maniadays = daystoplot.hypomania;
+    postDBSdays = daystoplot.non_responder;
+    healthydays = daystoplot.responder;
     single_day = 0;
 else
 
