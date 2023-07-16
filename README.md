@@ -111,7 +111,7 @@ Panel A: Run figure5.m. Runtime ~1 second
 
 Demo:
 
-![Fig5](DEMO/Figures/figure5.png)
+![Fig5](DEMO/Figures/fig5.png)
 
 
 
@@ -135,8 +135,8 @@ Run figureS2.m Runtime ~1 second.
 
 Demo:
 
-![FigS2a](DEMO/Figures/figureS2a.png)
-![FigS2b](DEMO/Figures/figureS2b.png)
+![FigS2a](DEMO/Figures/figS2a.png)
+![FigS2b](DEMO/Figures/figS2b.png)
 
 
 ## Figure S3
@@ -144,7 +144,7 @@ Run figureS3.m Runtime ~1 second.
 
 Demo:
 
-![FigS3](DEMO/Figures/figureS3.png)
+![FigS3](DEMO/Figures/figS3.png)
 
 ## Figure S4
 Run figureS4.m Runtime ~1 second. The first two figures are for left GPi, which are shown below. Right GPi data plotted in the second two figures (not shown).
