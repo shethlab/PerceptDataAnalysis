@@ -104,7 +104,7 @@ Demo:
 
 
 Violin Plots (python code): Allow python access to the data directory and run plot_violin_entropy.py.
-![Fig4violin](DEMO/Figures/fig4sd3q.png)
+![Fig4violin](DEMO/Figures/fig4violin.png)
 
 ## Figure 5
 Panel A: Run figure5.m. Runtime ~1 second
