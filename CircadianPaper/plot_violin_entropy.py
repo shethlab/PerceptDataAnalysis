@@ -56,7 +56,7 @@ def main():
     # Iterate over the patients
     for count, pt, id in zip([0,1,2,3,4], [4,1,5,6,2], [3,1,4,5,2]) 
         # Create a DataFrame for the patient data
-        all_data  = create_dataframe('demo_data_1day.mat', eng, pt)
+        all_data  = create_dataframe('demo_data_prepped_VCVS.mat', eng, pt)
         # Select rows where Labels are either 0 or 1
         pre_dbs = all_data[(all_data['Labels'] == 0)]
         chronic = all_data[(all_data['Labels'] == 1)]
