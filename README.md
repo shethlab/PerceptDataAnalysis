@@ -46,10 +46,10 @@ Run data_generation.m in the figure_scripts folder. Select the .json files and i
 
 ## Data Preparation
 
-Download “demo_data.mat” Open dataprep.m from the figure_scripts folder and adjust the load path to “demo_data.mat” in the code. Run code. Expected run time ~4-5 minutes for included demo_data file. Outputs of running are saved in “demo_data_prepped_VCVS.mat” and “demo_data_prepped1day_VCVS.mat” (or equivalent files titled for GPi). All data are saved in the same directory, and this directory will be the same one used for all future code. **FOR THE DEMO, THIS SCRIPT MUST BE RUN ON demo_data.mat PRIOR TO ANY FIGURE SCRIPTS**
+Download “demo_data.mat” to your local data directory. Open dataprep.m from the figure_scripts folder and adjust the load path to “demo_data.mat” in the code. Run code. Expected run time ~4-5 minutes for included demo_data file. Outputs of running are saved in “demo_data_prepped_VCVS.mat” and “demo_data_prepped1day_VCVS.mat” (or equivalent files titled for GPi). All data are saved in the same directory, and this directory will be the same one used for all future code. **FOR THE DEMO, THIS SCRIPT MUST BE RUN ON demo_data.mat PRIOR TO ANY FIGURE SCRIPTS**
 
 ## Statistical Calculations
-stat_calculations.m in the CircadianPaper folder is the central statistical function. It intakes a percept_data struct (which is the output of the above dataprep.m code), the zone_index variable stored in the above outputted file, and a string filed describing the metric you wish to do a statistical comparison for.
+stat_calculations.m in the CircadianPaper folder is the central statistical function. It intakes a percept_data struct (which is the output of the above dataprep.m code), the zone_index variable stored in the above outputted file, and a string field describing the metric you wish to do a statistical comparison for.
 
 ## Figure 1
 Panel A: generated via Lead-DBS as described in the methods section.
