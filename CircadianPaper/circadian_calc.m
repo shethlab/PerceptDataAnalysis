@@ -21,6 +21,7 @@ if exist('is_demo','var') && is_demo == 1
         all_components = [2,1];
         all_peaks = [2,1];
     end
+end
 
 for j = 1:size(percept_data.days,1)
     if exist('all_components','var')
