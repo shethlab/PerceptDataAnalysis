@@ -1,6 +1,6 @@
 %% Choosing files and DBS onset date
 
-clearvars -except percept_data zone_index
+clearvars -except percept_data_VCVS percept_data_GPi percept_data zone_index_VCVS zone_index_GPi
 
 c=readtable('C:\Users\Sandy\Box\Percept\Data\Patient_Information.xlsx');
 
@@ -55,12 +55,17 @@ unique_rounded_dates=unique(rounded_dates);
 LFP_matrix{1}=nan(24*6,length(unique_rounded_dates));
 LFP_matrix{2}=nan(24*6,length(unique_rounded_dates));
 
+stim_matrix{1}=nan(24*6,length(unique_rounded_dates));
+stim_matrix{2}=nan(24*6,length(unique_rounded_dates));
+
 for i=1:length(unique_rounded_dates)
     [~,idx]=ismember(rounded_dates,unique_rounded_dates(i));
     LFP_matrix{1}(disc_TOD(idx>0),i)=LFP(1,idx>0);
+    stim_matrix{1}(disc_TOD(idx>0),i)=stim(1,idx>0);
     time_matrix{1}(disc_TOD(idx>0),i)=unique_dates(idx>0);
 
     LFP_matrix{2}(disc_TOD(idx>0),i)=LFP(2,idx>0);
+    stim_matrix{2}(disc_TOD(idx>0),i)=stim(2,idx>0);
     time_matrix{2}(disc_TOD(idx>0),i)=unique_dates(idx>0);
 end
 
@@ -76,6 +81,7 @@ for hemisphere=1:2
 
     %Remove empty days from LFP data matrix and create nan-filled, outlier-removed, per-day normalized matrix
     LFP_matrix{hemisphere}(:,all_nan_days)=[];
+    stim_matrix{hemisphere}(:,all_nan_days)=[];
     time_matrix{hemisphere}(:,all_nan_days)=[];
     LFP_norm_matrix{hemisphere}=(LFP_matrix{hemisphere}-nanmean(LFP_matrix{hemisphere}))./nanstd(LFP_matrix{hemisphere});
 end
@@ -100,12 +106,14 @@ for hemisphere=1:2
     percept_data.time_matrix{subject_idx,1}=subject_name;
     percept_data.LFP_norm_matrix{subject_idx,1}=subject_name;
     percept_data.LFP_raw_matrix{subject_idx,1}=subject_name;
+    percept_data.stim_matrix{subject_idx,1}=subject_name;
     
     %Column 2 is left hemisphere data, column 3 is right hemisphere data
     percept_data.days{subject_idx,hemisphere+1}=DBS_time{hemisphere}';
     percept_data.time_matrix{subject_idx,hemisphere+1}=time_matrix{hemisphere};
     percept_data.LFP_norm_matrix{subject_idx,hemisphere+1}=LFP_norm_matrix{hemisphere};
     percept_data.LFP_raw_matrix{subject_idx,hemisphere+1}=LFP_matrix{hemisphere};
+    percept_data.stim_matrix{subject_idx,hemisphere+1}=stim_matrix{hemisphere};
 end
 
-clearvars -except percept_data zone_index_VCVS zone_index_GPi
+clearvars -except percept_data_VCVS percept_data_GPi percept_data zone_index_VCVS zone_index_GPi
