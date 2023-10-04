@@ -19,6 +19,9 @@ c_responder = [0,0,255]/255; % Color of chronic responder zone
 c_nonresponder = [127,63,152]/255; % Color of chronic non-responder zone
 c_preDBS = [255,215,0]/255; % Color of pre-DBS zone
 
+% Stimulation change lines
+include_stim_changes = false; 
+
 %% Plotting
 
 figure('Units','inches','Position',fig_position);
@@ -53,6 +56,17 @@ for j = 1:size(data.days,1)
     c_map(responder_idx,:) = repmat(c_responder,[length(responder_idx),1]);
     c_map(non_responder_idx,:) = repmat(c_nonresponder,[length(non_responder_idx),1]);
     c_map(manic_idx,:) = repmat(c_mania,[length(manic_idx),1]);
+
+    % Find when stimulation is changed day to day
+    if include_stim_changes == 1
+        % find the maximum daily stimulation
+        stim_matrix = cell2mat(data.stim_matrix(j,hemisphere+1));
+        max_daily_stim = max(stim_matrix, [], 1, 'omitnan');
+
+        % when the stimulation changes
+        stim_diffs = diff(max_daily_stim);
+        change_indices = find(stim_diffs) + 1;
+    end
     
     %Colorbar plot
     for i = 1:subplot_number %Split up discontinuous data into multiple plots with small gaps between
@@ -107,6 +121,15 @@ for j = 1:size(data.days,1)
         
         %Adds a vertical line at the zero point
         xline(0,'--y','LineWidth',zero_day_line_thickness,'Alpha',1)
+
+        % Add lines where the stimulation was changed
+        if include_stim_changes == 1
+            days = cell2mat(data.days(j, hemisphere+1));
+            days_to_plot = days(change_indices);
+            days_to_plot = days_to_plot(days_to_plot >= 1);
+
+            xline(days_to_plot, '-.y', 'LineWidth', 1, 'Alpha', 1)
+        end
         
         %Sets the colormap to "jet" and map limits to user spec
         colormap(ax2{i},jet)
