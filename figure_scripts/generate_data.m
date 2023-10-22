@@ -16,10 +16,10 @@ DBS_onset = datetime(DBS_onset,'InputFormat','dd-MMM-yyyy','TimeZone',time_zone)
 %% Raw data, normalized data, and timestamps
 
 %Initialize raw data table either as new or existing
-if ~exist('percept_data','var') || isempty('percept_data')
+if ~exist('percept_data','var') || isempty('percept_data') || ~any(strcmp(subject_name,percept_data.raw_data(:,1)))
     raw_data = [];
 else
-    raw_data = percept_data.raw_data;
+    raw_data = percept_data.raw_data{strcmp(subject_name,percept_data.raw_data(:,1)),2};
 end
 
 %Handling when only one file is selected
