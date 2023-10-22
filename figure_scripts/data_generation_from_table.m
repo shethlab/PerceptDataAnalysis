@@ -21,7 +21,7 @@ function percept_data = data_generation_from_table(subject_name,percept_data,tim
     if ~exist('percept_data','var') || isempty('percept_data')
         raw_data = [];
     else
-        raw_data = percept_data.raw_table;
+        raw_data = percept_data.raw_data;
     end
     
     %Handling when only one file is selected
