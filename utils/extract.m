@@ -31,7 +31,7 @@ function LFP_trend=extract(filename)
            
         % Generate ascending list of unique datetimes
         date_time=sort(unique([{data_left.DateTime},{data_right.DateTime}]))';
-        
+       
         % Create 2 row LFP/stim matrix with values sorted to match respective datetimes above
         LFP=nan(2,max(length(data_left),length(data_right)));
         stim_amp=nan(2,max(length(data_left),length(data_right)));
@@ -45,9 +45,8 @@ function LFP_trend=extract(filename)
         stim_amp(2,right_indices(right_indices>0))=[data_right.AmplitudeInMilliAmps]; %right_indices=0 indicates non-member
         
         % Export values
-        LFP_trend.time=datetime(date_time,'InputFormat','yyyy-MM-dd''T''HH:mm:ss''Z''','TimeZone','UTC');
-        LFP_trend.LFP_amp=LFP;
-        LFP_trend.stim_amp=stim_amp;
+        date_time=datetime(date_time,'InputFormat','yyyy-MM-dd''T''HH:mm:ss''Z''','TimeZone','UTC');
+        LFP_trend = table(date_time,LFP(1,:)',LFP(2,:)',stim_amp(1,:)',stim_amp(2,:)','VariableNames',{'Timestamp','LFP Amp Left','LFP Amp Right','Stim Amp Left','Stim Amp Right'});
     else
         LFP_trend=[];
     end

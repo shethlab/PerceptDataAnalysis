@@ -7,10 +7,10 @@ fig_position = [0,0,7.014,5];
 ylims = []; % 0-1 for R^2, 0-1.2 for amplitude; otherwise leave blank
 tick_height = [0.005,0.005]; % x and y tick height
 EMA_window = 5; %number of days for exponential moving average (EMA)
-sz = 3; %dot sizes
-EMA_sz = 0.5; %line width for EMA
+sz = 10; %dot sizes
+EMA_sz = 0.7; %line width for EMA
 patch_alpha = 0.3; %transparency for background colors
-font_size = 6;
+font_size = 16;
 
 %Color values (RGB 0-1)
 c_mania = [255,0,0]/255;
@@ -34,11 +34,14 @@ switch field
     case 'cosinor_R2'
         y_label = 'R^2';
         ylims = [0,1];
+    case 'autocorrelation'
+        y_label = '24h-Lag Autocorrelation';
+        ylims = [0,1];
     otherwise
         error('Inputted data field is invalid.')
 end
 
-fig=tiledlayout(size(data.days,1),1);
+fig = tiledlayout(size(data.days,1),1);
 
 for j=1:size(data.days,1)  
     
@@ -50,25 +53,29 @@ for j=1:size(data.days,1)
     hold on
     
     %Background patches
-    if ~isempty(zone_index.hypomania{j}) %Hypomania zone
-        zone_idx = [0,find(diff(zone_index.hypomania{j})>1),length(zone_index.hypomania{j})];
-        for i = 1:length(zone_idx)-1
-            patch([zone_index.hypomania{j}(zone_idx(i)+1),zone_index.hypomania{j}(zone_idx(i)+1),zone_index.hypomania{j}(zone_idx(i+1))+1,zone_index.hypomania{j}(zone_idx(i+1))+1],[0,10,10,0],c_mania,'FaceAlpha',patch_alpha,'LineStyle','none')
+    try
+        if ~isempty(zone_index.hypomania{j}) %Hypomania zone
+            zone_idx = [0,find(diff(zone_index.hypomania{j})>1),length(zone_index.hypomania{j})];
+            for i = 1:length(zone_idx)-1
+                patch([zone_index.hypomania{j}(zone_idx(i)+1),zone_index.hypomania{j}(zone_idx(i)+1),zone_index.hypomania{j}(zone_idx(i+1))+1,zone_index.hypomania{j}(zone_idx(i+1))+1],[0,10,10,0],c_mania,'FaceAlpha',patch_alpha,'LineStyle','none')
+            end
         end
-    end
-
-    if ~isempty(zone_index.responder{j}) %Responder zone
-        zone_idx = [0,find(diff(zone_index.responder{j})>1),length(zone_index.responder{j})];
-        for i = 1:length(zone_idx)-1
-            patch([zone_index.responder{j}(zone_idx(i)+1),zone_index.responder{j}(zone_idx(i)+1),zone_index.responder{j}(zone_idx(i+1))+1,zone_index.responder{j}(zone_idx(i+1))+1],[0,10,10,0],c_responder,'FaceAlpha',patch_alpha,'LineStyle','none')
-        end
-    end
     
-    if ~isempty(zone_index.non_responder{j}) %Non-responder zone
-        zone_idx = [0,find(diff(zone_index.non_responder{j})>1),length(zone_index.non_responder{j})];
-        for i = 1:length(zone_idx)-1
-            patch([zone_index.non_responder{j}(zone_idx(i)+1),zone_index.non_responder{j}(zone_idx(i)+1),zone_index.non_responder{j}(zone_idx(i+1))+1,zone_index.non_responder{j}(zone_idx(i+1))+1],[0,10,10,0],c_nonresponder,'FaceAlpha',patch_alpha,'LineStyle','none')
+        if ~isempty(zone_index.responder{j}) %Responder zone
+            zone_idx = [0,find(diff(zone_index.responder{j})>1),length(zone_index.responder{j})];
+            for i = 1:length(zone_idx)-1
+                patch([zone_index.responder{j}(zone_idx(i)+1),zone_index.responder{j}(zone_idx(i)+1),zone_index.responder{j}(zone_idx(i+1))+1,zone_index.responder{j}(zone_idx(i+1))+1],[0,10,10,0],c_responder,'FaceAlpha',patch_alpha,'LineStyle','none')
+            end
         end
+        
+        if ~isempty(zone_index.non_responder{j}) %Non-responder zone
+            zone_idx = [0,find(diff(zone_index.non_responder{j})>1),length(zone_index.non_responder{j})];
+            for i = 1:length(zone_idx)-1
+                patch([zone_index.non_responder{j}(zone_idx(i)+1),zone_index.non_responder{j}(zone_idx(i)+1),zone_index.non_responder{j}(zone_idx(i+1))+1,zone_index.non_responder{j}(zone_idx(i+1))+1],[0,10,10,0],c_nonresponder,'FaceAlpha',patch_alpha,'LineStyle','none')
+            end
+        end
+    catch
+        disp('Invalid zone index labels. Using default color labels.')
     end
     
     patch([min(days)-1,min(days)-1,0,0],[0,10,10,0],c_preDBS,'FaceAlpha',patch_alpha,'LineStyle','none') %Pre-DBS zone

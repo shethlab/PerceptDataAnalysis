@@ -14,12 +14,12 @@ end
 
 % If the demo flag is enabled, uses hardcoded cosinor parameters for the demo dataset
 if exist('is_demo','var') && is_demo == 1
-    if size(percept_data.days,1) == 5 %VC/VS demo data loaded
-        all_components = [3,2,1,1,1];
-        all_peaks = [2,2,1,1,1];
+    if size(percept_data.days,1) == 6 %VC/VS demo data loaded
+        all_components = [3,2,1,1,1,2];
+        all_peaks = [2,2,1,1,1,2];
     else %GPi demo data loaded
-        all_components = [2,1];
-        all_peaks = [2,1];
+        all_components = [2,1,1];
+        all_peaks = [2,1,1];
     end
 end
 
@@ -67,6 +67,7 @@ for j = 1:size(percept_data.days,1)
         amp = nan(1,length(days),num_peaks);
         p = nan(1,length(days));
         R2 = nan(1,length(days));
+        autocorrelation = nan(1,length(days));
         
         for i = 1:length(days) %Iterating on the specified window for each day in the dataset
             disp([percept_data.days{j,1},' - ',num2str(i)])
@@ -80,6 +81,10 @@ for j = 1:size(percept_data.days,1)
                 %Calculation of sample entropy
                 s = SampEn(y_filled,'m',2,'tau',1,'r',3.6,'Logx',exp(1));
                 sample_entropy(i) = s(3);
+
+                %Calculation of autocorrelation
+                [acf, lags] = autocorr(y_filled,NumLags=144);
+                autocorrelation(i) = acf(145);
                 
                 %Calculation of cosinor amplitude, acrophase, p-value, and R^2
                 [amp(1,i,1:num_peaks),acro(1,i,1:num_peaks),p(i),fit] = cosinor(t,y,period,num_components,num_peaks);
@@ -93,7 +98,7 @@ for j = 1:size(percept_data.days,1)
     percept_data.acrophase{j,hemisphere+1} = acro;
     percept_data.cosinor_p{j,hemisphere+1} = p;
     percept_data.cosinor_R2{j,hemisphere+1} = R2;
-
+    percept_data.autocorrelation{j,hemisphere+1} = autocorrelation;
     end
     
     %Copying patient labels
@@ -102,6 +107,7 @@ for j = 1:size(percept_data.days,1)
     percept_data.acrophase{j,1} = percept_data.days{j,1};
     percept_data.cosinor_p{j,1} = percept_data.days{j,1};
     percept_data.cosinor_R2{j,1} = percept_data.days{j,1};
+    percept_data.autocorrelation{j,1} = percept_data.days{j,1};
 end
 
 end
