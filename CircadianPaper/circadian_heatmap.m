@@ -46,9 +46,16 @@ for j = 1:size(data.days,1)
     
     %Find indices of each zone
     pre_DBS_idx = find(days<0);
-    [~,non_responder_idx] = intersect(days,zone_index.non_responder{j});
-    [~,responder_idx] = intersect(days,zone_index.responder{j});
-    [~,manic_idx] = intersect(days,zone_index.hypomania{j});
+    try
+        [~,non_responder_idx] = intersect(days,zone_index.non_responder{j});
+        [~,responder_idx] = intersect(days,zone_index.responder{j});
+        [~,manic_idx] = intersect(days,zone_index.hypomania{j});
+    catch
+        disp('Invalid zone index labels. Using default color labels.')
+        non_responder_idx = [];
+        responder_idx = [];
+        manic_idx = [];
+    end
     
     %Generate RGB colormap for each index of data
     c_map = ones(length(days),3);
@@ -128,7 +135,7 @@ for j = 1:size(data.days,1)
             days_to_plot = days(change_indices);
             days_to_plot = days_to_plot(days_to_plot >= 1);
 
-            xline(days_to_plot, '-.y', 'LineWidth', 1, 'Alpha', 1)
+            xline(days_to_plot, '-.m', 'LineWidth', zero_day_line_thickness, 'Alpha', 1)
         end
         
         %Sets the colormap to "jet" and map limits to user spec
