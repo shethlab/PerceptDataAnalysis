@@ -1,43 +1,64 @@
 %% Generate Figure 1
 %% Data Located in streamsplot.mat
 colors = {[230 145 60]/255,[0 162 89]/255};
-band=[8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79];
-pats = {'P001','P002','P004','P005','P006','P007','P008'};
-figure('Renderer', 'painters', 'PaperUnits','centimeters','PaperPosition',[0,0,8.7,8.85]);
+band=[8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79];
+pats = {'B001','B002','B004','B005','B006','B007','B008','B009','B010','U001','U002','U003'};
+figure('Renderer', 'painters', 'PaperUnits','centimeters','PaperPosition',[0,0,8.7,8.85],'Color','w');
 
-s = 1;
-for i = [3,1,4,5,2,6,7]
+t = tiledlayout(4,3);
+
+
+for i = 1:12
     pt = streams{i};
-    %% Compute and Plot spectrum for each hemisphere
-    for j=1:length(pt)
-        hold on
-        if isempty(pt{j})
-            amp = [];
-            freq = [];
-        else
-            [amp,freq] = computeSpectrum(pt{j});
+                ax = nexttile;
+
+    if i <10
+        %% Compute and Plot spectrum for each hemisphere
+        for j=1:length(pt)
+            hold on
+            if isempty(pt{j})
+                amp = [];
+                freq = [];
+            else
+                [amp,freq] = computeSpectrum(pt{j});
+            end
+            plot(freq,20*log10(amp),'Color',colors{j});
+            hold on
+            xline(band(i))
+            title(ax,pats{i})
+            ax.TitleHorizontalAlignment = 'left';
+
+        
+
+
+
         end
-        if i ==7
-            s = 8;
+    else
+        for j=1:length(pt)
+            if isempty(pt{j})
+                amp = [];
+                freq = [];
+            else
+                amp = pt{j};
+            end
+            plot(frequency,20*log10(amp),'Color',colors{j});
+            hold on
+            xline(band(i))
+            title(ax,pats{i})
+            ax.TitleHorizontalAlignment = 'left';
         end
-        ax = subplot(3,3,s);
-        plot(freq,20*log10(amp),'Color',colors{j});
-        hold on
-        xline(band(i))
-        title(ax,pats{i})
-        ax.TitleHorizontalAlignment = 'left';
     end
-
     box off
-
+        axis square
     %% Plot Limits and Gray Patch on Recording Band
     xlim([0,60])
+    ax = gca;
     x = [band(i)-2.5 band(i)+2.5 band(i)+2.5 band(i)-2.5];
     y = [ax.YLim(1) ax.YLim(1) ax.YLim(2) ax.YLim(2)];
     patch(x,y,[.8 .8 .8],'EdgeColor','none')
     set(gca,'children',flipud(get(gca,'children')))
-    s = s+1;
 
 end
-
+%t.Padding = 'Compact';
+t.TileSpacing = 'tight';
 
