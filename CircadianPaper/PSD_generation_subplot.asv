@@ -3,7 +3,7 @@
 colors = {[230 145 60]/255,[0 162 89]/255};
 band=[8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79];
 pats = {'B001','B002','B004','B005','B006','B007','B008','B009','B010','U001','U002','U003'};
-figure('Renderer', 'painters', 'PaperUnits','centimeters','Position',[10,10,600,1200],'Color','w');
+figure('Renderer', 'painters','PaperPosition',[0,0,8.7,10.85],'Color','w');
 
 t = tiledlayout(4,3);
 
