@@ -3,7 +3,7 @@
 colors = {[230 145 60]/255,[0 162 89]/255};
 band=[8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79,8.79];
 pats = {'B001','B002','B004','B005','B006','B007','B008','B009','B010','U001','U002','U003'};
-figure('Renderer', 'painters', 'PaperUnits','centimeters','Position',[10,10,600,1200],'Color','w');
+figure('Renderer', 'painters', 'Units','centimeters','Position',[0,0,16,12],'Color','w');
 
 t = tiledlayout(4,3);
 
@@ -53,6 +53,13 @@ for i = 1:12
     y = [ax.YLim(1) ax.YLim(1) ax.YLim(2) ax.YLim(2)];
     patch(x,y,[.8 .8 .8],'EdgeColor','none')
     set(gca,'children',flipud(get(gca,'children')))
+    ylabel('Power (dB)');
+    if i==1
+        ylim([-9 40]);
+    end
+    if i==2
+        ylim([-15 10]);
+    end
 
 end
 %t.Padding = 'Compact';
