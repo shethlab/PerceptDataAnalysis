@@ -25,8 +25,8 @@ function before_after_plots(percept_data,hemisphere)
     
     ylim_SE = [0,0.04]; % Y axis limits for sample entropy
     ylim_delta_SE = [-0.03,0.03]; % Y axis limits for delta sample entropy
-    ylim_R2 = [0,0.85]; % Y axis limits for cosinor/AR R^2
-    ylim_delta_R2 = [-0.7,0.7]; % Y axis limits for cosinor/AR delta R^2
+    ylim_R2 = [0,85]; % Y axis limits for cosinor/AR R^2
+    ylim_delta_R2 = [-70,70]; % Y axis limits for cosinor/AR delta R^2
     
     fig_position = [0,0,30,30]; % Make this a square
     
@@ -52,6 +52,7 @@ function before_after_plots(percept_data,hemisphere)
         hold on
         yyaxis left
         plot(repmat([x_preDBS,x_postDBS,NaN],1,size(data,1)),reshape([data.Pre_DBS';chronic';nan(1,size(data,1))],[1,size(data,1)*3]),'-k','Color',[0,0,0,line_alpha],'LineWidth',1);
+
         scatter(repelem([x_preDBS,x_postDBS],size(data,1)),[data.Pre_DBS;data.Non_Responder],sz,'filled','MarkerEdgeColor',c_nonresponder,'MarkerFaceColor',c_nonresponder,'MarkerFaceAlpha',face_alpha);
         scatter(repelem(x_postDBS,size(data,1)),data.Responder,sz,'^','filled','MarkerEdgeColor',c_responder,'MarkerFaceColor',c_responder,'MarkerFaceAlpha',face_alpha);
     
@@ -71,8 +72,9 @@ function before_after_plots(percept_data,hemisphere)
             ylabel('Sample Entropy')
             ylim(ylim_SE)
         else
-            ylabel('R^2')
-            ylim(ylim_R2)
+            ylabel('R^2 (%)')
+            ylim(ylim_R2/100)
+            set(gca,'YTickLabel',arrayfun(@num2str, 100*get(gca,'YTick'), 'UniformOutput', 0))
         end
     
         yyaxis right
@@ -97,8 +99,9 @@ function before_after_plots(percept_data,hemisphere)
             ylim(ylim_delta_SE)
             ylabel('\Delta Sample Entropy','Rotation',270)
         else
-            ylim(ylim_delta_R2)
-            ylabel('\Delta R^2','Rotation',270)
+            ylim(ylim_delta_R2/100)
+            ylabel('\Delta R^2 (%)','Rotation',270)
+            set(gca,'YTickLabel',arrayfun(@num2str, 100*get(gca,'YTick'), 'UniformOutput', 0))
         end
     
         hold off
