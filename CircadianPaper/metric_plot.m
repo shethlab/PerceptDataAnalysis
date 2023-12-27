@@ -117,7 +117,11 @@ function metric_plot(percept_data,subject,hemisphere,pre_DBS_bounds,post_DBS_bou
     xlim(post_DBS_bounds)
     ylim(ylim_LFP)
     hold off
-    set(gca,'LineWidth',2,'XColor',c_preDBS,'YColor',c_preDBS,'TickLength',[tick_size,0],'FontSize',font_size)
+    if ~isempty(zone_index.responder{patient_idx})
+        set(gca,'LineWidth',2,'XColor',c_responder,'YColor',c_responder,'TickLength',[tick_size,0],'FontSize',font_size)
+    else
+        set(gca,'LineWidth',2,'XColor',c_nonresponder,'YColor',c_nonresponder,'TickLength',[tick_size,0],'FontSize',font_size)
+    end
     ax = gca;
     for i = 1:length(ax.XTickLabel)
         ax.XTickLabel{i} = ['\color{black}' ax.XTickLabel{i}];
@@ -283,7 +287,7 @@ function metric_plot(percept_data,subject,hemisphere,pre_DBS_bounds,post_DBS_bou
 end
 
 function EMA_plot(days,stat,color,ema_skip)
-    skip_idx=max([ema_skip,find(~isnan(stat),1,'first')]); %Skip 1st data point or initial NaN points when identifying start of EMA
+    skip_idx = max([ema_skip,find(~isnan(stat),1,'first')]); %Skip 1st data point or initial NaN points when identifying start of EMA
     try
         plot(days(skip_idx:end),movavg(fillmissing(stat(skip_idx:end)','pchip','EndValues','none'),"exponential",5),'Color',color,'LineWidth',2);
     end
