@@ -59,7 +59,7 @@ function metric_plot(percept_data,subject,hemisphere,pre_DBS_bounds,post_DBS_bou
     fig = tiledlayout(height_fullTD + height_zoomTD + height_timeline + 3*height_R2SE, 4);
     
     %Find indices of discontiuous days of data
-    start_index = find(diff(days)>1);
+    start_index = find(diff(days)>7);
     try
         start_index = [1,start_index,length(days)];
     catch
@@ -160,7 +160,13 @@ function metric_plot(percept_data,subject,hemisphere,pre_DBS_bounds,post_DBS_bou
         cb = nexttile(colorbar_tile,[1,start_index(i+1)-start_index(i)]);
         imagesc([days(start_index(i)+1),days(start_index(i+1))],[],1:start_index(i+1)-start_index(i));
         colormap(cb,c_map(start_index(i)+1:start_index(i+1),:))
-        set(gca,'Visible','off','Color','none')
+        set(gca,'YColor','none','XColor','none','TickLength',[0,0],'XTick',[])
+        if i == 1
+            set(gca,'FontSize',font_size);
+            ylabel(' ')
+        else
+            set(gca,'YTick',[],'FontSize',font_size);
+        end
     end
     
     nexttile(fig,[height_timeline,1]);
