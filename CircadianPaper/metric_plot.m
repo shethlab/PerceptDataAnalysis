@@ -8,16 +8,16 @@ function metric_plot(percept_data,subject,hemisphere,pre_DBS_bounds,post_DBS_bou
 % post_DBS_bounds = upper and lower bounds for zoomed-in plot in the form [A,B]
 % zone_index = name of zone_index structure
 
-    %% Input parameter adjustments
+     %% Input parameter adjustments
 
     %Color values (RGB 0-1)
     c_mania = [255,0,0]/255; % Color of hypomania zone
     c_responder = [0,0,255]/255; % Color of chronic responder zone
     c_nonresponder = [255,185,0]/255; % Color of chronic non-responder zone
     c_preDBS = [255,215,0]/255; % Color of pre-DBS zone
-    c_linAR = [213,62,79]/255; % Color of linear AR scatter plot/line
-    c_cosinor = [252,141,89]/255; % Color of cosinor scatter plot/line
-    c_SE = [0,0,64]/255; % Color of sample entropy scatter plot/line
+    c_linAR = [51,160,44]/255; % Color of linear AR scatter plot/line
+    c_cosinor = [251,154,153]/255; % Color of cosinor scatter plot/line
+    c_SE = [106,61,154]/255; % Color of sample entropy scatter plot/line
     
     sz = 10; % Size of scatter plot dots
     ylim_LFP = [-2,6]; % Y axis limits for the zoomed-in time domain plots
@@ -33,7 +33,7 @@ function metric_plot(percept_data,subject,hemisphere,pre_DBS_bounds,post_DBS_bou
     font_size = 8; % Font size of numbers on axes 
     tick_size = 0.02; % Size of axis ticks
     
-    fig_position = [0,0,30,20]; %dimensions of the figure (x location, y location, width, height)
+    fig_position = [0,0,20,15]; %dimensions of the figure (x location, y location, width, height)
     
     %% Main Plotting Code
     
