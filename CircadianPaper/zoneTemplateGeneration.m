@@ -36,7 +36,7 @@ end
 
 c_red = [255,0,0]/255;
 c_blue = [0,0,255]/255;
-c_purple = [127,63,152]/255;
+c_purple = [255,185,0]/255;
 c_yellow = [255,215,0]/255;
 
 hems = {'Left Hemisphere','Right Hemisphere'};
@@ -94,7 +94,7 @@ end
 %% Plot Templates Wrapped or Unwrapped
 if wrapped
     for h = 2:2+bl
-        figure('Units','inches','Position',[1 1 2 5]);
+        figure('Units','inches','Position',[1 1 10 5]);
         %figure('Position', get(0, 'Screensize'));
 
         t = tiledlayout(2-overlaid,5);
