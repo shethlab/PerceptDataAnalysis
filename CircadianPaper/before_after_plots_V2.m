@@ -3,7 +3,7 @@ function before_after_plots_V2(percept_data,hemisphere)
     
     c_responder = [0,0,255]/255; % Color of chronic responder zone
     c_nonresponder = [255,215,0]/255; % Color of chronic non-responder zone
-    c_nonlinAR = [0,0,0]/255; % Color of non-linear AR line in ROC
+    c_nonlinAR = [178,223,128]/255; % Color of non-linear AR line in ROC
     c_linAR = [51,160,44]/255; % Color of linear AR scatter plot/line
     c_cosinor = [251,154,153]/255; % Color of cosinor scatter plot/line
     c_SE = [106,61,154]/255; % Color of sample entropy scatter plot/line
