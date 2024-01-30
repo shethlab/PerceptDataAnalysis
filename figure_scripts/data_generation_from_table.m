@@ -1,16 +1,24 @@
-function percept_data = data_generation_from_table(subject_name,percept_data,time_zone)
+function [percept_data,zone_index] = data_generation_from_table(subject_name,percept_data,zone_index,time_zone)
     
     %% Choosing files and DBS onset date
     
+    [fileName2,path2] = uigetfile('*Patient_Information.xlsx','MultiSelect','off','Select Patient Information table');
+    c = readtable(fullfile(path2,fileName2));
+    
     [fileName,path] = uigetfile('*.json','MultiSelect','on','Select patient JSON files');
     fileList = fullfile(path,fileName);
+
+    %Handling when only one file is selected
+    if ischar(fileList)
+        fileName = {fileName};
+        fileList = {fileList};
+    end
     
     %Set default time zone as Central Time US if not specified
     if ~exist('time_zone','var') || isempty('time_zone')
         time_zone = 'America/Chicago';
     end
     
-    c=readtable('C:\Users\Sandy\Box\Percept\Data\Patient_Information.xlsx');
     c.InitialVCVSProgramming_Confidential_.TimeZone='America/Chicago';
     DBS_onset=c.InitialVCVSProgramming_Confidential_(find(strcmp(c.PatientStudyNumber,fileName{1}(1:3))));
     DBS_onset.TimeZone=time_zone;
@@ -18,16 +26,10 @@ function percept_data = data_generation_from_table(subject_name,percept_data,tim
     %% Raw data, normalized data, and timestamps
     
     %Initialize raw data table either as new or existing
-    if ~exist('percept_data','var') || isempty('percept_data')
+    if ~exist('percept_data','var') || isempty('percept_data') || ~any(strcmp(subject_name,percept_data.raw_data(:,1)))
         raw_data = [];
     else
-        raw_data = percept_data.raw_data;
-    end
-    
-    %Handling when only one file is selected
-    if ischar(fileList)
-        fileName = {fileName};
-        fileList = {fileList};
+        raw_data = percept_data.raw_data{strcmp(subject_name,percept_data.raw_data(:,1)),2};
     end
 
     %Import and concatenate data from JSONs
@@ -87,12 +89,20 @@ function percept_data = data_generation_from_table(subject_name,percept_data,tim
         time_matrix{hemisphere}(:,all_nan_days) = [];
         stim_matrix{hemisphere}(:,all_nan_days) = [];
         LFP_norm_matrix{hemisphere} = (LFP_matrix{hemisphere}-nanmean(LFP_matrix{hemisphere}))./nanstd(LFP_matrix{hemisphere});
+        filled = fillData(LFP_matrix{hemisphere},DBS_time{hemisphere}');
+        LFP_filled_matrix{hemisphere} = (filled - nanmean(filled))./nanstd(filled);
     end
     
     %% Add raw, normalized, and timestamp data to a combined cell array of all patients
 
     if exist('percept_data','var') && any(strcmp(subject_name,percept_data.days(:,1))) % Appending data to existing subject
         subject_idx = find(strcmp(subject_name,percept_data.days(:,1)));
+        zone_update = input('Do you want to update the zone indices (Y or N)? ','s');
+        if strcmpi(zone_update,'y')
+            zone_index.responder{subject_idx,1} = input('Enter the new responder zone index as an array (leave blank if empty). ');
+            zone_index.non_responder{subject_idx,1} = input('Enter the new non-responder zone index as an array (leave blank if empty). ');
+            zone_index.hypomania{subject_idx,1} = input('Enter the new hypomania zone index as an array (leave blank if empty). ');
+        end
     else %Adding new row
         if ~exist('percept_data','var') % First patient in list
             subject_idx = 1;
@@ -103,17 +113,24 @@ function percept_data = data_generation_from_table(subject_name,percept_data,tim
         percept_data.days{subject_idx,1} = subject_name;
         percept_data.time_matrix{subject_idx,1} = subject_name;
         percept_data.LFP_norm_matrix{subject_idx,1} = subject_name;
+        percept_data.LFP_filled_matrix{subject_idx,1} = subject_name;
         percept_data.LFP_raw_matrix{subject_idx,1} = subject_name;
         percept_data.stim_matrix{subject_idx,1} = subject_name;
         percept_data.raw_data{subject_idx,1} = subject_name;
-    end
+
+        zone_index.responder{subject_idx,1} = input('Enter the new responder zone index as an array (leave blank if empty). ');
+        zone_index.non_responder{subject_idx,1} = input('Enter the new non-responder zone index as an array (leave blank if empty). ');
+        zone_index.hypomania{subject_idx,1} = input('Enter the new hypomania zone index as an array (leave blank if empty). ');
+   end
     
     percept_data.raw_data{subject_idx,2} = raw_data;
     for hemisphere = 1:2 %2nd column is left hem, 3rd column is right hem
         percept_data.days{subject_idx,hemisphere+1} = DBS_time{hemisphere}';
         percept_data.time_matrix{subject_idx,hemisphere+1} = time_matrix{hemisphere};
         percept_data.LFP_norm_matrix{subject_idx,hemisphere+1} = LFP_norm_matrix{hemisphere};
+        percept_data.LFP_filled_matrix{subject_idx,hemisphere+1} = LFP_filled_matrix{hemisphere};
         percept_data.LFP_raw_matrix{subject_idx,hemisphere+1} = LFP_matrix{hemisphere};
         percept_data.stim_matrix{subject_idx,hemisphere+1} = stim_matrix{hemisphere};
     end
+
 end
