@@ -55,10 +55,7 @@
 %   1. percept_data: the updated data structure including all of the input
 %       information, as well as the new data. It includes the following
 %       fields:
-%           - raw_data: a table containing the original, untransformed
-%               timestamp as well as LFP & stimulation amplitudes in both
-%               hemispheres. This variable is used only for checking
-%               redundancy when updating new subject data.
+%           - raw_data: a
 %           - days: a 3xN cell array (where N is number of subjects), where
 %               column one is the subject name, column two is left
 %               hemisphere data, and column three is right hemisphere data.
