@@ -59,28 +59,28 @@
 %               timestamp as well as LFP & stimulation amplitudes in both
 %               hemispheres. This variable is used only for checking
 %               redundancy when updating new subject data.
-%           - days: a 3xN cell array (where N is number of subjects), where
+%           - days: a Nx3 cell array (where N is number of subjects), where
 %               column one is the subject name, column two is left
 %               hemisphere data, and column three is right hemisphere data.
 %               Each entry contains a 1D vector of the unique dates of data
 %               recording, expressed as integer days since DBS activation.
-%           - time_matrix: a 3xM cell array (where M is the number of unique
+%           - time_matrix: a Mx3 cell array (where M is the number of unique
 %               days). Each entry contains a 2D vector with 144 rows 
 %               (corresponding to each 10-minute interval from midnight to 
 %               11:50 PM) in which data points are double-precision days 
 %               since DBS activation.
-%           - LFP_raw_matrix: a 3xN cell array. Each entry contains a 2D
+%           - LFP_raw_matrix: a Mx3 cell array. Each entry contains a 2D
 %               vector with 144 rows in which data points are the raw LFP 
 %               signal in uVp.
-%           - LFP_norm_matrix: a 3xN cell array. Each entry contains a 2D
+%           - LFP_norm_matrix: a Mx3 cell array. Each entry contains a 2D
 %               vector with 144 rows in which data points are a per-day
 %               z-score of the respective values from LFP_raw_matrix. These
 %               matrices are used for visualization only (i.e. heatmaps).
-%           - LFP_filled_matrix: a 3xN cell array. Each entry contains a 2D
+%           - LFP_filled_matrix: a Mx3 cell array. Each entry contains a 2D
 %               vector with 144 rows in which data points are missing internal
 %               data and outliers are filled with pchip interpolation. These
 %               matrices are used for calculations.
-%           - stim_matrix: a 3xN cell array. Each entry contains a 2D
+%           - stim_matrix: a Mx3 cell array. Each entry contains a 2D
 %               vector with 144 rows in which data points are the provided
 %               stimulation amplitude (in mA) from the device at that time.
 
