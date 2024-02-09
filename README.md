@@ -47,11 +47,11 @@ Demo datasets and and a script to generate demo outputs are located in the DEMO 
 # Workflow
 Below are instructions for generating each of the code-based figures in the paper sequentially for your own data. All figure and table-generating codes are contained in Github folder "CircadianPaper". 
 
-##1. Raw Data Extraction
+## 1. Raw Data Extraction
 Run the function "generate_data" (type "help generate_data" in the command window for specific function operation). Select the .json files and indicate both date of DBS onset and patient label when required. Output will be of equivalent form to that stored in demo_data.mat.
     -Estimated runtime: 5-20s per patient depending on data quantity
 
-##2. Circadian Calculations
+## 2. Circadian Calculations
 Run the function "calc_circadian" (type "help calc_circadian" in the command window for specific function operation) on the output struct generated from step 1. This function uses MATLAB to calculate cosinor and sample entropy metrics, and then passes the data to python to generate autoregressive metrics and perform classification testing. A current limitation of this code is that it re-runs all data every time, so processing time will get cumulatively longer with more subjects and data added. IMPORTANT NOTE: permutation testing and the nonlinear AR (neural network) model are incredibly slow to run, so in most cases they should be skipped. This occurs by default, and the user must manually provide an optional input to run these analyses (see "help calc_circadian").
     - Estimated runtime (no permutation or nonlinear AR): 30-60s per patient depending on data quantity
     - Estimated runtime (permutation and/or nonlinear AR): >24hr
