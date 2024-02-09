@@ -3,24 +3,25 @@
 %   1. percept_data: the data structure containing the Percept data. The
 %       prerequisite for this function is the circadian_calc function, which
 %       creates the appropriately-formatted data structure. This structure 
-%       must contain four fields called "days," "acrophase," "amplitude,"
-%       and "cosinor_p."
-%   2. hemisphere: the hemisphere of data to display. Set to 1 for left or
+%       must contain four fields called "days," "template_acro," "template_p,"
+%       and "LFP_raw_matrix."
+%   2. subject: the name of the subject to load as a string. This name
+%       should match the appropriate data row in percept_data.days.
+%   3. hemisphere: the hemisphere of data to display. Set to 1 for left or
 %       2 for right.
 %   3. zone_index: the structure containing the list of days in which
 %       patients are behaviorally-noted as being in clinical response, non-
 %       response, or hypomania. This structure is generated as part of the
 %       generate_data function.
-%   5 (optional). is_demo: a flag which, when set to 1, signals that the
-%       demo dataset (demo_data.mat) is being run. This plots only the
-%       first five patients to align with the patients displayed in the
-%       manuscript Figure 2 and S1.
+%   5 (optional). template_days: a vector containing a list of days
+%       (expressed as integer days since DBS activation) for which to plot
+%       circular templates. If left blank, only the average zone template
+%       will be displayed.
 %
-% This function outputs an n x 1 plot of cosinor amplitude (radial axis) vs
-% acrophase (angular axis), where n is the number of subjects. Points
-% corrseponding to days which resulted in non-significant cosinor fits are
-% plotted with reduced transparency.
-
+% This function outputs an 1x(n+1) plot of cosinor amplitude (radial axis) vs
+% acrophase (angular axis), where n is the number of inputted template days. 
+% The final plot is an overlay of median-averaged templates in the pre-DBS
+% zone and the chronic clinical state zone.
 
 function plot_templates(percept_data,subject,hemisphere,zone_index,template_days)
 
