@@ -1,5 +1,6 @@
 function allStats = detailedStats(y,x,label)
 %% Return Detailed Statistics obtained from testing H0 that x ~ y
+
 allStats.subject = label;
 if ~isempty(x) && ~isempty(y)    
     [~,p,ci,stats] = ttest2(x,y,'Vartype','unequal');

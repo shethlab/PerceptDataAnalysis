@@ -6,11 +6,9 @@ function filledData = fillData(matrix,days)
 
 %% Inputs ---
 %  matrix : 2D circadian matrix
-%  days: day vector containing day since VCVS DBS On for each column in
-%  matrix
+%  days: day vector containing day since DBS On for each column in matrix
 %% Outputs ---
-% filledData: data with interpolated values reshaped into original 2D
-% format 
+% filledData: data with interpolated values reshaped into original 2D format 
 
 
 filledData = [];

@@ -17,7 +17,8 @@ switch nargin
         color = varargin{3};
 end
 
-theta = 0:2*pi/144:143*2*pi/144 ;
+theta = 0:2*pi/144:143*2*pi/144;
+
 if size(day,2) ==1
     polarplot(theta,day,'Color',color,'LineWidth',2)
     pax=gca;
@@ -39,10 +40,10 @@ if size(day,2) ==1
     pax.ThetaDir='clockwise';
     pax.ThetaZeroLocation='top';
     hold on
-    polarplot(pi*[1,1],[currlim(1),currlim(2)],'Color','k','LineWidth',2);
+    %polarplot(pi*[1,1],[currlim(1),currlim(2)],'Color','k','LineWidth',2);
     thetaticklabels({});
     pax.RTickLabels = {};
     %thetaticklabels({'0:00','2:00','4:00','6:00','8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'})
-    title(titlestring,'Units', 'normalized',Position=[0.5, -0.1, 0]);
+    %title(titlestring,'Units', 'normalized',Position=[0.5, -0.1, 0]);
 end
 end
