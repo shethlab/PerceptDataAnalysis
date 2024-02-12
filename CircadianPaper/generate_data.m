@@ -8,6 +8,12 @@
 %       this patient data to. To add new patients or update patient data to
 %       an existing data struct, enter the name of the existing struct
 %       here. If left blank, patient data will be added to a new struct.
+%   2. zone_index (optional): the name of the zone index struct to add
+%       this patient data to. To add new patients or update patient data to
+%       an existing data struct, enter the name of the existing struct
+%       here. If left blank, patient data will be added to a new struct. This
+%       struct refers to a list of days for each clinical state (see #4 in the
+%       following section.)
 %   3. time_zone (optional): enter time zone in a MATLAB-standard format
 %       (e.g. 'Europe/London'). Defaults to 'America/Chicago' if not provided.
 % 
@@ -84,7 +90,7 @@
 %               vector with 144 rows in which data points are the provided
 %               stimulation amplitude (in mA) from the device at that time.
 
-function percept_data = generate_data(subject_name,percept_data,time_zone)
+function [percept_data,zone_index] = generate_data(subject_name,percept_data,zone_index,time_zone)
     
 %% Choosing files and DBS onset date
 
