@@ -1,6 +1,6 @@
 %% This function collates Percept data directly from JSONs into a struct
 % variable to be subsequently processed. This code must be run prior to
-% any analysis. This function has one required input and two optional:
+% any analysis. This function has one required input and three optional:
 %   1. subject_name: the ID of the subject whose data will be added (e.g.
 %       "B001"). Only use alphanumeric characters and underscores to avoid
 %       potential code conflicts.
@@ -8,13 +8,13 @@
 %       this patient data to. To add new patients or update patient data to
 %       an existing data struct, enter the name of the existing struct
 %       here. If left blank, patient data will be added to a new struct.
-%   2. zone_index (optional): the name of the zone index struct to add
+%   3. zone_index (optional): the name of the zone index struct to add
 %       this patient data to. To add new patients or update patient data to
 %       an existing data struct, enter the name of the existing struct
 %       here. If left blank, patient data will be added to a new struct. This
 %       struct refers to a list of days for each clinical state (see #4 in the
 %       following section.)
-%   3. time_zone (optional): enter time zone in a MATLAB-standard format
+%   4. time_zone (optional): enter time zone in a MATLAB-standard format
 %       (e.g. 'Europe/London'). Defaults to 'America/Chicago' if not provided.
 % 
 % This function also requests inputs from the user through a UI file prompt
