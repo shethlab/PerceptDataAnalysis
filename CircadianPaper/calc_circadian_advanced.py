@@ -352,15 +352,13 @@ def run_regression(master_df: pd.DataFrame, lag_terms: list):
     
     return common_lags, final_model, cont
 
-def perform_logistic_regression(X: np.array, y: np.array, num_feat: int):
+def perform_logistic_regression(data: pd.DataFrame):
     """
-    Performs logistic regression using Leave-One-Out Cross-Validation (LOOCV) to evaluate model performance.
+    Performs logistic regression using Leave-One-Patient-Out Cross-Validation (LOPO-CV) to evaluate model performance.
     
     
     Parameters:
-    - X (numpy.ndarray): Feature matrix with shape (n_samples, n_features).
-    - y (numpy.array): Target vector with binary outcomes.
-    - num_feat (int): The number of features in X. Ensures X is reshaped correctly if needed.
+    - data (pandas.DataFrame): Dataframe containing the R2, dR2, y-label, and patient id for a given metric. 
     
     Returns:
     - tuple of lists: 
@@ -368,32 +366,65 @@ def perform_logistic_regression(X: np.array, y: np.array, num_feat: int):
         - Predicted probabilities of the positive class for each sample.
         - Predicted classes for each sample.
     """
-    
-    # Reshape X to ensure it has the correct dimensions.
-    X = X.reshape(-1, num_feat)
-    
-    # Initialize KFold for Leave-One-Out Cross-Validation.
-    cv = KFold(n_splits=y.shape[0], shuffle=True, random_state=42)
-    
     # Lists to store true labels, predicted probabilities, and predicted classes.
-    true, pred_prob, pred_class = [], [], []
-
-    # Iterate over each train-test split.
-    for train_ix, test_ix in cv.split(X, y):
+    true, pred, pred_rd = [], [], []
+    
+    # Iterate over each patient split.
+    for pt in set(data['PT']):
+        
         # Split the data into training and testing sets.
-        train_X, test_X = X[train_ix], X[test_ix]
-        train_y, test_y = y[train_ix], y[test_ix]
+        test_data = data.loc[data['PT'] == pt]
+        train_data = data.loc[data['PT'] != pt]
+ 
+        # Reshape test data to ensure it has the correct dimensions.
+        test_x = test_data.iloc[:,:-2].values.reshape(-1,1)
+        test_y = test_data.iloc[:,-2].values
+
+        # Reshape train data to ensure it has the correct dimensions.
+        train_x = train_data.iloc[:,:-2].values.reshape(-1,1)
+        
+        train_y = train_data.iloc[:,-2].values
 
         # Train the logistic regression model.
-        clf = LogisticRegression(class_weight='balanced').fit(train_X, train_y)
+        clf = LogisticRegression(class_weight='balanced', penalty = None).fit(train_x, train_y)
         
-        # Extend the lists with the test outcomes and predictions.
+        # Extend the lists with the test outcomes and predictions.   
         true.extend(test_y)
-        pred_prob.extend(clf.predict_proba(test_X)[:, 1])  # Probability of the positive class.
-        pred_class.extend(clf.predict(test_X))  # Predicted class labels.
-    
-    return true, pred_prob, pred_class
+        pred.extend(clf.predict_proba(test_x)[:,1]) # Probability of the positive class.
+        pred_rd.extend(clf.predict(test_x)) # Predicted class labels.
 
+    return true, pred, pred_rd
+    
+def circular_shift(data: pd.DataFrame):
+    """
+    Applies a circular shift to the 'Y' column for each patient within the dataset, 
+    with the shift magnitude randomly determined for each patient.
+
+    Parameters:
+    - data (pd.DataFrame): The DataFrame containing the dataset. Must include a 'PT' column 
+                           for patient IDs and a 'Y' column for the values to be shifted.
+
+    Returns:
+    - data (pd.DataFrame): The modified DataFrame with the 'Y' values circularly shifted 
+                           for each patient.
+    """
+    
+    # Initialize an empty list to store the circularly shifted 'Y' values for all patients.
+    roll_y = []
+    
+    # Iterate through each unique patient ID.
+    for pt in data.loc[:,'PT'].unique():
+        # Extract 'Y' values for the current patient as a numpy array.
+        pt_y = data.loc[data['PT'] == pt,'Y'].to_numpy()
+        # Append the circularly shifted 'Y' array to the list, shifting by a random magnitude.
+        roll_y.append(np.roll(pt_y, random.randrange(0,pt_y.shape[0])))
+        
+    # Update the 'Y' column in the original DataFrame with the concatenated shifted arrays.
+    data.loc[:, 'Y'] = np.concatenate(roll_y)
+    
+    # Return the modified DataFrame.
+    return data
+    
 def NN_AR(train: pd.DataFrame, test: pd.DataFrame, index: list):
     """
     Trains a neural network on autoregressive features and evaluates the model's predictive accuracy on test data based on the R-squared metric.
@@ -698,21 +729,21 @@ def across_pt_regression(log_df: pd.DataFrame, permut_testing: bool, saveDict: d
     Parameters:
     - log_df (pd.DataFrame): The input DataFrame containing the dataset for analysis.
     - permut_testing (bool): Flag indicating whether permutation testing should be performed.
+    - saveDict (dict): A dictionary to save predictions, ROC-AUC curves, performance statistics, and permutation testing results (if conducted).
+    - model (str): Name of the current metric being tested. 
 
     Returns:
     - saveDict (dict): A dictionary containing all predictions, ROC-AUC curves, performance statistics, and permutation testing results (if conducted).
     """
     
     # Filtering and preparing data for logistic regression analysis.
-    delt = log_df.loc[log_df['dR2'].notna()]  # Select rows where 'dR2' is not NaN.
-    norm = log_df.iloc[:,[0,2]]  # Select first and third columns of log_df.
+    delt = log_df.loc[log_df['dR2'].notna()].iloc[:,[1,2,3]]  # Select rows where 'dR2' is not NaN.
+    norm = log_df.iloc[:,[0,2,3]]  # Select first and third columns of log_df.
 
     # Loop to process 'Delta' and 'Norm' models for logistic regression.
-    for model_type, data, feat in zip(['Delta', 'Norm'], [delt, norm], [2,1]):
-        y = data.iloc[:,-1].values  # Extract last column as the dependent variable.
-        
+    for model_type, data in zip(['Delta', 'Norm'], [delt, norm]):        
         # Perform logistic regression, save predictions, and calculate ROC curve and AUC.
-        true, pred_prob, pred_class = perform_logistic_regression(data.iloc[:,:-1].values, y, feat)
+        true, pred_prob, pred_class = perform_logistic_regression(data)
         saveDict[f'{model}_{model_type}_ROC_AUC_Predictions'] = pd.DataFrame({'True': true, 'Pred_Prob': pred_prob, 'Pred': pred_class})
         
         fpr, tpr, thresholds = roc_curve(true, pred_prob)  # Calculate False Positive Rate, True Positive Rate, and thresholds for ROC curve.
@@ -722,27 +753,33 @@ def across_pt_regression(log_df: pd.DataFrame, permut_testing: bool, saveDict: d
         bacc = balanced_accuracy_score(true, pred_class)  # Compute balanced accuracy score.
         saveDict[f'{model}_{model_type}_ROC_AUC_Performance_Statistics'] = pd.DataFrame({'ROC_AUC': [auc], 'Balanced_Accuracy': [bacc]})
 
-        # Initialize lists for permutation testing results.
-        dist_auc, dist_bal = [], []
-        
         # Permutation testing conditional block.
         if permut_testing:
             # Perform permutation tests to assess the significance of the observed metrics.
-            for iter in range(10000):
-                np.random.shuffle(y)  # Randomly shuffle the dependent variable to simulate chance distribution.
-                true, pred_prob, pred_class = perform_logistic_regression(data.iloc[:,:-1].values, y, feat)  # Re-run logistic regression with shuffled labels.
-
-                # Store AUC and Balanced Accuracy of permuted labels for significance testing.
-                dist_auc.append(roc_auc_score(true, pred_prob))
-                dist_bal.append(balanced_accuracy_score(true, pred_class))
-            
-            # Calculate mean chance metrics and p-values from permutation tests.
-            saveDict[f'{model}_ROC_AUC_Randomization_Statistics'] = pd.DataFrame({
-                'Chance_AUC': [np.mean(dist_auc)], 
-                'AUC_Pvalue': [(((np.array(dist_auc) > auc).sum())/len(dist_auc))], 
-                'Chance_Balanced_Accuracy': [np.mean(dist_bal)], 
-                'Balanced_Accuracy_PValue': [((np.array(dist_bal) > bacc).sum())/len(dist_bal)]
-            })
+            for rand_strat in ['Randomization', 'Circular_Shift']:
+                # Create a copy of the original dataset 
+                permut_data = data.copy()
+                
+                # Initialize lists for permutation testing results.
+                dist_auc, dist_bal = [], []
+                for iter in range(10000):
+                    if rand_strat == 'Randomization':
+                        permut_data['Y'] = permut_data['Y'].sample(frac=1)  # Randomly shuffle the dependent variable to simulate chance distribution.
+                    else:
+                        permut_data = circular_shift(permut_data)
+                    true, pred_prob, pred_class = perform_logistic_regression(data)  # Re-run logistic regression with shuffled labels.
+    
+                    # Store AUC and Balanced Accuracy of permuted labels for significance testing.
+                    dist_auc.append(roc_auc_score(true, pred_prob))
+                    dist_bal.append(balanced_accuracy_score(true, pred_class))
+                
+                # Calculate mean chance metrics and p-values from permutation tests.
+                saveDict[f'{model}_{model_type}_ROC_AUC_{rand_strat}_Statistics'] = pd.DataFrame({
+                    'Chance_AUC': [np.mean(dist_auc)], 
+                    'AUC_Pvalue': [(((np.array(dist_auc) > auc).sum())/len(dist_auc))], 
+                    'Chance_Balanced_Accuracy': [np.mean(dist_bal)], 
+                    'Balanced_Accuracy_PValue': [((np.array(dist_bal) > bacc).sum())/len(dist_bal)]
+                })
 
     # Return a dictionary containing all the results and statistics from the analysis.
     return saveDict
@@ -770,7 +807,7 @@ def main(hemi: int, mat_file: str, components: list, pt: list, models: list, per
     for model in models:
         # Initialize dictionaries for R2 metrics and confidence intervals, and a DataFrame to store values for an across-patient regression.
         r2_info, ci_info = {}, {}
-        log_df = pd.DataFrame(columns = ['R2' , 'dR2', 'Y']) 
+        log_df = pd.DataFrame(columns = ['R2' , 'dR2', 'Y', 'PT']) 
         
         # Iterate through each patient.
         for pt_id, pt_name in enumerate(pt):
