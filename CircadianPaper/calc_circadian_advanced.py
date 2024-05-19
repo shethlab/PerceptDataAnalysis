@@ -717,7 +717,7 @@ def compile_r2(df: pd.DataFrame, master_df: pd.DataFrame, se: pd.DataFrame, log_
     for group in set(r2_df.loc['State_Label']):
         if group in [0,2,3]:
             for value in r2_df.loc[:, r2_df.loc['State_Label'] == group]:
-                log_df.loc[log_df.shape[0]] = [r2_df.loc['R2', value], r2_df.loc['Delta', value], LABEL_MAPPING[group]]
+                log_df.loc[log_df.shape[0]] = [r2_df.loc['R2', value], r2_df.loc['Delta', value], LABEL_MAPPING[group], pt[1]]
     
     # Return updated dictionaries and log DataFrame.
     return r2_info, ci_info, log_df
