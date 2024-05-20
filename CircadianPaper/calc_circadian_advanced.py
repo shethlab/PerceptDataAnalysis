@@ -764,10 +764,10 @@ def across_pt_regression(log_df: pd.DataFrame, permut_testing: bool, saveDict: d
                 dist_auc, dist_bal = [], []
                 for iter in range(10000):
                     if rand_strat == 'Randomization':
-                        permut_data['Y'] = permut_data['Y'].sample(frac=1)  # Randomly shuffle the dependent variable to simulate chance distribution.
+                        permut_data['Y'] = permut_data['Y'].sample(frac=1).values  # Randomly shuffle the dependent variable to simulate chance distribution.
                     else:
                         permut_data = circular_shift(permut_data)
-                    true, pred_prob, pred_class = perform_logistic_regression(data)  # Re-run logistic regression with shuffled labels.
+                    true, pred_prob, pred_class = perform_logistic_regression(permut_data)  # Re-run logistic regression with shuffled labels.
     
                     # Store AUC and Balanced Accuracy of permuted labels for significance testing.
                     dist_auc.append(roc_auc_score(true, pred_prob))
