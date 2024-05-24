@@ -48,7 +48,7 @@ c_preDBS = [255,215,0]/255; % Color of pre-DBS zone
 if exist('is_demo','var') && is_demo == 1 % For figure 2 & S1 demo
     total_height = 5;
 else
-    total_height = size(percept_data.days,1);
+    total_height = size(data,1);
 end
 
 figure('Units','centimeters','Position',[0,0,fig_width,fig_height*total_height],'Color','w');
