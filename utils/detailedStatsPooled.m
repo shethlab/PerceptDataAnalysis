@@ -1,7 +1,7 @@
-function allStats = detailedStats(y,x,label,effective)
+function allStats = detailedStatsPooled(y,x,label,ESS_y,ESS_x)
 %% Returns Detailed Statistics obtained from testing H0 that x ~ y where
-% y is pre-DBS and x is post-DBS. Includes standard testing and effective
-% sample size-corrected testing.
+% y is data from the symptomatic state and x is data from the responder state. 
+% Includes standard testing and effective sample size-corrected testing.
 
 allStats.subject = label; % Patient name
 
@@ -14,10 +14,7 @@ if isempty(x) || isempty(y) %skip calculation if either group missing
     allStats.effectCI = [];
     allStats.sampleSizePre = length(y);
     allStats.sampleSizePost = length(x);
-elseif effective == 1 % Effective sample size calculation
-    ESS_y = ESS(y); % Effective sample size
-    ESS_x = ESS(x);
-
+elseif ~isempty(ESS_x) && ~isempty(ESS_y) % Effective sample size calculation
     var_y = var(y); % Variance
     var_x = var(x);
 

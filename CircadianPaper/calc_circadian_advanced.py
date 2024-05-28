@@ -5,6 +5,7 @@ import numpy as np
 import matlab.engine
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
+import random
 from sklearn.metrics import r2_score
 from statsmodels.tsa.ar_model import ar_select_order
 from sklearn.model_selection import KFold

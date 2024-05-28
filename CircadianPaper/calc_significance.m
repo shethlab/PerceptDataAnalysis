@@ -1,7 +1,9 @@
 %% This function is used to calculate significance of distributions of
-% various metrics before vs after DBS as well as stationarity. Metrics 
-% include cosinor R2, amplitude, and acrophase; linearAR R2; nonlinear AR R2;
-% and sample entropy. This function has three required inputs:
+% various metrics before vs after DBS as well as stationarity using the
+% Augmented Dickey-Fuller (ADF) and Kwiatkowski–Phillips–Schmidt–Shin (KPSS)
+% test. Metrics include cosinor R2, amplitude, and acrophase; linearAR R2; 
+% nonlinear AR R2; and sample entropy. This function has three required 
+% inputs and one optional:
 %   1. percept_data: the data structure containing the Percept data. The
 %      prerequisite for this code is calc_circadian.py, which creates the
 %      appropriately-formatted data structure. This structure must contain
@@ -14,30 +16,20 @@
 %       patients are behaviorally-noted as being in clinical response, non-
 %       response, or hypomania. This structure is generated as part of the
 %       generate_data function.
+%   4. effective (optional): a binary (0 or 1) input for deciding whether to use
+%       Effective Sample Size (ESS) for statistical tests. ESS accounts for
+%       underlying autocorrelation. Defaults to 0 if not provided.
 %
-% This function also requests inputs from the user through a command line
-% prompt. It references the following two variables for each patient to be
-% processed:
-%   1. Cosinor components: the number of components (i.e. N in the cosinor
-%       listed in the cosinor equation of the main manuscript).
-%       Practically, this is the number of local maxima that appear during
-%       each sinusoidal period, which can be determined visually or
-%       calculated through a periodogram. Increasing the number of
-%       components increases fit strength but results in overfitting if too
-%       high a number is selected.
-%   2. Cosinor peaks: the number of peaks for which to calculate amplitude
-%       (peak height) and acrophase (time of the peak). This value must be
-%       less than or equal to the number of components.
-%
-% This function has one output:
-%   1. percept_data: the updated data structure including all of the input
-%       information, as well as the new calculated data. New fields include
-%       "entropy," "amplitude," "acrophase," and "cosinor_p." If the python
-%       code is also processed, additional fields include "cosinor_R2,"
-%       "cosinor_matrix," "linearAR_R2," "linearAR_matrix,"
-%       "nonlinearAR_R2," "nonlinearAR_matrix," "ROC," and "kfold."
+% This function has two outputs:
+%   1. ttest: a 1x2 cell array (one for each hemisphere) containing a
+%       structure containing the following results of the t-test: p-value,
+%       t-statistic, 95% confidence interval, degrees of freedom, Hedge's
+%       g, Hedge's g 95% confidence interval, and sample sizes.
+%   2. stationarity: a 1x2 cell array (one for each hemisphere) containing
+%       a 2x2 table with the results of the ADF and KPSS tests for each of
+%       the two groups being compared.
 
-function [ttest,stationarity] = calc_significance(percept_data,field,zone_index) 
+function [ttest,stationarity] = calc_significance(percept_data,field,zone_index,effective) 
 
 switch field
     case 'entropy'
@@ -48,6 +40,10 @@ switch field
     case 'nonlinearAR_R2'
     otherwise
         error('Inputted data field is invalid.')
+end
+
+if ~exist('effective','var') || ~isnumeric(effective) || isempty(effective) || effective ~= 1
+    effective = 0;
 end
 
 for j = 1:size(percept_data.days,1)
@@ -65,7 +61,7 @@ for j = 1:size(percept_data.days,1)
         chronic_data = metric(1,chronic_idx,1);
         
         %Comparing pre-DBS vs chronic state statistics
-        stats{j,hemisphere} = detailedStats(pre_DBS_data(~isnan(pre_DBS_data)),chronic_data(~isnan(chronic_data)),percept_data.days{j,1});
+        stats{j,hemisphere} = detailedStats(pre_DBS_data(~isnan(pre_DBS_data)),chronic_data(~isnan(chronic_data)),percept_data.days{j,1},effective);
         
         %Calculate stationarity for pre-DBS
         try
