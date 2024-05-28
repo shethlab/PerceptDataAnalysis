@@ -51,72 +51,72 @@ clear_var_tabs %Close open variable tabs
 cosinor_fits = calc_preDBS_cosinor(percept_data,1);
 openvar('cosinor_fits')
 
-%% Table 3 (5-Fold Cross-Validation Means & Confidence Intervals)
+%% Tables 3 & 7 (Per-Patient Cosinor R2 T-test)
 
 clear_var_tabs %Close open variable tabs
 
-openvar('percept_data.kfold')
-openvar('percept_data.kfold_CI')
-
-%% Table 4 (Difference in Cross-Validation Means)
-
-clear_var_tabs %Close open variable tabs
-
-% Calculate deltas by subtracting chronic status kfold means from pre-DBS kfold means
-for hemisphere = 1:2
-    kfold_deltas.cosinor(hemisphere,:) = percept_data.kfold.cosinor{hemisphere}.('Pre-DBS') - nanmin([percept_data.kfold.cosinor{hemisphere}.('Responder'),percept_data.kfold.cosinor{hemisphere}.('Non-Responder')],[],2);
-    kfold_deltas.linearAR(hemisphere,:) = percept_data.kfold.linearAR{hemisphere}.('Pre-DBS') - nanmin([percept_data.kfold.linearAR{hemisphere}.('Responder'),percept_data.kfold.linearAR{hemisphere}.('Non-Responder')],[],2);
-    kfold_deltas.entropy(hemisphere,:) = percept_data.kfold.entropy{hemisphere}.('Pre-DBS') - nanmin([percept_data.kfold.entropy{hemisphere}.('Responder'),percept_data.kfold.entropy{hemisphere}.('Non-Responder')],[],2);    
-    try
-        kfold_deltas.nonlinearAR(hemisphere,:) = percept_data.kfold.nonlinearAR{hemisphere}.('Pre-DBS') - nanmin([percept_data.kfold.nonlinearAR{hemisphere}.('Responder'),percept_data.kfold.nonlinearAR{hemisphere}.('Non-Responder')],[],2);
-    end
-end
-
-kfold_deltas.cosinor = array2table(kfold_deltas.cosinor,"VariableNames",percept_data.kfold.cosinor{hemisphere}.Subject,'RowNames',{'Left','Right'});
-kfold_deltas.linearAR = array2table(kfold_deltas.linearAR,"VariableNames",percept_data.kfold.linearAR{hemisphere}.Subject,'RowNames',{'Left','Right'});
-kfold_deltas.entropy = array2table(kfold_deltas.entropy,"VariableNames",percept_data.kfold.entropy{hemisphere}.Subject,'RowNames',{'Left','Right'});
-try
-    kfold_deltas.nonlinearAR = array2table(kfold_deltas.nonlinearAR,"VariableNames",percept_data.kfold.nonlinearAR{hemisphere}.Subject);
-end
-
-openvar('kfold_deltas')
-
-%% Table 5 (Cosinor R2 T-test)
-
-clear_var_tabs %Close open variable tabs
-
-cosinor_ttest = calc_significance(percept_data,'cosinor_R2',zone_index);
+% Calculate t-test with normal sample size
+cosinor_ttest = calc_significance(percept_data_VCVS,'cosinor_R2',zone_index,0);
 openvar('cosinor_ttest')
 
-%% Table 6 (Linear AR R2 T-test)
+% Calculate t-test with effective sample size
+cosinor_ttest_ESS = calc_significance(percept_data_VCVS,'cosinor_R2',zone_index,1);
+openvar('cosinor_ttest_ESS')
+
+%% Tables 4 & 7 (Per-Patient Linear AR R2 T-test)
 
 clear_var_tabs %Close open variable tabs
 
-linearAR_ttest = calc_significance(percept_data,'linearAR_R2',zone_index);
+% Calculate t-test with normal sample size
+linearAR_ttest = calc_significance(percept_data,'linearAR_R2',zone_index,0);
 openvar('linearAR_ttest')
 
-%% Table 7 (Non-Linear AR R2 T-test)
+% Calculate t-test with effective sample size
+linearAR_ttest_ESS = calc_significance(percept_data,'linearAR_R2',zone_index,1);
+openvar('linearAR_ttest_ESS')
+
+%% Tables 5 & 7 (Per-Patient Non-Linear AR R2 T-test)
 
 clear_var_tabs %Close open variable tabs
 
-nonlinearAR_ttest = calc_significance(percept_data,'nonlinearAR_R2',zone_index);
+% Calculate t-test with normal sample size
+nonlinearAR_ttest = calc_significance(percept_data,'nonlinearAR_R2',zone_index,0);
 openvar('nonlinearAR_ttest')
 
-%% Table 8 (Sample Entropy T-test)
+% Calculate t-test with effective sample size
+nonlinearAR_ttest_ESS = calc_significance(percept_data,'nonlinearAR_R2',zone_index,1);
+openvar('nonlinearAR_ttest_ESS')
+
+%% Tables 6 & 7 (Per-Patient Sample Entropy T-test)
 
 clear_var_tabs %Close open variable tabs
 
-entropy_ttest = calc_significance(percept_data,'entropy',zone_index);
+% Calculate t-test with normal sample size
+entropy_ttest = calc_significance(percept_data,'entropy',zone_index,0);
 openvar('entropy_ttest')
+
+% Calculate t-test with effective sample size
+entropy_ttest_ESS = calc_significance(percept_data,'entropy',zone_index,1);
+openvar('entropy_ttest_ESS')
+
+%% Table 8 (Cross-Patient T-tests for All Metrics)
+
+clear_var_tabs %Close open variable tabs
+
+pooled_ttest = calc_pooled_significance(percept_data,zone_index,0);
+openvar('pooled_ttest')
+
+pooled_ttest_ESS = calc_pooled_significance(percept_data,zone_index,1);
+openvar('pooled_ttest_ESS')
 
 %% Table 9 (ROC Classifier Performance)
 
-clear_var_tabs
-openvar('percept_data.ROC_metrics')
+clear_var_tabs %Close open variable tabs
+openvar('percept_data.Regression_metrics')
 
 %% Table 10 (DeLong Tests)
 
-clear_var_tabs
+clear_var_tabs %Close open variable tabs
 
-delong = calc_delong(percept_data);
+delong = calc_deLong(percept_data);
 openvar('delong')

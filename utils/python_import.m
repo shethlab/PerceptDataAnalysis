@@ -1,6 +1,8 @@
 %% Imports data from python into the percept_data MATLAB structure
 
-function percept_data = python_import(python_data,percept_data)
+function percept_data = python_import(python_data,percept_data,models)
+
+model_field = replace(models,{'Cosinor','LinAR'},{'cosinor','linAR'}); % Secondary list of model names to match fieldnames in python struct
 
 field_list = fieldnames(python_data);
 
@@ -37,13 +39,13 @@ matlab_data.cosinor{1} = struct(python_data.Cosinor1);
 matlab_data.cosinor{2} = struct(python_data.Cosinor2);
 matlab_data.linAR{1} = struct(python_data.LinAR1);
 matlab_data.linAR{2} = struct(python_data.LinAR2);
-matlab_data.SE{1} = struct(python_data.SE1);
-matlab_data.SE{2} = struct(python_data.SE2);
-
 try
     matlab_data.NN_AR{1} = struct(python_data.NN_AR1);
     matlab_data.NN_AR{2} = struct(python_data.NN_AR2);
 end
+matlab_data.SE{1} = struct(python_data.SE1);
+matlab_data.SE{2} = struct(python_data.SE2);
+
 
 
 %% Metric-Generated Raw Data
@@ -95,61 +97,62 @@ for hemisphere = 1:2
     end
 end
 
-%% ROC
-
-percept_data.ROC.cosinor(:,1) = {'Norm','Delta'};
+%% ROC Predictions
 
 for hemisphere = 1:2
-    %Cosinor
-    percept_data.ROC.cosinor{1,hemisphere+1} = matlab_data.cosinor{hemisphere}.Cosinor_Norm_ROC_AUC_Predictions(:,1:2);
-    percept_data.ROC.cosinor{2,hemisphere+1} = matlab_data.cosinor{hemisphere}.Cosinor_Delta_ROC_AUC_Predictions(:,1:2);
-    percept_data.ROC_metrics.cosinor{1,hemisphere+1} = matlab_data.cosinor{hemisphere}.Cosinor_Norm_ROC_AUC_Performance_Statistics;
-    percept_data.ROC_metrics.cosinor{2,hemisphere+1} = matlab_data.cosinor{hemisphere}.Cosinor_Delta_ROC_AUC_Performance_Statistics;
-    percept_data.ROC_metrics.cosinor(:,1) = {'Daily Model','Delta Model'};
-
-    %Linear AR
-    percept_data.ROC.linearAR{1,hemisphere+1} = matlab_data.linAR{hemisphere}.LinAR_Norm_ROC_AUC_Predictions(:,1:2);
-    percept_data.ROC.linearAR{2,hemisphere+1} = matlab_data.linAR{hemisphere}.LinAR_Delta_ROC_AUC_Predictions(:,1:2);
-    percept_data.ROC_metrics.linearAR{1,hemisphere+1} = matlab_data.linAR{hemisphere}.LinAR_Norm_ROC_AUC_Performance_Statistics;
-    percept_data.ROC_metrics.linearAR{2,hemisphere+1} = matlab_data.linAR{hemisphere}.LinAR_Delta_ROC_AUC_Performance_Statistics;
-    percept_data.ROC_metrics.linearAR(:,1) = {'Daily Model','Delta Model'};
-
-    %Sample Entropy
-    percept_data.ROC.entropy{1,hemisphere+1} = matlab_data.SE{hemisphere}.SE_Norm_ROC_AUC_Predictions(:,1:2);
-    percept_data.ROC.entropy{2,hemisphere+1} = matlab_data.SE{hemisphere}.SE_Delta_ROC_AUC_Predictions(:,1:2);
-    percept_data.ROC_metrics.entropy{1,hemisphere+1} = matlab_data.SE{hemisphere}.SE_Norm_ROC_AUC_Performance_Statistics;
-    percept_data.ROC_metrics.entropy{2,hemisphere+1} = matlab_data.SE{hemisphere}.SE_Delta_ROC_AUC_Performance_Statistics;
-    percept_data.ROC_metrics.entropy(:,1) = {'Daily Model','Delta Model'};
-
-    %Nonlinear AR
-    try
-        percept_data.ROC.nonlinearAR{1,hemisphere+1} = matlab_data.NN_AR{hemisphere}.NN_AR_Norm_ROC_AUC_Predictions(:,1:2);
-        percept_data.ROC.nonlinearAR{2,hemisphere+1} = matlab_data.NN_AR{hemisphere}.NN_AR_Delta_ROC_AUC_Predictions(:,1:2);
-        percept_data.ROC_metrics.nonlinearAR{1,hemisphere+1} = matlab_data.NN_AR{hemisphere}.NN_AR_Norm_ROC_AUC_Performance_Statistics;
-        percept_data.ROC_metrics.nonlinearAR{2,hemisphere+1} = matlab_data.NN_AR{hemisphere}.NN_AR_Delta_ROC_AUC_Performance_Statistics;
-        percept_data.ROC_metrics.nonlinearAR(:,1) = {'Daily Model','Delta Model'};
+    for m = 1:length(models)
+        percept_data.ROC.(model_field{m})(:,1) = {'Norm','Delta'};
+        percept_data.ROC.(model_field{m}){1,hemisphere+1} = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Predictions'])(:,1:2);
+        percept_data.ROC.(model_field{m}){2,hemisphere+1} = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Predictions'])(:,1:2);
     end
 end
+
 %% KFold States
 
 for hemisphere = 1:2
-    %Cosinor
-    percept_data.kfold.cosinor{1,hemisphere} = matlab_data.cosinor{hemisphere}.Cosinor_State_Metrics;
-    percept_data.kfold_CI.cosinor{1,hemisphere} = matlab_data.cosinor{hemisphere}.Cosinor_CI;
-    
-    %Linear AR
-    percept_data.kfold.linearAR{1,hemisphere} = matlab_data.linAR{hemisphere}.LinAR_State_Metrics;
-    percept_data.kfold_CI.linearAR{1,hemisphere} = matlab_data.linAR{hemisphere}.LinAR_CI;
-    
-    %Sample Entropy
-    percept_data.kfold.entropy{1,hemisphere} = matlab_data.SE{hemisphere}.SE_State_Metrics;
-    percept_data.kfold_CI.entropy{1,hemisphere} = matlab_data.SE{hemisphere}.SE_CI;
-    
-    %Nonlinear AR
-    try
-        percept_data.kfold.nonlinearAR{1,hemisphere} = matlab_data.NN_AR{hemisphere}.NN_State_Metrics;
-        percept_data.kfold_CI.nonlinearAR{1,hemisphere} = matlab_data.NN_AR{hemisphere}.NN_CI;
+    for m = 1:length(models)
+        percept_data.kfold.(model_field{m}){1,hemisphere} = matlab_data.(model_field{m}){hemisphere}.([models{m},'_State_Metrics']);
+        percept_data.kfold_CI.(model_field{m}){1,hemisphere} = matlab_data.(model_field{m}){hemisphere}.([models{m},'_CI']);
     end
+end
+
+%% Leave-one-patient-out Logistic Regression Metrics
+
+percept_data.Regression_metrics.AUROC(1:2,1) = {'Delta','Daily'};
+percept_data.Regression_metrics.Balanced_Accuracy(1:2,1) = {'Delta','Daily'};
+
+for hemisphere = 1:2
+    for m = 1:length(models)
+        %AUROC Delta Stats
+        percept_data.Regression_metrics.AUROC{1,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Performance_Statistics']).ROC_AUC; % AUROC
+        percept_data.Regression_metrics.AUROC{1,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).Chance_AUC; % AUROC with randomized labels
+        percept_data.Regression_metrics.AUROC{1,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).AUC_Pvalue; % P-value for AUROC with randomized labels
+        percept_data.Regression_metrics.AUROC{1,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Circular_Shift_Statistics']).AUC_Pvalue; % P-value for AUROC with circularly-shifted labels
+        
+        %AUROC Daily Stats
+        percept_data.Regression_metrics.AUROC{2,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Performance_Statistics']).ROC_AUC; % AUROC
+        percept_data.Regression_metrics.AUROC{2,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).Chance_AUC; % AUROC with randomized labels
+        percept_data.Regression_metrics.AUROC{2,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).AUC_Pvalue; % P-value for AUROC with randomized labels
+        percept_data.Regression_metrics.AUROC{2,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Circular_Shift_Statistics']).AUC_Pvalue; % P-value for AUROC with circularly-shifted labels
+        
+        %Balanced Accuracy Delta Stats
+        percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Performance_Statistics']).Balanced_Accuracy; % AUROC
+        percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).Chance_Balanced_Accuracy; % AUROC with randomized labels
+        percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with randomized labels
+        percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Circular_Shift_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with circularly-shifted labels
+        
+        %Balanced Accuracy Daily Stats
+        percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Performance_Statistics']).Balanced_Accuracy; % AUROC
+        percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).Chance_Balanced_Accuracy; % AUROC with randomized labels
+        percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with randomized labels
+        percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Circular_Shift_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with circularly-shifted labels
+    end
+
+    % Convert statistics matrices into tables
+    percept_data.Regression_metrics.AUROC{1,hemisphere+1} = array2table(percept_data.Regression_metrics.AUROC{1,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
+    percept_data.Regression_metrics.AUROC{2,hemisphere+1} = array2table(percept_data.Regression_metrics.AUROC{2,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
+    percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1} = array2table(percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
+    percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1} = array2table(percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
 end
 
 end

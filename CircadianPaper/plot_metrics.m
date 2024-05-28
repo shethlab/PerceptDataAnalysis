@@ -372,6 +372,7 @@ function EMA_plot(days,stat,c_map,ema_skip,figure)
 skip_idx = max([ema_skip,find(~isnan(stat),1,'first')]); %Skip 1st data point or initial NaN points when identifying start of EMA
 try
     EMA = patch([days(skip_idx:end),nan],[movavg(fillmissing(stat(skip_idx:end)','pchip','EndValues','none'),"exponential",5);nan],[days(skip_idx:end),nan],'EdgeColor','flat','LineWidth',2);
+    c_map(all(c_map,2),:) = c_map(all(c_map,2),:)/2; % Replace white EMA with grey
     colormap(figure,[c_map(skip_idx:end,:)])
 end
 
