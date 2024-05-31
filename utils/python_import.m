@@ -1,6 +1,6 @@
 %% Imports data from python into the percept_data MATLAB structure
 
-function percept_data = python_import(python_data,percept_data,models)
+function percept_data = python_import(python_data,percept_data,models,permut_testing)
 
 model_field = replace(models,{'Cosinor','LinAR'},{'cosinor','linAR'}); % Secondary list of model names to match fieldnames in python struct
 
@@ -118,41 +118,43 @@ end
 
 %% Leave-one-patient-out Logistic Regression Metrics
 
-percept_data.Regression_metrics.AUROC(1:2,1) = {'Delta','Daily'};
-percept_data.Regression_metrics.Balanced_Accuracy(1:2,1) = {'Delta','Daily'};
-
-for hemisphere = 1:2
-    for m = 1:length(models)
-        %AUROC Delta Stats
-        percept_data.Regression_metrics.AUROC{1,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Performance_Statistics']).ROC_AUC; % AUROC
-        percept_data.Regression_metrics.AUROC{1,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).Chance_AUC; % AUROC with randomized labels
-        percept_data.Regression_metrics.AUROC{1,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).AUC_Pvalue; % P-value for AUROC with randomized labels
-        percept_data.Regression_metrics.AUROC{1,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Circular_Shift_Statistics']).AUC_Pvalue; % P-value for AUROC with circularly-shifted labels
-        
-        %AUROC Daily Stats
-        percept_data.Regression_metrics.AUROC{2,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Performance_Statistics']).ROC_AUC; % AUROC
-        percept_data.Regression_metrics.AUROC{2,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).Chance_AUC; % AUROC with randomized labels
-        percept_data.Regression_metrics.AUROC{2,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).AUC_Pvalue; % P-value for AUROC with randomized labels
-        percept_data.Regression_metrics.AUROC{2,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Circular_Shift_Statistics']).AUC_Pvalue; % P-value for AUROC with circularly-shifted labels
-        
-        %Balanced Accuracy Delta Stats
-        percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Performance_Statistics']).Balanced_Accuracy; % AUROC
-        percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).Chance_Balanced_Accuracy; % AUROC with randomized labels
-        percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with randomized labels
-        percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Circular_Shift_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with circularly-shifted labels
-        
-        %Balanced Accuracy Daily Stats
-        percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Performance_Statistics']).Balanced_Accuracy; % AUROC
-        percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).Chance_Balanced_Accuracy; % AUROC with randomized labels
-        percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with randomized labels
-        percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Circular_Shift_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with circularly-shifted labels
+if permut_testing %Skip if no leave-one-out permutation testing was performed
+    percept_data.Regression_metrics.AUROC(1:2,1) = {'Delta','Daily'};
+    percept_data.Regression_metrics.Balanced_Accuracy(1:2,1) = {'Delta','Daily'};
+    
+    for hemisphere = 1:2
+        for m = 1:length(models)
+            %AUROC Delta Stats
+            percept_data.Regression_metrics.AUROC{1,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Performance_Statistics']).ROC_AUC; % AUROC
+            percept_data.Regression_metrics.AUROC{1,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).Chance_AUC; % AUROC with randomized labels
+            percept_data.Regression_metrics.AUROC{1,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).AUC_Pvalue; % P-value for AUROC with randomized labels
+            percept_data.Regression_metrics.AUROC{1,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Circular_Shift_Statistics']).AUC_Pvalue; % P-value for AUROC with circularly-shifted labels
+            
+            %AUROC Daily Stats
+            percept_data.Regression_metrics.AUROC{2,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Performance_Statistics']).ROC_AUC; % AUROC
+            percept_data.Regression_metrics.AUROC{2,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).Chance_AUC; % AUROC with randomized labels
+            percept_data.Regression_metrics.AUROC{2,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).AUC_Pvalue; % P-value for AUROC with randomized labels
+            percept_data.Regression_metrics.AUROC{2,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Circular_Shift_Statistics']).AUC_Pvalue; % P-value for AUROC with circularly-shifted labels
+            
+            %Balanced Accuracy Delta Stats
+            percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Performance_Statistics']).Balanced_Accuracy; % AUROC
+            percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).Chance_Balanced_Accuracy; % AUROC with randomized labels
+            percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Randomization_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with randomized labels
+            percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Delta_ROC_AUC_Circular_Shift_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with circularly-shifted labels
+            
+            %Balanced Accuracy Daily Stats
+            percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(1,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Performance_Statistics']).Balanced_Accuracy; % AUROC
+            percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(2,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).Chance_Balanced_Accuracy; % AUROC with randomized labels
+            percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(3,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Randomization_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with randomized labels
+            percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1}(4,m) = matlab_data.(model_field{m}){hemisphere}.([models{m},'_Norm_ROC_AUC_Circular_Shift_Statistics']).Balanced_Accuracy_PValue; % P-value for AUROC with circularly-shifted labels
+        end
+    
+        % Convert statistics matrices into tables
+        percept_data.Regression_metrics.AUROC{1,hemisphere+1} = array2table(percept_data.Regression_metrics.AUROC{1,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
+        percept_data.Regression_metrics.AUROC{2,hemisphere+1} = array2table(percept_data.Regression_metrics.AUROC{2,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
+        percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1} = array2table(percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
+        percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1} = array2table(percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
     end
-
-    % Convert statistics matrices into tables
-    percept_data.Regression_metrics.AUROC{1,hemisphere+1} = array2table(percept_data.Regression_metrics.AUROC{1,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
-    percept_data.Regression_metrics.AUROC{2,hemisphere+1} = array2table(percept_data.Regression_metrics.AUROC{2,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
-    percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1} = array2table(percept_data.Regression_metrics.Balanced_Accuracy{1,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
-    percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1} = array2table(percept_data.Regression_metrics.Balanced_Accuracy{2,hemisphere+1},'RowNames',{'True Label','Shuffled Label','P-Val (Random)','P-Val (Circular)'},'VariableNames',models);
 end
 
 end
