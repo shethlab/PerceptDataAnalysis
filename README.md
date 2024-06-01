@@ -42,7 +42,7 @@ AUROC Matlab Package: https://github.com/alistairewj/auroc-matlab/tree/master
 ```
 
 # Code Demo
-Demo datasets and and a script to generate demo outputs are located in the DEMO folder. Run the demo script section-by-section to view how each step of analysis is conducted. For all figures, axis and other aesthetic adjustments were completed on Adobe Illustrator. 
+Demo datasets and and a script to generate demo outputs are located in the DEMO folder. Run the demo ("demo.m") script section-by-section to view how each step of analysis is conducted. For all figures, axis and other aesthetic adjustments were completed on Adobe Illustrator. 
 
 # Workflow
 Below are instructions for generating each of the code-based figures in the paper sequentially for your own data. All figure and table-generating codes are contained in Github folder "CircadianPaper". 
@@ -93,15 +93,16 @@ TO-DO
 Calculates F-test statistics for a single cosinor fit across the entire pre-DBS period. Run the function "calc_preDBS_cosinor" (type "help calc_preDBS_cosinor" in the command window for specific function operation).
     - Estimated runtime: 3-5 seconds
 
-## Table 3
-Calculates means and confidence intervals for 5-fold cross-validation folds of metric data. This is already located in the percept_data struct under the variables "kfold" and "kfold_CI" after running step 2 of the workflow.
+## Tables 3-7 (Cohort 1 results in 3-6, Cohort 2 results in 7)
+Calculates two-sample, two-tailed Welch’s t-test statistics between parameters of the various model fits for pre- vs. post-DBS periods. This also calculates stationarity of signals in the pre-DBS and chronic clinical states using the Augmented Dickey-Fuller and Kwiatkowski–Phillips–Schmidt–Shin tests if a second output variable is specified. 
 
-## Table 4
-Differences in means can be calculated from the "kfold" variable in the percept_data struct (see "Table 4" section of demo code).
-    - Estimated runtime: 1-3 seconds
+Run the function "calc_significance" (type "help calc_significance" in the command window for specific function operation), change the second input parameter to the metric of interest (Cosinor, linear AR, nonlinear AR, or sample entropy) and change the final input parameter from 0 to 1 to correct for effective sample size.
 
-## Table 5-8
-Calculates two-tailed Welch's t-tests for various metrics before DBS vs in the chronic clinical state. Run the function "calc_significance" (type "help calc_significance" in the command window for specific function operation). This also calculates stationarity of signals in the pre-DBS and chronic clinical states using the Augmented Dickey-Fuller and Kwiatkowski–Phillips–Schmidt–Shin tests if a second output variable is specified.
+## Table 8
+
+Calculates two-sample two-tailed Welch’s t-test statistics for the period in which patients had high symptom burden (i.e., pre-DBS and persistent OCD symptoms post- DBS) vs. the period with low symptom burden (i.e., post-DBS clinical response) using cosinor R2, linear AR R2, nonlinear AR R2, and sample entropy (per-day). Analysis pooled across patients and conducted with either corrected or uncorrected sample size as before.
+
+Run the function "calc_pooled_significance" (type "help calc_pooled_significance" in the command window for specific function operation) and change the final input parameter from 0 to 1 to correct for effective sample size.
 
 ## Table 9
 Calculates ROC classifier performance metrics. This is already located in the percept_data struct under the variables "ROC_metrics" after running step 2 of the workflow.
