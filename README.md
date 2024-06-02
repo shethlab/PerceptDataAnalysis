@@ -87,7 +87,8 @@ Run the function "plot_deltas" (type "help plot_deltas" in the command window fo
 ![Fig5](DEMO/Figures/fig5.png)
 
 ## Figure S2/S3
-TO-DO
+Run the function ___ (Python code for visual aesthetics) to generate violin plots for both Supplementary Figures 2 and 3. 
+    - Estimated runtime: 
 
 ## Table 2
 Calculates F-test statistics for a single cosinor fit across the entire pre-DBS period. Run the function "calc_preDBS_cosinor" (type "help calc_preDBS_cosinor" in the command window for specific function operation).
@@ -97,12 +98,14 @@ Calculates F-test statistics for a single cosinor fit across the entire pre-DBS 
 Calculates two-sample, two-tailed Welch’s t-test statistics between parameters of the various model fits for pre- vs. post-DBS periods. This also calculates stationarity of signals in the pre-DBS and chronic clinical states using the Augmented Dickey-Fuller and Kwiatkowski–Phillips–Schmidt–Shin tests if a second output variable is specified. 
 
 Run the function "calc_significance" (type "help calc_significance" in the command window for specific function operation), change the second input parameter to the metric of interest (Cosinor, linear AR, nonlinear AR, or sample entropy) and change the final input parameter from 0 to 1 to correct for effective sample size.
+    - Estimated runtime: 1-3 seconds
 
 ## Table 8
 
 Calculates two-sample two-tailed Welch’s t-test statistics for the period in which patients had high symptom burden (i.e., pre-DBS and persistent OCD symptoms post- DBS) vs. the period with low symptom burden (i.e., post-DBS clinical response) using cosinor R2, linear AR R2, nonlinear AR R2, and sample entropy (per-day). Analysis pooled across patients and conducted with either corrected or uncorrected sample size as before.
 
 Run the function "calc_pooled_significance" (type "help calc_pooled_significance" in the command window for specific function operation) and change the final input parameter from 0 to 1 to correct for effective sample size.
+    - Estimated runtime: 1-3 seconds
 
 ## Table 9
 Calculates ROC classifier performance metrics. This is already located in the percept_data struct under the variables "ROC_metrics" after running step 2 of the workflow.
