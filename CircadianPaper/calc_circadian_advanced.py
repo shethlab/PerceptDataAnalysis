@@ -738,6 +738,7 @@ def across_pt_regression(log_df: pd.DataFrame, permut_testing: bool, saveDict: d
     """
     
     # Filtering and preparing data for logistic regression analysis.
+    log_df = log_df[np.abs(stats.zscore(log_df['R2'])) < 5]   
     delt = log_df.loc[log_df['dR2'].notna()].iloc[:,[1,2,3]]  # Select rows where 'dR2' is not NaN.
     norm = log_df.iloc[:,[0,2,3]]  # Select first and third columns of log_df.
 
