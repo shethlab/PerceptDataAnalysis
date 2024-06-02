@@ -113,3 +113,6 @@ Calculates ROC classifier performance metrics. This is already located in the pe
 ## Table 10
 Calculates DeLong test statistics on pairwise ROC comparisons. Run the function "calc_delong" (type "help calc_delong" in the command window for specific function operation).
     - Estimated runtime: 3-5 seconds
+
+## Supplementary Video
+Run the script "plot_video" (type "help plot_video" in the command window for specific function operation). This generates a video of the ____. 
