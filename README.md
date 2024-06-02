@@ -115,4 +115,4 @@ Calculates DeLong test statistics on pairwise ROC comparisons. Run the function 
     - Estimated runtime: 3-5 seconds
 
 ## Supplementary Video
-Run the script "plot_video" (type "help plot_video" in the command window for specific function operation). This generates a video of the ____. 
+Run the script "plot_video" (type "help plot_video" in the command window for specific function operation). This generates a video of the patient's treatment course over time, with three metricd (Cosinor R2, linear AR R2, and sample entropy) plotted and background shading representing treatment status. Above these timelines is plotted the daily template.   
