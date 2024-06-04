@@ -15,13 +15,14 @@ This package is supported for Windows 11. The package has been tested on the fol
 ```
 numpy == 1.24.3
 pandas == 2.2.0
-pytorch == 2.2.0
+pytorch == 2.1.0
 matlabengine == 23.2.1
-scikit-learn == 1.4.0
+scikit-learn == 1.2.0
 statsmodels == 0.14.1
 matplotlib == 3.8.2
 plotly == 5.14.1
-kaleido == 0.1.0
+kaleido == 0.1.0.post1
+scipy == 1.10.1
 ```
 
 ## MATLAB Dependencies
