@@ -786,7 +786,7 @@ def across_pt_regression(log_df: pd.DataFrame, permut_testing: bool, saveDict: d
     # Return a dictionary containing all the results and statistics from the analysis.
     return saveDict
 
-def main(hemi: int, mat_file: str, components: list, pt: list, models: list, permut_testing: bool):
+def main(hemi: int, mat_file: str, components: list, pt_index: list, pt_names: list, models: list, permut_testing: bool):
     """
     Main function to run analysis across different models and patients. The function compiles R2 metrics, confidence intervals, and conducts regression analyses.
 
@@ -794,7 +794,8 @@ def main(hemi: int, mat_file: str, components: list, pt: list, models: list, per
     - hemi (int): Hemisphere indentifier (0 for left hemisphere, 1 for right hemisphere).
     - mat_file (str): Path to the .mat file containing the data.
     - components (list): A list with number of cosinor components needed for each patient.
-    - pt (list): A list of patient identifiers.
+    - pt_index (list): A list of patient index.
+    - pt_names (list): A list of patient names.
     - models (list): A list of models (e.g., 'SE', 'LinAR') to analyze.
     - permut_testing (bool): Flag indicating whether permutation testing should be performed.
 
@@ -812,7 +813,7 @@ def main(hemi: int, mat_file: str, components: list, pt: list, models: list, per
         log_df = pd.DataFrame(columns = ['R2' , 'dR2', 'Y', 'PT']) 
         
         # Iterate through each patient.
-        for pt_id, pt_name in enumerate(pt):
+        for pt_id, pt_name in zip(pt_index, pt_names):
             
             # Initialize patient-specific entries in dictionaries.
             r2_info[pt_name], ci_info[pt_name] = {}, {}
