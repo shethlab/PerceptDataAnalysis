@@ -64,7 +64,7 @@ Run the function "plot_PSD" (type "help plot_PSD" in the command window for spec
 
 ![Fig1](DEMO/Figures/fig1.png)
  
-## Figure 2/S1
+## Figure 2/Extended Data Figure 1
 Heatmaps: Run the function "plot_heatmap" (type "help plot_heatmap" in the command window for specific function operation).
     - Estimated runtime: 3-5 seconds
 
@@ -86,7 +86,7 @@ Run the function "plot_deltas" (type "help plot_deltas" in the command window fo
     
 ![Fig5](DEMO/Figures/fig5.png)
 
-## Figure S2/S3
+## Extended Data Figure 2/3
 Run the function ___ (Python code for visual aesthetics) to generate violin plots for both Supplementary Figures 2 and 3. 
     - Estimated runtime: 
 
