@@ -73,7 +73,7 @@ Cosinor Polar Plots: Run the function "plot_cosinor" (type "help plot_cosinor" i
     - Estimated runtime: 1-3 seconds
 
 ![Fig2heatmap](Demo/Figures/Fig2_heatmap.png)
-![Fig2acro](Demo/Figures/Fig2_acro.png)
+![Fig2acro](Demo/Figures/Fig2_cosinor.png)
 
 ## Figure 3/4
 Daily "Template" Polar Plots: Run the function "plot_templates" (type "help plot_template" in the command window for specific function operation). Note that the final plot is a median-average of all days in a particular zone.
@@ -123,4 +123,4 @@ Calculates DeLong test statistics on pairwise ROC comparisons. Run the function 
 ## Supplementary Video
 Run the script "plot_video" (type "help plot_video" in the command window for specific function operation). This generates a video of the patient's treatment course over time, with three metricd (Cosinor R2, linear AR R2, and sample entropy) plotted and background shading representing treatment status. Above these timelines is plotted the daily template.
 
-![VidS1](Demo/Figures/VidS1.png)
+![VidS1](Demo/Figures/VidS1.mp4)
