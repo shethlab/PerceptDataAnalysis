@@ -8,11 +8,11 @@
 %% Loading and prepping data (must be run first)
 load('demo_data.mat')
 
-percept_data = calc_circadian(percept_data,zone_index,2,2,0,0,[],[],[],1); % full calculations including nonlinear AR & permutation testing
+percept_data = calc_circadian(percept_data,zone_index,2,2,0,0,[],1,1,1); % full calculations including nonlinear AR & permutation testing
 
 %% Figure 1 (PSD Plots)
 
-plot_PSD(percept_data,8.79,4,3)
+plot_PSD(percept_data_VCVS,8.79,4,3)
 
 %% Figure 2 (Left Hemisphere Heatmaps & Cosinor Plots)
 
@@ -40,15 +40,17 @@ plot_cosinor(percept_data,2,zone_index,1)
 
 %% Figure S2 (Left Hemisphere Expanded Violin Plots in Responders)
 
+plot_violin(percept_data,1,zone_index,{'B004','B005','B007','B009','U002'});
 
 %% Figure S3 (Left Hemisphere Expanded Violin Plots in Non-Responders)
 
+plot_violin(percept_data,1,zone_index,{'B002','B008','B010','U001','U003'});
 
 %% Table 2 (Pre-DBS Single Cosinor Fit)
 
 clear_var_tabs %Close open variable tabs
 
-cosinor_fits = calc_preDBS_cosinor(percept_data,1);
+cosinor_fits = calc_preDBS_cosinor(percept_data,0);
 openvar('cosinor_fits')
 
 %% Tables 3 & 7 (Per-Patient Cosinor R2 T-test)
