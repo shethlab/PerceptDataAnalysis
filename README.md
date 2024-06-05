@@ -63,7 +63,7 @@ Run the function "calc_circadian" (type "help calc_circadian" in the command win
 Run the function "plot_PSD" (type "help plot_PSD" in the command window for specific function operation). This requires a manually-created field in the percept_data called "streams," which is an nx3 cell array (same structure as percept_data.days) where n is the number of patients. Column 1 should be the patient name, column 2 should be left hemisphere signal, and column 3 should be right hemisphere signal. Each signal should be a 1D vector of either BrainSense Streaming time-domain data (>100 samples) or BrainSense Survey pre-calculated PSDs (must equal 100 values).
     - Estimated runtime: 1-3 seconds
 
-![Fig1](DEMO/Figures/Fig1.png)
+![Fig1](Demo/Figures/Fig1.png)
  
 ## Figure 2/Extended Data Figure 1
 Heatmaps: Run the function "plot_heatmap" (type "help plot_heatmap" in the command window for specific function operation).
@@ -72,8 +72,8 @@ Heatmaps: Run the function "plot_heatmap" (type "help plot_heatmap" in the comma
 Cosinor Polar Plots: Run the function "plot_cosinor" (type "help plot_cosinor" in the command window for specific function operation).
     - Estimated runtime: 1-3 seconds
 
-![Fig2heatmap](DEMO/Figures/Fig2_heatmap.png)
-![Fig2acro](DEMO/Figures/Fig2_acro.png)
+![Fig2heatmap](Demo/Figures/Fig2_heatmap.png)
+![Fig2acro](Demo/Figures/Fig2_acro.png)
 
 ## Figure 3/4
 Daily "Template" Polar Plots: Run the function "plot_templates" (type "help plot_template" in the command window for specific function operation). Note that the final plot is a median-average of all days in a particular zone.
@@ -81,20 +81,20 @@ Daily "Template" Polar Plots: Run the function "plot_templates" (type "help plot
 Raw data and metrics over time: Run the function "plot_metrics" (type "help plot_metrics" in the command window for specific function operation). The manuscript uses python-generated violin plots instead of MATLAB for aesthetics (see "Figure S2/S3" section).
     - Estimated runtime: 3-5 seconds
 
-![Fig4templates](DEMO/Figures/Fig4_templates.png)
-![Fig4metrics](DEMO/Figures/Fig4_metrics.png)
+![Fig4templates](Demo/Figures/Fig4_templates.png)
+![Fig4metrics](Demo/Figures/Fig4_metrics.png)
 
 ## Figure 5
 Run the function "plot_deltas" (type "help plot_deltas" in the command window for specific function operation).
     - Estimated runtime: 3-5 seconds
     
-![Fig5](DEMO/Figures/Fig5.png)
+![Fig5](Demo/Figures/Fig5.png)
 
 ## Extended Data Figure 2/3
 Run the function ___ (Python code for visual aesthetics) to generate violin plots for both Supplementary Figures 2 and 3. 
     - Estimated runtime: 10-15 seconds
 
-![FigE2](DEMO/Figures/FigE2.png)
+![FigE2](Demo/Figures/FigE2.png)
 
 ## Extended Data Tables 1-5 (Cohort 1 results in 1-4, Cohort 2 results in 5)
 Calculates two-sample, two-tailed Welch’s t-test statistics between parameters of the various model fits for pre- vs. post-DBS periods. This also calculates stationarity of signals in the pre-DBS and chronic clinical states using the Augmented Dickey-Fuller and Kwiatkowski–Phillips–Schmidt–Shin tests if a second output variable is specified. 
@@ -123,4 +123,4 @@ Calculates DeLong test statistics on pairwise ROC comparisons. Run the function 
 ## Supplementary Video
 Run the script "plot_video" (type "help plot_video" in the command window for specific function operation). This generates a video of the patient's treatment course over time, with three metricd (Cosinor R2, linear AR R2, and sample entropy) plotted and background shading representing treatment status. Above these timelines is plotted the daily template.
 
-![VidS1](DEMO/Figures/VidS1.png)
+![VidS1](Demo/Figures/VidS1.png)
