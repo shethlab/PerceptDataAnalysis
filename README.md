@@ -91,7 +91,7 @@ Run the function "plot_deltas" (type "help plot_deltas" in the command window fo
 ![Fig5](Demo/Figures/Fig5.png)
 
 ## Extended Data Figure 2/3
-Run the function ___ (Python code for visual aesthetics) to generate violin plots for both Supplementary Figures 2 and 3. 
+Run the function plot_violin (Python code for visual aesthetics) to generate violin plots for both Supplementary Figures 2 and 3. 
     - Estimated runtime: 10-15 seconds
 
 ![FigE2](Demo/Figures/FigE2.png)
