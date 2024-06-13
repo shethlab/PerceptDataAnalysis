@@ -41,7 +41,7 @@ EntropyHub Toolbox v0.2: https://github.com/MattWillFlood/EntropyHub
 ```
 
 # Code Demo
-Demo datasets and and a script to generate demo outputs are located in the DEMO folder. Run the demo ("demo.m") script section-by-section to view how each step of analysis is conducted. For all figures, axis and other aesthetic adjustments were completed on Adobe Illustrator. 
+Demo datasets and and a script to generate demo outputs are located in the DEMO folder. The demo dataset contains raw data, pre-calculated metric values for patients whose raw data is not allowed to be uploaded due to data sharing agreements, and a pre-populated "streams" variable (see "Figure 1" section below). Run the demo ("demo.m") script section-by-section to view how each step of analysis is conducted. For all figures, axis and other aesthetic adjustments were completed on Adobe Illustrator. 
 
 # Workflow
 Below are instructions for generating each of the code-based figures in the paper sequentially for your own data. All figure and table-generating codes are contained in Github folder "CircadianPaper". 
@@ -53,7 +53,7 @@ Run the function "generate_data" (type "help generate_data" in the command windo
 ## 2. Circadian Calculations
 Run the function "calc_circadian" (type "help calc_circadian" in the command window for specific function operation) on the output struct generated from step 1. This function uses MATLAB to calculate cosinor and sample entropy metrics, and then passes the data to python to generate autoregressive metrics and perform classification testing. A current limitation of this code is that it re-runs all data every time, so processing time will get cumulatively longer with more subjects and data added. IMPORTANT NOTE: permutation testing and the nonlinear AR (neural network) model are incredibly slow to run, so in most cases they should be skipped. This occurs by default, and the user must manually provide an optional input to run these analyses (see "help calc_circadian").
     - Estimated runtime (no permutation or nonlinear AR): 30-60s per patient depending on data quantity
-    - Estimated runtime (permutation and/or nonlinear AR): >24hr
+    - Estimated runtime (permutation and/or nonlinear AR): ~30min per patient depending on data quantity
 
 # Figures and Tables
 
