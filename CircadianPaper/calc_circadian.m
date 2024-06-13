@@ -112,7 +112,7 @@ end
 pause(2)
 
 %% Matlab calculations
-for j = 1:size(percept_data.days,1)
+for j = 1:size(percept_data.LFP_norm_matrix,1)
     if exist('all_components','var')
         num_components = all_components(j);
         num_peaks = all_peaks(j);
@@ -231,13 +231,13 @@ if skip_python ~= 1
         for hemisphere = 1:2
             disp(['Running - ' models{m} ' Hemisphere ' num2str(hemisphere)])
             python_data.([models{m},num2str(hemisphere)]) = pyrunfile("calc_circadian_advanced.py","saveDict",hemi=py.int(hemisphere-1),mat_file=mat_file_path,...
-                components=py.list(all_components),pt=py.list(percept_data.LFP_filled_matrix(:,1)'),...
-                models=py.list(models(m)),permut_testing=permut_testing);
+                components=py.list(all_components),pt_index=py.list(cellfun(@(x) py.int(x),num2cell(0:size(percept_data.LFP_filled_matrix(:,1))-1),UniformOutput=false)),...
+                pt_names=py.list(percept_data.LFP_filled_matrix(:,1)'),models=py.list(models(m)),permut_testing=permut_testing);
         end
     end
     
     percept_data = python_import(python_data,percept_data,models,permut_testing); %Import data into matlab struct
-    delete(mat_file_path) %Remove temp mat file
+    %delete(mat_file_path) %Remove temp mat file
 end
 
 end

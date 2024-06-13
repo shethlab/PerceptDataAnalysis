@@ -36,18 +36,17 @@ if exist('is_demo','var') && is_demo == 1
     all_peaks = [2,2,1,1,1,1,2,1,2];
 end
 
-num_subjects = size(percept_data.days,1);
-cosinor_fit_left = table(percept_data.days(:,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),'VariableNames',{'Subject','R2','p','F','df','n','Components'});
-cosinor_fit_right = table(percept_data.days(:,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),'VariableNames',{'Subject','R2','p','F','df','n','Components'});
+num_subjects = size(percept_data.LFP_filled_matrix,1);
+cosinor_fit_left = table(percept_data.LFP_filled_matrix(:,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),'VariableNames',{'Subject','R2','p','F','df','n','Components'});
+cosinor_fit_right = table(percept_data.LFP_filled_matrix(:,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),nan(num_subjects,1),'VariableNames',{'Subject','R2','p','F','df','n','Components'});
 
-for j = 1:size(percept_data.days,1)
-    % Left hemisphere
-    if exist('all_components','var')
+for j = 1:size(percept_data.LFP_filled_matrix,1)
+    if exist('is_demo','var') && is_demo == 1
         num_components = all_components(j);
         num_peaks = all_peaks(j);
     else
-        num_components = input(['Enter the number of cosinor components for subject ',percept_data.days{j,1},': ']); %cosinor parameter input
-        num_peaks = input(['Enter the number of cosinor peaks for subject ',percept_data.days{j,1},': ']); %cosinor parameter input
+        num_components = input(['Enter the number of cosinor components for subject ',percept_data.LFP_filled_matrix{j,1},': ']); %cosinor parameter input
+        num_peaks = input(['Enter the number of cosinor peaks for subject ',percept_data.LFP_filled_matrix{j,1},': ']); %cosinor parameter input
     end
 
     %Warning if improper cosinor inputs
@@ -57,6 +56,7 @@ for j = 1:size(percept_data.days,1)
         all_components(j) = num_components;
     end
 
+    % Left hemisphere
     try
         % Filter all timepoints less than zero
         t = percept_data.time_matrix{j,2};

@@ -26,7 +26,11 @@
 
 function ttest = calc_pooled_significance(percept_data,zone_index,effective) 
 
-field = {'cosinor_R2','linearAR_R2','nonlinearAR_R2','entropy'};
+if isfield(percept_data,'nonlinearAR_R2') %List of models to analyze
+    field = {'cosinor_R2','linearAR_R2','nonlinearAR_R2','entropy'};
+else
+    field = {'cosinor_R2','linearAR_R2','entropy'};
+end
 
 % Identify which metrics are provided in the data
 field = field(isfield(percept_data,field));
@@ -42,29 +46,46 @@ for hemisphere = 1:2
     ESS_responder = zeros(1,4);
     
     for j = 1:size(percept_data.days,1)
+        preDBS_data = [];
+        nonresponder_data = [];
         symptomatic_data = [];
         responder_data = [];
+        model_preDBS_data = {};
+        model_nonresponder_data = {};
         model_symptomatic_data = {};
         model_responder_data = {};
 
         % Find zone indices relative to days since DBS activation
         days = percept_data.days{j,hemisphere+1};
+        [~,preDBS_idx] = intersect(days,days(days < 0));
+        [~,nonresponder_idx] = intersect(days,zone_index.non_responder{j});
         [~,symptomatic_idx] = intersect(days,[days(days < 0),zone_index.non_responder{j}]);
         [~,responder_idx] = intersect(days,zone_index.responder{j});
     
         for m = 1:length(field)            
             % Extract per-zone data
+            model_preDBS_data{m} = percept_data.(field{m}){j,hemisphere+1}(1,preDBS_idx,1);
+            model_nonresponder_data{m} = percept_data.(field{m}){j,hemisphere+1}(1,nonresponder_idx,1);
             model_symptomatic_data{m} = percept_data.(field{m}){j,hemisphere+1}(1,symptomatic_idx,1);
             model_responder_data{m} = percept_data.(field{m}){j,hemisphere+1}(1,responder_idx,1);
             
             % Add current patient's data to pooled data
+            preDBS_data = [preDBS_data,model_preDBS_data{m}'];
+            nonresponder_data = [nonresponder_data,model_nonresponder_data{m}'];
             symptomatic_data = [symptomatic_data,model_symptomatic_data{m}'];
             responder_data = [responder_data,model_responder_data{m}'];
         end
 
         % Deleting days with NaN for any metric to match sample sizes across metrics
+        preDBS_nan_index = find(any(isnan(preDBS_data),2));
+        preDBS_data(preDBS_nan_index,:) = [];        
+        
+        nonresponder_nan_index = find(any(isnan(nonresponder_data),2));
+        nonresponder_data(nonresponder_nan_index,:) = [];
+        
         symptomatic_nan_index = find(any(isnan(symptomatic_data),2));
         symptomatic_data(symptomatic_nan_index,:) = [];
+        
         responder_nan_index = find(any(isnan(responder_data),2));
         responder_data(responder_nan_index,:) = [];
 
@@ -73,8 +94,8 @@ for hemisphere = 1:2
         
         % Adding effective sample size to running tally
         for m = 1:length(field)
-            ESS_symptomatic(m) = ESS_symptomatic(m) + ESS(model_symptomatic_data{m});
-            ESS_responder(m) = ESS_responder(m) + ESS(model_responder_data{m});
+            ESS_symptomatic(m) = ESS_symptomatic(m) + ESS(preDBS_data(:,m)) + ESS(nonresponder_data(:,m));
+            ESS_responder(m) = ESS_responder(m) + ESS(responder_data(:,m));
         end
     end
 

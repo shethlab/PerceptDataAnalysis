@@ -12,7 +12,7 @@ percept_data = calc_circadian(percept_data,zone_index,2,2,0,0,[],1,1,1); % full 
 
 %% Figure 1 (PSD Plots)
 
-plot_PSD(percept_data_VCVS,8.79,4,3)
+plot_PSD(percept_data,8.79,4,3)
 
 %% Figure 2 (Left Hemisphere Heatmaps & Cosinor Plots)
 
@@ -50,7 +50,7 @@ plot_violin(percept_data,1,zone_index,{'B002','B008','B010','U001','U003'});
 
 clear_var_tabs %Close open variable tabs
 
-cosinor_fits = calc_preDBS_cosinor(percept_data,0);
+cosinor_fits = calc_preDBS_cosinor(percept_data,1);
 openvar('cosinor_fits')
 
 %% Tables 3 & 7 (Per-Patient Cosinor R2 T-test)
@@ -58,11 +58,11 @@ openvar('cosinor_fits')
 clear_var_tabs %Close open variable tabs
 
 % Calculate t-test with normal sample size
-cosinor_ttest = calc_significance(percept_data_VCVS,'cosinor_R2',zone_index,0);
+cosinor_ttest = calc_significance(percept_data,'cosinor_R2',zone_index,0);
 openvar('cosinor_ttest')
 
 % Calculate t-test with effective sample size
-cosinor_ttest_ESS = calc_significance(percept_data_VCVS,'cosinor_R2',zone_index,1);
+cosinor_ttest_ESS = calc_significance(percept_data,'cosinor_R2',zone_index,1);
 openvar('cosinor_ttest_ESS')
 
 %% Tables 4 & 7 (Per-Patient Linear AR R2 T-test)

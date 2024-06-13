@@ -442,6 +442,7 @@ def NN_AR(train: pd.DataFrame, test: pd.DataFrame, index: list):
 
     # Create a neural network model with specified architecture.
     model = create_nn(input_size=len(index), hidden_size1=32, output_size=1)
+    model.to(device)
     
     # Prepare DataLoader objects for both training and test datasets.
     train_loader = create_dataloader(train.loc[index, :], train.loc['Original Data', :])
@@ -454,7 +455,7 @@ def NN_AR(train: pd.DataFrame, test: pd.DataFrame, index: list):
     # Train the model and retrieve performance metrics.
     metrics = train_model(model, criterion, optimizer, train_loader, test_loader, epochs=50, l1_lambda=L1_LAMBDA)
     best_test_r2 = metrics['best_test_r2']  # Best R-squared value on the test data.
-    preds = metrics['best_predictions']  # Predictions corresponding to the best R-squared value.
+    preds = metrics['best_predictions'][1]  # Predictions corresponding to the best R-squared value.
 
     return best_test_r2, preds
 
@@ -738,7 +739,7 @@ def across_pt_regression(log_df: pd.DataFrame, permut_testing: bool, saveDict: d
     """
     
     # Filtering and preparing data for logistic regression analysis.
-    log_df = log_df[np.abs(stats.zscore(log_df['R2'])) < 5]   
+    log_df = log_df[np.abs(st.zscore(log_df['R2'])) < 5]   
     delt = log_df.loc[log_df['dR2'].notna()].iloc[:,[1,2,3]]  # Select rows where 'dR2' is not NaN.
     norm = log_df.iloc[:,[0,2,3]]  # Select first and third columns of log_df.
 
@@ -851,4 +852,4 @@ def main(hemi: int, mat_file: str, components: list, pt_index: list, pt_names: l
         
 if __name__ == "__main__":    
     # Requires input from MATLAB
-    saveDict = main(hemi, mat_file, components, pt, models, permut_testing)
+    saveDict = main(hemi, mat_file, components, pt_index, pt_names, models, permut_testing)

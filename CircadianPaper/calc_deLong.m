@@ -60,11 +60,12 @@ for row = 1:2 %Daily & delta models
             end
         end
         
-        delong{row,hemisphere} = array2table(thetaP,'VariableNames',{'Cosinor','Linear AR','Nonlinear AR','Sample Entropy'},'RowNames',{'Cosinor','Linear AR','Nonlinear AR','Sample Entropy'});
-        %delong{row,hemisphere} = array2table(x_stat,'VariableNames',{'Cosinor','Linear AR','Nonlinear AR','Sample Entropy'},'RowNames',{'Cosinor','Linear AR','Nonlinear AR','Sample Entropy'});
+        delong.p{row,hemisphere} = array2table(thetaP,'VariableNames',{'Cosinor','Linear AR','Nonlinear AR','Sample Entropy'},'RowNames',{'Cosinor','Linear AR','Nonlinear AR','Sample Entropy'});
+        delong.t{row,hemisphere} = array2table(x_stat,'VariableNames',{'Cosinor','Linear AR','Nonlinear AR','Sample Entropy'},'RowNames',{'Cosinor','Linear AR','Nonlinear AR','Sample Entropy'});
     end
 end
 
-delong = array2table(delong,'VariableNames',{'Left','Right'},'RowNames',{'Daily Model','Delta Model'});
+delong.p = array2table(delong.p,'VariableNames',{'Left','Right'},'RowNames',{'Daily Model','Delta Model'});
+delong.t = array2table(delong.t,'VariableNames',{'Left','Right'},'RowNames',{'Daily Model','Delta Model'});
 
 end

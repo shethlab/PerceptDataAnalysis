@@ -46,8 +46,6 @@ end
 matlab_data.SE{1} = struct(python_data.SE1);
 matlab_data.SE{2} = struct(python_data.SE2);
 
-
-
 %% Metric-Generated Raw Data
 
 percept_data.cosinor_matrix(:,1) = percept_data.days(:,1);

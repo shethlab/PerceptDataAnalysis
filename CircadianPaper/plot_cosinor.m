@@ -25,7 +25,7 @@ function plot_cosinor(percept_data,hemisphere,zone_index,is_demo)
 
 %% Detailed Adjustable Inputs
 
-sz = 6; % Marker size
+sz = 12; % Marker size
 sig_point_alpha = 0.7; % Transparency of points with significant cosinor fit
 nonsig_point_alpha = 0.3; % Transparency of points with non-significant cosinor fit
 fig_width = 3.43; % Width of figure in cm
@@ -98,9 +98,8 @@ for j = 1:total_height
     pax.ThetaDir = 'clockwise';
     pax.ThetaZeroLocation = 'top';
     thetaticklabels({'0:00','2:00','4:00','6:00','8:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'})
-    thetaticklabels({})
     pax.RAxis.Label.String = ['Amplitude'; '(Z-Score)'];
-    pax.RAxis.Label.Position = [-5,mean(rlim)];
+    pax.RAxis.Label.Position = [-25,mean(rlim)];
     subtitle(percept_data.days(j,1));
     pax.FontSize = font_size;
     pax.RAxisLocation = 0;

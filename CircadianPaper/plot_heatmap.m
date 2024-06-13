@@ -40,7 +40,7 @@ fig_width = 18.5; % Figure width in cm
 %Color values (RGB 0-1)
 c_mania = [255,0,0]/255; % Color of hypomania zone
 c_responder = [0,0,255]/255; % Color of chronic responder zone
-c_nonresponder = [127,63,152]/255; % Color of chronic non-responder zone
+c_nonresponder = [255,185,0]/255; % Color of chronic non-responder zone
 c_preDBS = [255,215,0]/255; % Color of pre-DBS zone
 
 %% Plotting
@@ -48,19 +48,18 @@ c_preDBS = [255,215,0]/255; % Color of pre-DBS zone
 if exist('is_demo','var') && is_demo == 1 % For figure 2 & S1 demo
     total_height = 5;
 else
-    total_height = size(data,1);
+    total_height = size(data.LFP_norm_matrix,1);
 end
 
 figure('Units','centimeters','Position',[0,0,fig_width,fig_height*total_height],'Color','w');
 
 %Determine maximum number of data points to display horizontally
-max_day_width = max(cellfun('length',data.days(:,hemisphere+1)));
-colorbar_height = colorbar_height/size(data.days,1); % Colorbar height (fraction of figure size)
-colorbar_offset = colorbar_offset/size(data.days,1); % Vertical offset of colorbar from heatmaps (fraction of figure size)
-heatmap_height = heatmap_height/size(data.days,1); % Heatmap height (fraction of figure size)
+max_day_width = max(cellfun('length',data.LFP_norm_matrix(:,hemisphere+1)));
+colorbar_height = colorbar_height/size(data.LFP_norm_matrix,1); % Colorbar height (fraction of figure size)
+colorbar_offset = colorbar_offset/size(data.LFP_norm_matrix,1); % Vertical offset of colorbar from heatmaps (fraction of figure size)
+heatmap_height = heatmap_height/size(data.LFP_norm_matrix,1); % Heatmap height (fraction of figure size)
 
-for j = 1:size(data.days,1)
-    
+for j = 1:total_height  
     %Temporary variables per iteration
     LFP = data.LFP_norm_matrix{j,hemisphere+1};
     days = data.days{j,hemisphere+1}; 

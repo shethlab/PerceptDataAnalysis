@@ -59,70 +59,84 @@ font_size_legend = 12; % Font size of legend in ROC plots
 %% Plotting
 
 figure('Units','centimeters','Position',fig_position);
-fig = tiledlayout(2,6);
 
-model_name = {'cosinor','linearAR','nonlinearAR','entropy'};
-actual_model_name = {'Cosinor','Linear AR','Non-linear AR','Sample Entropy'};
+if isfield(percept_data.kfold,'NN_AR') %Include non-linear AR if available
+    model_name = {'cosinor','linAR','NN_AR','SE'};
+    actual_model_name = {'Cosinor','Linear AR','Non-linear AR','Sample Entropy'};
+    legend_suffix_delta = {' \DeltaR^2',' \DeltaR^2',' \DeltaR^2',' \Delta'};
+    legend_suffix_daily = {' R^2',' R^2',' R^2',''};
+    fig = tiledlayout(2,6);
+else
+    model_name = {'cosinor','linAR','SE'};
+    actual_model_name = {'Cosinor','Linear AR','Sample Entropy'};
+    legend_suffix_delta = {' \DeltaR^2',' \DeltaR^2',' \Delta'};
+    legend_suffix_daily = {' R^2',' R^2',''};
+    fig = tiledlayout(2,5);
+end
 
-for m = 1:4
+% Scatter plot of delta values
+for m = 1:length(model_name)
     nexttile(fig,[1,1])
 
-    % %Temporary variables per iteration
-    % data = percept_data.kfold.(model_name{m}){hemisphere};
-    % chronic = nanmax(data.Responder,data.('Non-Responder'));
-    % 
-    % hold on
-    % delta = sum([data.('Pre-DBS'),-chronic],2);
-    % responder_idx = find(~isnan(data.Responder));
-    % nonresponder_idx = find(~isnan(data.('Non-Responder')));
-    % 
-    % scatter(repelem(x_delta,length(nonresponder_idx)),delta(nonresponder_idx),sz,'filled','MarkerEdgeColor',c_nonresponder,'MarkerFaceColor',c_nonresponder,'MarkerFaceAlpha',face_alpha);
-    % scatter(repelem(x_delta,length(responder_idx)),delta(responder_idx),sz,'^','filled','MarkerEdgeColor',c_responder,'MarkerFaceColor',c_responder,'MarkerFaceAlpha',face_alpha);
-    % 
-    % text(repelem(x_delta_label,size(data,1)),delta,data.Subject,'FontSize',font_size_label);
-    % 
-    % if max(delta(responder_idx)) < min(delta(nonresponder_idx))
-    %     threshold = median([max(delta(responder_idx)),min(delta(nonresponder_idx))]);
-    %     plot([x_delta-threshold_width,x_delta+threshold_width],[threshold,threshold],':k')
-    % elseif min(delta(responder_idx)) > max(delta(nonresponder_idx))
-    %     threshold = median([min(delta(responder_idx)),max(delta(nonresponder_idx))]);
-    %     plot([x_delta-threshold_width,x_delta+threshold_width],[threshold,threshold],':k')
-    % end
-    % 
-    % ax = gca;
-    % if m == 4
-    %     ylim(ylim_delta_SE)
-    %     ylabel('\Delta Sample Entropy')
-    %     ax.YAxis.Exponent = -2;
-    % else
-    %     ylim(ylim_delta_R2/100)
-    %     ylabel('\Delta R^2 (%)')
-    %     set(gca,'YTickLabel',arrayfun(@num2str, 100*get(gca,'YTick'), 'UniformOutput', 0))
-    % end
-    % 
-    % hold off
-    % title(actual_model_name{m})
-    % xlim(x_lims_delta)
-    % xticks(x_delta)
-    % xticklabels({'\Delta'})
-    % ax.FontSize = font_size_beforeafter;
-    % ax.TickLength(1) = 0;
-    % box on
+    % Temporary variables per iteration
+    data = percept_data.kfold.(model_name{m}){hemisphere};
+    chronic = nanmax(data.Responder,data.('Non-Responder'));
+
+    hold on
+    delta = sum([data.('Pre-DBS'),-chronic],2); %Difference b/w pre-DBS and post-DBS data
+    responder_idx = find(~isnan(data.Responder));
+    nonresponder_idx = find(~isnan(data.('Non-Responder')));
+    
+    scatter(repelem(x_delta,length(nonresponder_idx)),delta(nonresponder_idx),sz,'filled','MarkerEdgeColor',c_nonresponder,'MarkerFaceColor',c_nonresponder,'MarkerFaceAlpha',face_alpha);
+    scatter(repelem(x_delta,length(responder_idx)),delta(responder_idx),sz,'^','filled','MarkerEdgeColor',c_responder,'MarkerFaceColor',c_responder,'MarkerFaceAlpha',face_alpha);
+    
+    text(repelem(x_delta_label,size(data,1)),delta,data.Subject,'FontSize',font_size_label); %Adjust patient labels
+    
+    % Add a max margin classifier line if responders and non-responders can be perfectly demarcated
+    if max(delta(responder_idx)) < min(delta(nonresponder_idx))
+        threshold = median([max(delta(responder_idx)),min(delta(nonresponder_idx))]);
+        plot([x_delta-threshold_width,x_delta+threshold_width],[threshold,threshold],':k')
+    elseif min(delta(responder_idx)) > max(delta(nonresponder_idx))
+        threshold = median([min(delta(responder_idx)),max(delta(nonresponder_idx))]);
+        plot([x_delta-threshold_width,x_delta+threshold_width],[threshold,threshold],':k')
+    end
+
+    % Y axis labels
+    ax = gca;
+    if strcmp(model_name{m},'SE')
+        ylim(ylim_delta_SE)
+        ylabel('\Delta Sample Entropy')
+        ax.YAxis.Exponent = -2;
+    else
+        ylim(ylim_delta_R2/100)
+        ylabel('\Delta R^2 (%)')
+        set(gca,'YTickLabel',arrayfun(@num2str, 100*get(gca,'YTick'), 'UniformOutput', 0))
+    end
+
+    hold off
+    title(actual_model_name{m})
+    xlim(x_lims_delta)
+    xticks(x_delta)
+    xticklabels({'\Delta'})
+    ax.FontSize = font_size_beforeafter;
+    ax.TickLength(1) = 0;
+    box on
 end
 
 nexttile(fig,[1,2])
 hold on
 
+% Plotting ROCs for delta values
 plot([0,1],[0,1],'--k')
-for m = 1:4
+for m = 1:length(model_name)
     ROC = percept_data.ROC.(model_name{m}){2,hemisphere+1};
-    [FPR,TPR] = perfcurve(ROC.True,ROC.Pred_Prob,1);
+    [FPR,TPR] = perfcurve(ROC.True,ROC.Pred_Prob,1); %Calculate ROC for prediction matrix
     plot(FPR,TPR,'LineWidth',2)
 end
 hold off
 
 set(gca,'XTick',0:0.1:1,'YTick',0:0.1:1,'FontSize',font_size_ROC)
-legend([{''},strcat(actual_model_name,{' \DeltaR^2',' \DeltaR^2',' \DeltaR^2',' \Delta'})],'Location','southeast','FontSize',font_size_legend)
+legend([{''},strcat(actual_model_name,legend_suffix_delta)],'Location','southeast','FontSize',font_size_legend)
 legend boxoff
 xlim([0,1])
 xlabel('False Positive Rate')
@@ -132,65 +146,68 @@ box on
 axis square
 colororder(gca,[0,0,0;c_cosinor;c_linAR;c_nonlinAR;c_SE])
 
-for m = 1:4
+% Scatter plot of daily values
+for m = 1:length(model_name)
     nexttile(fig,[1,1])
     
     %Temporary variables per iteration
-    % data = percept_data.kfold.(model_name{m}){hemisphere};
-    % chronic = nanmax(data.Responder,data.('Non-Responder'));
-    % 
-    % hold on
-    % plot(repmat([x_preDBS,x_postDBS,NaN],1,size(data,1)),reshape([data.('Pre-DBS')';chronic';nan(1,size(data,1))],[1,size(data,1)*3]),'-k','Color',[0,0,0,line_alpha],'LineWidth',1);
-    % 
-    % scatter(repelem(x_preDBS,size(data,1)),data.('Pre-DBS'),sz,'filled','MarkerEdgeColor',c_preDBS_outline,'MarkerFaceColor',c_preDBS,'MarkerFaceAlpha',face_alpha);
-    % scatter(repelem(x_postDBS,size(data,1)),data.('Non-Responder'),sz,'filled','MarkerEdgeColor',c_nonresponder,'MarkerFaceColor',c_nonresponder,'MarkerFaceAlpha',face_alpha);    
-    % scatter(repelem(x_postDBS,size(data,1)),data.Responder,sz,'^','filled','MarkerEdgeColor',c_responder,'MarkerFaceColor',c_responder,'MarkerFaceAlpha',face_alpha);
-    % 
-    % text(repelem(x_preDBS_label,size(data,1)),data.('Pre-DBS'),data.Subject,'FontSize',font_size_label)
-    % text(repelem(x_postDBS_label,sum(isnan(data.('Pre-DBS')))),chronic(isnan(data.('Pre-DBS'))),data.Subject(isnan(data.('Pre-DBS'))),'FontSize',font_size_label)
-    % 
-    % % Plot threshold line if clear demarcation exists
-    % if max([data.('Pre-DBS');data.('Non-Responder')]) < min(data.Responder)
-    %     threshold = median([max([data.('Pre-DBS');data.('Non-Responder')]),min(data.Responder)]);
-    %     plot([x_preDBS-threshold_width,x_postDBS+threshold_width],[threshold,threshold],':k')
-    % elseif min([data.('Pre-DBS');data.('Non-Responder')]) > max(data.Responder)
-    %     threshold = median([min([data.('Pre-DBS');data.('Non-Responder')]),max(data.Responder)]);
-    %     plot([x_preDBS-threshold_width,x_postDBS+threshold_width],[threshold,threshold],':k')
-    % end
-    % 
-    % ax = gca;
-    % if m == 4
-    %     ylabel('Sample Entropy')
-    %     ylim(ylim_SE)
-    %     ax.YAxis.Exponent = -2;
-    % else
-    %     ylabel('R^2 (%)')
-    %     ylim(ylim_R2/100)
-    %     set(gca,'YTickLabel',arrayfun(@num2str, 100*get(gca,'YTick'), 'UniformOutput', 0))
-    % end
-    % 
-    % hold off
-    % title(actual_model_name{m})
-    % xlim(x_lims_norm)
-    % xticks([x_preDBS,x_postDBS])
-    % xticklabels({'Pre-DBS','Chronic Status'})
-    % ax.FontSize = font_size_beforeafter;
-    % ax.TickLength(1) = 0;
-    % box on
+    data = percept_data.kfold.(model_name{m}){hemisphere};
+    chronic = nanmax(data.Responder,data.('Non-Responder'));
+
+    hold on
+    plot(repmat([x_preDBS,x_postDBS,NaN],1,size(data,1)),reshape([data.('Pre-DBS')';chronic';nan(1,size(data,1))],[1,size(data,1)*3]),'-k','Color',[0,0,0,line_alpha],'LineWidth',1);
+
+    scatter(repelem(x_preDBS,size(data,1)),data.('Pre-DBS'),sz,'filled','MarkerEdgeColor',c_preDBS_outline,'MarkerFaceColor',c_preDBS,'MarkerFaceAlpha',face_alpha);
+    scatter(repelem(x_postDBS,size(data,1)),data.('Non-Responder'),sz,'filled','MarkerEdgeColor',c_nonresponder,'MarkerFaceColor',c_nonresponder,'MarkerFaceAlpha',face_alpha);    
+    scatter(repelem(x_postDBS,size(data,1)),data.Responder,sz,'^','filled','MarkerEdgeColor',c_responder,'MarkerFaceColor',c_responder,'MarkerFaceAlpha',face_alpha);
+
+    text(repelem(x_preDBS_label,size(data,1)),data.('Pre-DBS'),data.Subject,'FontSize',font_size_label)
+    text(repelem(x_postDBS_label,sum(isnan(data.('Pre-DBS')))),chronic(isnan(data.('Pre-DBS'))),data.Subject(isnan(data.('Pre-DBS'))),'FontSize',font_size_label)
+
+    % Add a max margin classifier line if responders and non-responders can be perfectly demarcated
+    if max([data.('Pre-DBS');data.('Non-Responder')]) < min(data.Responder)
+        threshold = median([max([data.('Pre-DBS');data.('Non-Responder')]),min(data.Responder)]);
+        plot([x_preDBS-threshold_width,x_postDBS+threshold_width],[threshold,threshold],':k')
+    elseif min([data.('Pre-DBS');data.('Non-Responder')]) > max(data.Responder)
+        threshold = median([min([data.('Pre-DBS');data.('Non-Responder')]),max(data.Responder)]);
+        plot([x_preDBS-threshold_width,x_postDBS+threshold_width],[threshold,threshold],':k')
+    end
+    
+    % Y axis labels
+    ax = gca;
+    if strcmp(model_name{m},'SE')
+        ylabel('Sample Entropy')
+        ylim(ylim_SE)
+        ax.YAxis.Exponent = -2;
+    else
+        ylabel('R^2 (%)')
+        ylim(ylim_R2/100)
+        set(gca,'YTickLabel',arrayfun(@num2str, 100*get(gca,'YTick'), 'UniformOutput', 0))
+    end
+
+    hold off
+    title(actual_model_name{m})
+    xlim(x_lims_norm)
+    xticks([x_preDBS,x_postDBS])
+    xticklabels({'Pre-DBS','Chronic Status'})
+    ax.FontSize = font_size_beforeafter;
+    ax.TickLength(1) = 0;
+    box on
 end
 
+% Plotting ROCs for delta values
 nexttile(fig,[1,2])
 hold on
 plot([0,1],[0,1],'--k')
-for m = 1:4
+for m = 1:length(model_name)
     ROC = percept_data.ROC.(model_name{m}){1,hemisphere+1};
-    [FPR,TPR] = perfcurve(ROC.True,ROC.Pred_Prob,1);
+    [FPR,TPR] = perfcurve(ROC.True,ROC.Pred_Prob,1); %Calculate ROC for prediction matrix
     plot(FPR,TPR,'LineWidth',2)
 end
 hold off
 
 set(gca,'XTick',0:0.1:1,'YTick',0:0.1:1,'FontSize',font_size_ROC)
-legend([{''},strcat(actual_model_name,{' R^2',' R^2',' R^2',''})],'Location','southeast','FontSize',font_size_legend)
+legend([{''},strcat(actual_model_name,legend_suffix_daily)],'Location','southeast','FontSize',font_size_legend)
 legend boxoff
 xlim([0,1])
 xlabel('False Positive Rate')
