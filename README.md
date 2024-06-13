@@ -38,8 +38,6 @@ Respective version of the Signal Processing Toolbox: https://www.mathworks.com/p
     ~5 minute installation
 EntropyHub Toolbox v0.2: https://github.com/MattWillFlood/EntropyHub
     ~5 minute installation
-AUROC Matlab Package: https://github.com/alistairewj/auroc-matlab/tree/master
-    ~5 minute installation
 ```
 
 # Code Demo
