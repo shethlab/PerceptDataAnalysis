@@ -113,7 +113,7 @@ pause(2)
 
 %% Matlab calculations
 for j = 1:size(percept_data.LFP_norm_matrix,1)
-    if exist('all_components','var')
+    if exist('is_demo','var') && is_demo == 1
         num_components = all_components(j);
         num_peaks = all_peaks(j);
     else
