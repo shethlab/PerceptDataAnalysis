@@ -237,7 +237,7 @@ if skip_python ~= 1
     end
     
     percept_data = python_import(python_data,percept_data,models,permut_testing); %Import data into matlab struct
-    %delete(mat_file_path) %Remove temp mat file
+    delete(mat_file_path) %Remove temp mat file
 end
 
 end

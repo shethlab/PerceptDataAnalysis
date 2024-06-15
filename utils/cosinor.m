@@ -47,8 +47,8 @@ try
     disc_peaks = discretize(mod(peak_locs,1),num_peaks);
     disc_acro = unique(disc_peaks);
 catch
-    disc_peaks = nan;
-    disc_acro = nan;
+    disc_peaks = [];
+    disc_acro = [];
 end
 
 if length(disc_acro) > 1 %Multiple peaks per cycle
