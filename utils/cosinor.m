@@ -42,9 +42,14 @@ mesor = median([min(f),max(f)]); %MESOR is defined as the cycle median
 p_value = fit_model.ModelFitVsNullModel.Pvalue; %P value of model fit vs constant model
 
 %Acrophase and amplitude calculation
-[peaks,peak_locs] = findpeaks(f,t,'MinPeakHeight',mesor,'MinPeakDistance',1/24);
-disc_peaks = discretize(mod(peak_locs,1),num_peaks);
-disc_acro = unique(disc_peaks);
+try
+    [peaks,peak_locs] = findpeaks(f,t,'MinPeakHeight',mesor,'MinPeakDistance',1/24);
+    disc_peaks = discretize(mod(peak_locs,1),num_peaks);
+    disc_acro = unique(disc_peaks);
+catch
+    disc_peaks = nan;
+    disc_acro = nan;
+end
 
 if length(disc_acro) > 1 %Multiple peaks per cycle
     for i = 1:num_peaks
