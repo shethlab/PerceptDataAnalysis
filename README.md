@@ -28,7 +28,7 @@ scipy == 1.10.1
 ## MATLAB Dependencies
 ```
 System requirements:
-All MATLAB code run on version 2022b using Windows 11
+All MATLAB code run on version 2023b using Windows 11
 Windows Requirements: https://www.mathworks.com/content/dam/mathworks/mathworks-dot-com/support/sysreq/files/system-requirements-release-2022b-windows.pdf
 
 Installation guide:
@@ -37,6 +37,8 @@ Mathworks MATLAB 2022b: https://www.mathworks.com/downloads
 Respective version of the Signal Processing Toolbox: https://www.mathworks.com/products/signal.html
     ~5 minute installation
 EntropyHub Toolbox v0.2: https://github.com/MattWillFlood/EntropyHub
+    ~5 minute installation
+Econometrics Toolbox R2023b: https://www.mathworks.com/products/econometrics.html
     ~5 minute installation
 ```
 
@@ -51,9 +53,12 @@ Run the function "generate_data" (type "help generate_data" in the command windo
     -Estimated runtime: 5-20s per patient depending on data quantity
 
 ## 2. Circadian Calculations
-Run the function "calc_circadian" (type "help calc_circadian" in the command window for specific function operation) on the output struct generated from step 1. This function uses MATLAB to calculate cosinor and sample entropy metrics, and then passes the data to python to generate autoregressive metrics and perform classification testing. A current limitation of this code is that it re-runs all data every time, so processing time will get cumulatively longer with more subjects and data added. IMPORTANT NOTE: permutation testing and the nonlinear AR (neural network) model are incredibly slow to run, so in most cases they should be skipped. This occurs by default, and the user must manually provide an optional input to run these analyses (see "help calc_circadian").
-    - Estimated runtime (no permutation or nonlinear AR): 30-60s per patient depending on data quantity
-    - Estimated runtime (permutation and/or nonlinear AR): ~30min per patient depending on data quantity
+Run the function "calc_circadian" (type "help calc_circadian" in the command window for specific function operation) on the output struct generated from step 1. This function uses MATLAB to calculate cosinor and sample entropy metrics, and then passes the data to python to generate autoregressive metrics. A current limitation of this code is that it re-runs all data every time, so processing time will get cumulatively longer with more subjects and data added. IMPORTANT NOTE: the nonlinear AR (neural network) model may be slow to run, so in most cases they should be skipped. This occurs by default, and the user must manually provide an optional input to run these analyses (see "help calc_circadian").
+    - Estimated runtime (without nonlinear AR): 30+ s per patient depending on data quantity
+    - Estimated runtime (with nonlinear AR): 5+ min per patient depending on data quantity
+Run the function "calc_ROC" (type "help calc_ROC" in the command window for specific function operation) on the output struct generated from step 1. This function uses python to perform classification testing. A current limitation of this code is that it re-runs all data every time, so processing time will get cumulatively longer with more subjects and data added. IMPORTANT NOTE: permutation testing is slow to run. Thus it is set to skip by default, and the user must manually provide an optional input to run these analyses (see "help calc_ROC").
+    - Estimated runtime (without permutation testing): 30+ s per patient depending on data quantity
+    - Estimated runtime (with permutation testing): 5+ min per patient depending on data quantity
 
 # Figures and Tables
 

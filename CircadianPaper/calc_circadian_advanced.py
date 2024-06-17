@@ -260,7 +260,10 @@ def train_model(model, criterion, optimizer, train_loader: DataLoader, test_load
             # Update training metrics
             running_loss += total_loss.item() * inputs.size(0)
             train_act.extend(targets.tolist())
-            train_pred.extend(predictions.tolist())
+            try: # Error if the dataset only has one day's worth
+                train_pred.extend(predictions.tolist())
+            except:
+                train_pred.extend([predictions.tolist()])
 
         # Evaluation phase
         model.eval()  # Set model to evaluation mode
@@ -273,7 +276,10 @@ def train_model(model, criterion, optimizer, train_loader: DataLoader, test_load
                 # Update test metrics
                 running_test_loss += loss.item() * inputs.size(0)
                 test_act.extend(targets.tolist())
-                test_pred.extend(predictions.tolist())
+                try: # Error if the dataset only has one day's worth
+                    test_pred.extend(predictions.tolist())
+                except:
+                    test_pred.extend([predictions.tolist()])
 
         # Compute average losses and R^2 scores for the epoch
         epoch_train_loss = running_loss / len(train_loader.dataset)
@@ -293,7 +299,7 @@ def train_model(model, criterion, optimizer, train_loader: DataLoader, test_load
         test_r2.append(epoch_test_r2)
 
         # Output training progress
-        print(f"Epoch {epoch+1}/{epochs}: Train loss = {epoch_train_loss:.4f}, Train R^2 = {epoch_train_r2:.4f}, Test loss = {epoch_test_loss:.4f}, Test R^2 = {epoch_test_r2:.4f}")
+        #print(f"Epoch {epoch+1}/{epochs}: Train loss = {epoch_train_loss:.4f}, Train R^2 = {epoch_train_r2:.4f}, Test loss = {epoch_test_loss:.4f}, Test R^2 = {epoch_test_r2:.4f}")
 
     # Return a dictionary of tracked metrics and best results
     return {
@@ -352,79 +358,6 @@ def run_regression(master_df: pd.DataFrame, lag_terms: list):
     cont = 0 if (final_model.pvalues < 0.05).sum() >= len(final_model.pvalues) - 1 else 1
     
     return common_lags, final_model, cont
-
-def perform_logistic_regression(data: pd.DataFrame):
-    """
-    Performs logistic regression using Leave-One-Patient-Out Cross-Validation (LOPO-CV) to evaluate model performance.
-    
-    
-    Parameters:
-    - data (pandas.DataFrame): Dataframe containing the R2, dR2, y-label, and patient id for a given metric. 
-    
-    Returns:
-    - tuple of lists: 
-        - True labels for each sample.
-        - Predicted probabilities of the positive class for each sample.
-        - Predicted classes for each sample.
-    """
-    # Lists to store true labels, predicted probabilities, and predicted classes.
-    true, pred, pred_rd = [], [], []
-    
-    # Iterate over each patient split.
-    for pt in set(data['PT']):
-        
-        # Split the data into training and testing sets.
-        test_data = data.loc[data['PT'] == pt]
-        train_data = data.loc[data['PT'] != pt]
- 
-        # Reshape test data to ensure it has the correct dimensions.
-        test_x = test_data.iloc[:,:-2].values.reshape(-1,1)
-        test_y = test_data.iloc[:,-2].values
-
-        # Reshape train data to ensure it has the correct dimensions.
-        train_x = train_data.iloc[:,:-2].values.reshape(-1,1)
-        
-        train_y = train_data.iloc[:,-2].values
-
-        # Train the logistic regression model.
-        clf = LogisticRegression(class_weight='balanced', penalty = None).fit(train_x, train_y)
-        
-        # Extend the lists with the test outcomes and predictions.   
-        true.extend(test_y)
-        pred.extend(clf.predict_proba(test_x)[:,1]) # Probability of the positive class.
-        pred_rd.extend(clf.predict(test_x)) # Predicted class labels.
-
-    return true, pred, pred_rd
-    
-def circular_shift(data: pd.DataFrame):
-    """
-    Applies a circular shift to the 'Y' column for each patient within the dataset, 
-    with the shift magnitude randomly determined for each patient.
-
-    Parameters:
-    - data (pd.DataFrame): The DataFrame containing the dataset. Must include a 'PT' column 
-                           for patient IDs and a 'Y' column for the values to be shifted.
-
-    Returns:
-    - data (pd.DataFrame): The modified DataFrame with the 'Y' values circularly shifted 
-                           for each patient.
-    """
-    
-    # Initialize an empty list to store the circularly shifted 'Y' values for all patients.
-    roll_y = []
-    
-    # Iterate through each unique patient ID.
-    for pt in data.loc[:,'PT'].unique():
-        # Extract 'Y' values for the current patient as a numpy array.
-        pt_y = data.loc[data['PT'] == pt,'Y'].to_numpy()
-        # Append the circularly shifted 'Y' array to the list, shifting by a random magnitude.
-        roll_y.append(np.roll(pt_y, random.randrange(0,pt_y.shape[0])))
-        
-    # Update the 'Y' column in the original DataFrame with the concatenated shifted arrays.
-    data.loc[:, 'Y'] = np.concatenate(roll_y)
-    
-    # Return the modified DataFrame.
-    return data
     
 def NN_AR(train: pd.DataFrame, test: pd.DataFrame, index: list):
     """
@@ -724,70 +657,7 @@ def compile_r2(df: pd.DataFrame, master_df: pd.DataFrame, se: pd.DataFrame, log_
     # Return updated dictionaries and log DataFrame.
     return r2_info, ci_info, log_df
 
-def across_pt_regression(log_df: pd.DataFrame, permut_testing: bool, saveDict: dict, model: str):
-    """
-    Performs logistic regression analysis, evaluates model performance using ROC-AUC and balanced accuracy metrics, and conducts permutation testing for statistical significance.
-
-    Parameters:
-    - log_df (pd.DataFrame): The input DataFrame containing the dataset for analysis.
-    - permut_testing (bool): Flag indicating whether permutation testing should be performed.
-    - saveDict (dict): A dictionary to save predictions, ROC-AUC curves, performance statistics, and permutation testing results (if conducted).
-    - model (str): Name of the current metric being tested. 
-
-    Returns:
-    - saveDict (dict): A dictionary containing all predictions, ROC-AUC curves, performance statistics, and permutation testing results (if conducted).
-    """
-    
-    # Filtering and preparing data for logistic regression analysis.
-    log_df = log_df[np.abs(st.zscore(log_df['R2'])) < 5]   
-    delt = log_df.loc[log_df['dR2'].notna()].iloc[:,[1,2,3]]  # Select rows where 'dR2' is not NaN.
-    norm = log_df.iloc[:,[0,2,3]]  # Select first and third columns of log_df.
-
-    # Loop to process 'Delta' and 'Norm' models for logistic regression.
-    for model_type, data in zip(['Delta', 'Norm'], [delt, norm]):        
-        # Perform logistic regression, save predictions, and calculate ROC curve and AUC.
-        true, pred_prob, pred_class = perform_logistic_regression(data)
-        saveDict[f'{model}_{model_type}_ROC_AUC_Predictions'] = pd.DataFrame({'True': true, 'Pred_Prob': pred_prob, 'Pred': pred_class})
-        
-        fpr, tpr, thresholds = roc_curve(true, pred_prob)  # Calculate False Positive Rate, True Positive Rate, and thresholds for ROC curve.
-        saveDict[f'{model}_{model_type}_ROC_AUC_Curve'] = pd.DataFrame({'FPR': fpr, 'TPR': tpr, 'Thresholds': thresholds})
-
-        auc = roc_auc_score(true, pred_prob)  # Compute Area Under the ROC curve.
-        bacc = balanced_accuracy_score(true, pred_class)  # Compute balanced accuracy score.
-        saveDict[f'{model}_{model_type}_ROC_AUC_Performance_Statistics'] = pd.DataFrame({'ROC_AUC': [auc], 'Balanced_Accuracy': [bacc]})
-
-        # Permutation testing conditional block.
-        if permut_testing:
-            # Perform permutation tests to assess the significance of the observed metrics.
-            for rand_strat in ['Randomization', 'Circular_Shift']:
-                # Create a copy of the original dataset 
-                permut_data = data.copy()
-                
-                # Initialize lists for permutation testing results.
-                dist_auc, dist_bal = [], []
-                for iter in range(10000):
-                    if rand_strat == 'Randomization':
-                        permut_data['Y'] = permut_data['Y'].sample(frac=1).values  # Randomly shuffle the dependent variable to simulate chance distribution.
-                    else:
-                        permut_data = circular_shift(permut_data)
-                    true, pred_prob, pred_class = perform_logistic_regression(permut_data)  # Re-run logistic regression with shuffled labels.
-    
-                    # Store AUC and Balanced Accuracy of permuted labels for significance testing.
-                    dist_auc.append(roc_auc_score(true, pred_prob))
-                    dist_bal.append(balanced_accuracy_score(true, pred_class))
-                
-                # Calculate mean chance metrics and p-values from permutation tests.
-                saveDict[f'{model}_{model_type}_ROC_AUC_{rand_strat}_Statistics'] = pd.DataFrame({
-                    'Chance_AUC': [np.mean(dist_auc)], 
-                    'AUC_Pvalue': [(((np.array(dist_auc) > auc).sum())/len(dist_auc))], 
-                    'Chance_Balanced_Accuracy': [np.mean(dist_bal)], 
-                    'Balanced_Accuracy_PValue': [((np.array(dist_bal) > bacc).sum())/len(dist_bal)]
-                })
-
-    # Return a dictionary containing all the results and statistics from the analysis.
-    return saveDict
-
-def main(hemi: int, mat_file: str, components: list, pt_index: list, pt_names: list, models: list, permut_testing: bool):
+def main(hemi: int, mat_file: str, components: list, pt_index: list, pt_names: list, models: list):
     """
     Main function to run analysis across different models and patients. The function compiles R2 metrics, confidence intervals, and conducts regression analyses.
 
@@ -798,7 +668,6 @@ def main(hemi: int, mat_file: str, components: list, pt_index: list, pt_names: l
     - pt_index (list): A list of patient index.
     - pt_names (list): A list of patient names.
     - models (list): A list of models (e.g., 'SE', 'LinAR') to analyze.
-    - permut_testing (bool): Flag indicating whether permutation testing should be performed.
 
     Returns:
     - saveDict (dict): A dictionary containing all results and metrics from the analysis, structured by model and patient.
@@ -815,7 +684,6 @@ def main(hemi: int, mat_file: str, components: list, pt_index: list, pt_names: l
         
         # Iterate through each patient.
         for pt_id, pt_name in zip(pt_index, pt_names):
-            
             # Initialize patient-specific entries in dictionaries.
             r2_info[pt_name], ci_info[pt_name] = {}, {}
             
@@ -843,13 +711,10 @@ def main(hemi: int, mat_file: str, components: list, pt_index: list, pt_names: l
         saveDict[f'{model}_State_Metrics'] = pd.DataFrame(r2_info).T
         saveDict[f'{model}_CI'] = pd.DataFrame(ci_info).T
         
-        # Perform across-patient regression analysis, including permutation testing if enabled.
-        saveDict = across_pt_regression(log_df, permut_testing, saveDict, model)
-        
         # Return the dictionary containing all results.
         return saveDict
     saveDict = {}
         
 if __name__ == "__main__":    
-    # Requires input from MATLAB
-    saveDict = main(hemi, mat_file, components, pt_index, pt_names, models, permut_testing)
+    # Requires input from MATLAB   
+    saveDict = main(hemi, mat_file, components, pt_id, pt_name, models)

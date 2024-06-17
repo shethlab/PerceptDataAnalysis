@@ -21,7 +21,7 @@
 % corrseponding to days which resulted in non-significant cosinor fits are
 % plotted with reduced transparency.
 
-function plot_heatmap(data,hemisphere,zone_index,is_demo)
+function plot_heatmap(percept_data,hemisphere,zone_index,is_demo)
 
 %% Detailed Adjustable Inputs
 
@@ -48,21 +48,21 @@ c_preDBS = [255,215,0]/255; % Color of pre-DBS zone
 if exist('is_demo','var') && is_demo == 1 % For figure 2 & S1 demo
     total_height = 5;
 else
-    total_height = size(data.LFP_norm_matrix,1);
+    total_height = size(percept_data.LFP_norm_matrix,1);
 end
 
 figure('Units','centimeters','Position',[0,0,fig_width,fig_height*total_height],'Color','w');
 
 %Determine maximum number of data points to display horizontally
-max_day_width = max(cellfun('length',data.LFP_norm_matrix(:,hemisphere+1)));
-colorbar_height = colorbar_height/size(data.LFP_norm_matrix,1); % Colorbar height (fraction of figure size)
-colorbar_offset = colorbar_offset/size(data.LFP_norm_matrix,1); % Vertical offset of colorbar from heatmaps (fraction of figure size)
-heatmap_height = heatmap_height/size(data.LFP_norm_matrix,1); % Heatmap height (fraction of figure size)
+max_day_width = max(cellfun('length',percept_data.LFP_norm_matrix(:,hemisphere+1)));
+colorbar_height = colorbar_height/size(percept_data.LFP_norm_matrix,1); % Colorbar height (fraction of figure size)
+colorbar_offset = colorbar_offset/size(percept_data.LFP_norm_matrix,1); % Vertical offset of colorbar from heatmaps (fraction of figure size)
+heatmap_height = heatmap_height/size(percept_data.LFP_norm_matrix,1); % Heatmap height (fraction of figure size)
 
 for j = 1:total_height  
     %Temporary variables per iteration
-    LFP = data.LFP_norm_matrix{j,hemisphere+1};
-    days = data.days{j,hemisphere+1}; 
+    LFP = percept_data.LFP_norm_matrix{j,hemisphere+1};
+    days = percept_data.days{j,hemisphere+1}; 
 
     %Find indices of discontiuous days of data
     start_index = find(diff(days)>1);
@@ -96,13 +96,13 @@ for j = 1:total_height
     %Colorbar plot
     for i = 1:subplot_number %Split up discontinuous data into multiple plots with small gaps between
         if i == 1 && i ~= subplot_number %First of multiple plots
-            ax1{i} = subplot(2*size(data.days,1),1,j*2-1);
+            ax1{i} = subplot(2*size(percept_data.days,1),1,j*2-1);
             imagesc([days(start_index(i)),days(start_index(i+1)-1)],[],1:start_index(i+1)-start_index(i)); %plot subplot heatmap
             colormap(ax1{i},c_map(start_index(i):start_index(i+1)-1,:)) %apply colormap
             xlim([days(start_index(i))-.5,days(start_index(i+1)-1)+.5]) %stretch data to fill plot width
             ax1{i}.Position(3) = width_scale/max_day_width*ax1{i}.DataAspectRatio(1); %rescale subplot width relative to figure size
         elseif i == 1 && i == subplot_number %First and last plot
-            ax1{i} = subplot(2*size(data.days,1),1,j*2-1);
+            ax1{i} = subplot(2*size(percept_data.days,1),1,j*2-1);
             imagesc([days(start_index(i)),days(end)],[],1:length(days)-start_index(i));
             colormap(ax1{i},c_map(start_index(i):end,:));
             xlim([days(start_index(i))-.5,days(end)+.5])
@@ -125,12 +125,12 @@ for j = 1:total_height
     %Heatmap plot
     for i = 1:subplot_number %Split up discontinuous data into multiple plots with small gaps between
         if i == 1 && i ~= subplot_number %First of multiple plots
-            ax2{i} = subplot(2*size(data.days,1),1,j*2);
+            ax2{i} = subplot(2*size(percept_data.days,1),1,j*2);
             imagesc([days(start_index(i)),days(start_index(i+1)-1)],[],LFP(:,start_index(i):start_index(i+1)-1));
             xticks = x_tick_scale*ceil(days(start_index(i))/x_tick_scale):x_tick_scale:x_tick_scale*floor(days(start_index(i+1)-1)/x_tick_scale);
             ax2{i}.Position(3) = width_scale/(max_day_width/2)*ax2{i}.DataAspectRatio(1);
         elseif i == 1 && i == subplot_number %First and last plot
-            ax2{i} = subplot(2*size(data.days,1),1,j*2);
+            ax2{i} = subplot(2*size(percept_data.days,1),1,j*2);
             imagesc([days(start_index(i)),days(end)],[],LFP(:,start_index(i):end));
             xticks = x_tick_scale*ceil(days(start_index(i))/x_tick_scale):x_tick_scale:x_tick_scale*floor(days(end)/x_tick_scale);
             ax2{i}.Position(3) = width_scale/(max_day_width/2)*ax2{i}.DataAspectRatio(1);
@@ -156,7 +156,7 @@ for j = 1:total_height
             yticks = [0.5,36:36:144];
             yticklabels = {'0:00','','12:00','','24:00'};            
             set(gca,'YTick',yticks,'YTickLabels',yticklabels,'TickLength',[0.01,0.01],'FontSize',fontsize);
-            ylabel(data.LFP_norm_matrix(j,1))
+            ylabel(percept_data.LFP_norm_matrix(j,1))
         else
             set(gca,'YTick',[]);
         end
