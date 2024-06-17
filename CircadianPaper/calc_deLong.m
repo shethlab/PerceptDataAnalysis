@@ -18,16 +18,19 @@ for row = 1:2 %Daily & delta models
     for hemisphere = 1:2
         pred = [];
         ratings = [];
-
+        
+        % Cosinor
         sorted_data = sortrows(percept_data.ROC.cosinor{row,hemisphere+1},"True",'ascend');
         pred(:,1) = sorted_data.Pred_Prob;
         ratings(1,1:length(pred)) = pred(:,1)';
         
+        % Linear AR
         sorted_data = sortrows(percept_data.ROC.linAR{row,hemisphere+1},"True",'ascend');
         target = sorted_data.True;
         pred(:,2) = sorted_data.Pred_Prob;
         ratings(2,:) = pred(:,2)';
         
+        % Nonlinear AR (if included)
         try
             sorted_data = sortrows(percept_data.ROC.NN_AR{row,hemisphere+1},"True",'ascend');
             pred(:,3) = sorted_data.Pred_Prob;
@@ -36,10 +39,15 @@ for row = 1:2 %Daily & delta models
         end
         ratings(3,:) = pred(:,3)';
         
-        sorted_data = sortrows(percept_data.ROC.SE{row,hemisphere+1},"True",'ascend');
-        pred(:,4) = sorted_data.Pred_Prob;
+        % Sample entropy
+        try 
+            sorted_data = sortrows(percept_data.ROC.SE{row,hemisphere+1},"True",'ascend');
+            pred(:,4) = sorted_data.Pred_Prob;
+        catch %Occasionally sample entropy has one extra entry (day 0)
+            sorted_data = sortrows(percept_data.ROC.SE{row,hemisphere+1}(2:end,:),"True",'ascend');
+            pred(:,4) = sorted_data.Pred_Prob;
+        end
         ratings(4,:) = pred(:,4)';
-
         
         [S,~,~,~,~,theta] = wilcoxonCovariance(pred,target); %Calculates covariance
         

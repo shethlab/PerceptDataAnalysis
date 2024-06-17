@@ -362,7 +362,9 @@ classdef Violin < handle
                 [], [1 1 1], 'filled', 'v');
                 
             %% Set graphical preferences
-            obj.EdgeColor = args.EdgeColor;
+            try
+                obj.EdgeColor = args.EdgeColor;
+            end
             obj.MedianPlot.LineWidth = args.LineWidth;
             obj.BoxColor = args.BoxColor;
             obj.BoxWidth = args.BoxWidth;
@@ -420,7 +422,9 @@ classdef Violin < handle
                 % default
                 ViolinAlpha = {1,1};
             end
-            obj.ViolinAlpha = ViolinAlpha;
+            try
+                obj.ViolinAlpha = {0.5,0.5};
+            end
                 
                 
         end
