@@ -8,7 +8,8 @@
 %% Loading and prepping data (must be run first)
 load('demo_data.mat')
 
-percept_data = calc_circadian(percept_data,zone_index,2,2,0,0,[],1,1,1); % full calculations including nonlinear AR & permutation testing
+percept_data = calc_circadian(percept_data,zone_index,2,2,1,1); % Full calculations including nonlinear AR
+percept_data = calc_ROC(percept_data,zone_index,1); % Full ROC calculations including permutation testing
 
 %% Figure 1 (PSD Plots)
 
