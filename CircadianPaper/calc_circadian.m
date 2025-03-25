@@ -81,8 +81,8 @@ for j = 1:size(percept_data.LFP_norm_matrix,1)
         num_components = all_components(j);
         num_peaks = all_peaks(j);
     else
-        num_components = input(['Enter the number of cosinor components for subject ',percept_data.days{j,1},': ']); %cosinor parameter input
-        num_peaks = input(['Enter the number of cosinor peaks for subject ',percept_data.days{j,1},': ']); %cosinor parameter input
+        num_components = 1; %cosinor parameter input
+        num_peaks = 1; %cosinor parameter input
     end
 
     %Warning if improper cosinor inputs
